@@ -92,4 +92,24 @@ if (peliculaId(p.getId())!=null){
         documento.getRootElement().addContent(nueva);
         return guardarXML();
     }
+
+    public boolean modificarPelicula(Pelicula p) {
+        if (p == null || documento == null) {
+            return false;
+        }
+
+        for (Element e : documento.getRootElement().getChildren("pelicula")) {
+            int id = Integer.parseInt(e.getAttributeValue("id"));
+            if (id == p.getId()) {
+                e.getChild("nombre").setText(p.getTitulo());
+                e.getChild("director").setText(p.getDirector());
+                e.getChild("anio").setText(String.valueOf(p.getAnio()));
+                e.getChild("genero").setText(p.getGenero());
+                return guardarXML();
+            }
+        }
+
+        return false;
+    }
+
 }

@@ -92,7 +92,36 @@ public class Main {
                     }
                     break;
                 case 4:
+                    try {
+                        System.out.print("ID: ");
+                        int id = Integer.parseInt(scanner.nextLine());
+                        Pelicula pelicula=dom.peliculaId(id);
+                        if (pelicula==null){
+                            System.out.println("El id no existe");
+                            break;
+                        }
+                        System.out.print("Título: ");
+                        String titulo = scanner.nextLine();
 
+                        System.out.print("Director: ");
+                        String director = scanner.nextLine();
+
+                        System.out.print("Año: ");
+                        int anio = Integer.parseInt(scanner.nextLine());
+
+                        System.out.print("Género: ");
+                        String genero = scanner.nextLine();
+
+                        Pelicula modificada = new Pelicula(id, titulo, director, anio, genero);
+
+                        if (dom.modificarPelicula(modificada)) {
+                            System.out.println("Película modificada: " + modificada);
+                        } else {
+                            System.out.println("No se ha podido modificar.");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("El ID y el año tienen que ser números.");
+                    } 
                     break;
                 case 5:
 
