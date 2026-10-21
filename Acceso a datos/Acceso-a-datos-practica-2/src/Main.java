@@ -23,6 +23,7 @@ import org.w3c.dom.NodeList;
 public class Main {
     public static void main(String[] args) {
         String rutaXml = "peliculas.xml";
+        DomPeliculas dom = new DomPeliculas(rutaXml);
 
         Scanner scanner = new Scanner(System.in);
         int opcion = -1;
@@ -46,10 +47,21 @@ public class Main {
 
             switch (opcion) {
                 case 1:
-
+                    for (Pelicula p :dom.obtenerPeliculas())
+                        System.out.println(p);
                     break;
                 case 2:
-
+                    System.out.print("Escribe el ID que quieras buscar ");
+                    try {
+                        Pelicula pelicula = dom.peliculaId(Integer.parseInt(scanner.nextLine()));
+                        if (pelicula == null) {
+                            System.out.println("No hay pelicula con ese ID");
+                        } else {
+                            System.out.println(pelicula);
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("El ID tiene que ser un número.");
+                    }
                     break;
                 case 3:
 
