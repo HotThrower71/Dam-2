@@ -138,12 +138,6 @@
     <anio>2006</anio>
     <genero>Crimen</genero>
   </pelicula>
-  <pelicula id="32">
-    <nombre>Terminator 2: El juicio final</nombre>
-    <director>James Cameron</director>
-    <anio>1991</anio>
-    <genero>Acción</genero>
-  </pelicula>
   <pelicula id="33">
     <nombre>El gran hotel Budapest</nombre>
     <director>Wes Anderson</director>
@@ -197,5 +191,11 @@
     <director>Nolan</director>
     <anio>2008</anio>
     <genero>Superheroes</genero>
+  </pelicula>
+  <pelicula id="41">
+    <nombre>Man Of Steel</nombre>
+    <director>Zack Snyder</director>
+    <anio>2015</anio>
+    <genero>Accion</genero>
   </pelicula>
 </catalogo>
