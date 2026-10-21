@@ -64,7 +64,32 @@ public class Main {
                     }
                     break;
                 case 3:
+                    try {
+                        System.out.print("ID: ");
+                        int id = Integer.parseInt(scanner.nextLine());
 
+                        System.out.print("Título: ");
+                        String titulo = scanner.nextLine();
+
+                        System.out.print("Director: ");
+                        String director = scanner.nextLine();
+
+                        System.out.print("Año: ");
+                        int anio = Integer.parseInt(scanner.nextLine());
+
+                        System.out.print("Género: ");
+                        String genero = scanner.nextLine();
+
+                        Pelicula nueva = new Pelicula(id, titulo, director, anio, genero);
+
+                        if (dom.añadirPelicula(nueva)) {
+                            System.out.println("Película añadida: " + nueva);
+                        } else {
+                            System.out.println("No se ha podido añadir. ¿Ya existe una película con el ID " + id + "?");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("El ID y el año tienen que ser números.");
+                    }
                     break;
                 case 4:
 
