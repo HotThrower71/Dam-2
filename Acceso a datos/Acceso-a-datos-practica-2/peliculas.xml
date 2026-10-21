@@ -67,10 +67,10 @@
     <genero>Animación</genero>
   </pelicula>
   <pelicula id="20">
-    <nombre>El caballero oscuro</nombre>
-    <director>Christopher Nolan</director>
-    <anio>2008</anio>
-    <genero>Acción</genero>
+    <nombre>Superman</nombre>
+    <director>Odonnel</director>
+    <anio>1990</anio>
+    <genero>Superheroe</genero>
   </pelicula>
   <pelicula id="21">
     <nombre>Pinocho de Guillermo del Toro</nombre>

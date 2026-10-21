@@ -27,10 +27,13 @@ public class DomPeliculas {
             documento = new SAXBuilder().build(new File(this.rutaArchivo));
         } catch (FileNotFoundException e) {
             System.out.println("No se encuentra el archivo: " + rutaArchivo);
+            e.printStackTrace();
         } catch (JDOMException e) {
             System.out.println("El XML está mal formado: " + e.getMessage());
+            e.printStackTrace();
         } catch (IOException e) {
             System.out.println("Error al leer el archivo: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -64,27 +67,39 @@ public class DomPeliculas {
         return null;
     }
 
+    // Devuelve el ID más alto del catálogo + 1 (o 1 si no hay películas)
+    public int siguienteId() {
+        int maximo = 0;
+        for (Pelicula p : obtenerPeliculas()) {
+            if (p.getId() > maximo) {
+                maximo = p.getId();
+            }
+        }
+        return maximo + 1;
+    }
+
     public boolean guardarXML() {
-        try {
-            new XMLOutputter(Format.getPrettyFormat()).output(documento, new FileWriter(rutaArchivo));
+        // try-with-resources: el FileWriter se cierra solo al terminar
+        try (FileWriter escritor = new FileWriter(rutaArchivo)) {
+            new XMLOutputter(Format.getPrettyFormat()).output(documento, escritor);
         } catch (IOException e) {
             System.out.println("Error al guardar el archivo: " + e.getMessage());
+            e.printStackTrace();
             return false;
         }
         return true;
     }
 
-    public boolean añadirPelicula(Pelicula p){
-if (p==null || documento==null){
-    return false;
-}
-if (peliculaId(p.getId())!=null){
-    return false;
-}
-
+    public boolean añadirPelicula(Pelicula p) {
+        if (p == null || documento == null) {
+            return false;
+        }
+        if (peliculaId(p.getId()) != null) {
+            return false;
+        }
 
         Element nueva = new Element("pelicula");
-        nueva.setAttribute("id",String.valueOf(p.getId()));
+        nueva.setAttribute("id", String.valueOf(p.getId()));
         nueva.addContent(new Element("nombre").setText(p.getTitulo()));
         nueva.addContent(new Element("director").setText(p.getDirector()));
         nueva.addContent(new Element("anio").setText(String.valueOf(p.getAnio())));
@@ -112,4 +127,18 @@ if (peliculaId(p.getId())!=null){
         return false;
     }
 
+    public boolean eliminarPelicula(int id) {
+        if (documento == null) {
+            return false;
+        }
+
+        for (Element e : documento.getRootElement().getChildren("pelicula")) {
+            if (Integer.parseInt(e.getAttributeValue("id")) == id) {
+                documento.getRootElement().removeContent(e);
+                return guardarXML();
+            }
+        }
+
+        return false;
+    }
 }
