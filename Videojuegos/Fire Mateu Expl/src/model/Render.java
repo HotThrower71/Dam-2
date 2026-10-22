@@ -1,0 +1,27 @@
+package src.model;
+
+import java.awt.image.BufferedImage;
+
+public class Render {
+    private final Fire fire;
+    private final Palette palette;
+    private final BufferedImage image;
+
+    public Render (Fire fire,Palette palette){
+        this.fire=fire;
+        this.palette=palette;
+        this.image= new BufferedImage(fire.getAncho(),fire.getAltura(),BufferedImage.TYPE_INT_ARGB);
+    
+    }
+
+    public BufferedImage getImage(){
+        int[][] temperatures = fire.getTemperature();
+
+        for (int y = 0; y < temperatures.length; y++) {
+            for (int x = 0; x < temperatures.length; x++) {
+                image.setRGB(x, y, palette.color(temperatures[y][x]));
+            }
+        }
+        return image;
+    }
+}
