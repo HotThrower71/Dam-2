@@ -17,8 +17,8 @@ public class Render {
     public BufferedImage getImage(){
         int[][] temperatures = fire.getTemperature();
 
-        for (int y = 0; y < temperatures.length; y++) {
-            for (int x = 0; x < temperatures.length; x++) {
+        for (int y = 0; y < fire.getAltura(); y++) {
+            for (int x = 0; x < fire.getAncho(); x++) {
                 image.setRGB(x, y, palette.color(temperatures[y][x]));
             }
         }

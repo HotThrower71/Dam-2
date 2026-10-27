@@ -44,9 +44,9 @@ public class Fire {
                 
 
                 int actual = temperatures [y][x];
-                int left = temperatures [y-1][x-1];
-                int center = temperatures [y-1][x];
-                int right = temperatures [y][x+1];
+                int left = temperatures [ y + 1][Math.max(x-1,0)];
+                int center = temperatures [y + 1][x];
+                int right = temperatures [y + 1][Math.min (x+1,ancho-1)];
             
                 int t = (actual + left +right + center)/4;
 

@@ -17,7 +17,7 @@ public class Model implements IModel, Runnable {
 
     @Override
     public void start() {
-        Thread thread = new Thread("Model-Fire");// Modelo inciia el hilo
+        Thread thread = new Thread(this,"Model-Fire");// Modelo inciia el hilo
         thread.setDaemon(true);// El hilo se cierra al cerrar el program
         thread.start();// El hilo ejecuta
 

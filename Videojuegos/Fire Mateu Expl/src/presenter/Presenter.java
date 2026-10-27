@@ -9,17 +9,18 @@ public class Presenter implements IPresenter {
     private final IModel model;
 
     private final IView view;
-    private final int frameMS = 33;
 
 
     public Presenter (IModel model,IView view){
         this.model = model;
-        this.view=view;
+        this.view = view;
     }
     
     @Override 
     public void start(){
+        view.setPresenter(this);
         model.start();
+        view.start();
     }
 
     @Override 
