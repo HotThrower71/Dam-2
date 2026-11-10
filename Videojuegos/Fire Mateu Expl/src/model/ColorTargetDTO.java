@@ -1,4 +1,6 @@
 package src.model;
+
+// Un color clave de la paleta: "a esta temperatura, el color es este"
 public class ColorTargetDTO {
     private final int temperature;
     private final int red;

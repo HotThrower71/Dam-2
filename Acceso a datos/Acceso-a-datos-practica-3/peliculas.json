@@ -1,0 +1,201 @@
+{
+  "peliculas" : [ {
+    "id" : 9,
+    "titulo" : "La lista de Schindler",
+    "director" : "Steven Spielberg",
+    "año" : 1993,
+    "genero" : "Drama"
+  }, {
+    "id" : 10,
+    "titulo" : "El club de la lucha",
+    "director" : "David Fincher",
+    "año" : 1999,
+    "genero" : "Drama"
+  }, {
+    "id" : 11,
+    "titulo" : "El viaje de Chihiro",
+    "director" : "Hayao Miyazaki",
+    "año" : 2001,
+    "genero" : "Animación"
+  }, {
+    "id" : 12,
+    "titulo" : "Gladiator",
+    "director" : "Ridley Scott",
+    "año" : 2000,
+    "genero" : "Acción"
+  }, {
+    "id" : 13,
+    "titulo" : "Spirited Away",
+    "director" : "Hayao Miyazaki",
+    "año" : 2001,
+    "genero" : "Animación"
+  }, {
+    "id" : 14,
+    "titulo" : "Cadena perpetua",
+    "director" : "Frank Darabont",
+    "año" : 1994,
+    "genero" : "Drama"
+  }, {
+    "id" : 15,
+    "titulo" : "El resplandor",
+    "director" : "Stanley Kubrick",
+    "año" : 1980,
+    "genero" : "Terror"
+  }, {
+    "id" : 16,
+    "titulo" : "La vida es bella",
+    "director" : "Roberto Benigni",
+    "año" : 1997,
+    "genero" : "Drama"
+  }, {
+    "id" : 17,
+    "titulo" : "Blade Runner 2049",
+    "director" : "Denis Villeneuve",
+    "año" : 2017,
+    "genero" : "Ciencia ficción"
+  }, {
+    "id" : 18,
+    "titulo" : "El silencio de los corderos",
+    "director" : "Jonathan Demme",
+    "año" : 1991,
+    "genero" : "Crimen"
+  }, {
+    "id" : 19,
+    "titulo" : "Coco",
+    "director" : "Lee Unkrich",
+    "año" : 2017,
+    "genero" : "Animación"
+  }, {
+    "id" : 20,
+    "titulo" : "Superman",
+    "director" : "Odonnel",
+    "año" : 1990,
+    "genero" : "Superheroe"
+  }, {
+    "id" : 21,
+    "titulo" : "Pinocho de Guillermo del Toro",
+    "director" : "Guillermo del Toro",
+    "año" : 2022,
+    "genero" : "Animación"
+  }, {
+    "id" : 22,
+    "titulo" : "Whiplash",
+    "director" : "Damien Chazelle",
+    "año" : 2014,
+    "genero" : "Drama"
+  }, {
+    "id" : 23,
+    "titulo" : "WALL-E",
+    "director" : "Andrew Stanton",
+    "año" : 2008,
+    "genero" : "Animación"
+  }, {
+    "id" : 24,
+    "titulo" : "Salvar al soldado Ryan",
+    "director" : "Steven Spielberg",
+    "año" : 1998,
+    "genero" : "Drama"
+  }, {
+    "id" : 25,
+    "titulo" : "Psicosis",
+    "director" : "Alfred Hitchcock",
+    "año" : 1960,
+    "genero" : "Terror"
+  }, {
+    "id" : 26,
+    "titulo" : "Uno de los nuestros",
+    "director" : "Martin Scorsese",
+    "año" : 1990,
+    "genero" : "Crimen"
+  }, {
+    "id" : 27,
+    "titulo" : "Alien, el octavo pasajero",
+    "director" : "Ridley Scott",
+    "año" : 1979,
+    "genero" : "Ciencia ficción"
+  }, {
+    "id" : 28,
+    "titulo" : "El truco final (El prestigio)",
+    "director" : "Christopher Nolan",
+    "año" : 2006,
+    "genero" : "Misterio"
+  }, {
+    "id" : 29,
+    "titulo" : "Delrevés (Inside Out)",
+    "director" : "Pete Docter",
+    "año" : 2015,
+    "genero" : "Animación"
+  }, {
+    "id" : 30,
+    "titulo" : "La la land",
+    "director" : "Damien Chazelle",
+    "año" : 2016,
+    "genero" : "Romance"
+  }, {
+    "id" : 31,
+    "titulo" : "Infiltrados",
+    "director" : "Martin Scorsese",
+    "año" : 2006,
+    "genero" : "Crimen"
+  }, {
+    "id" : 33,
+    "titulo" : "El gran hotel Budapest",
+    "director" : "Wes Anderson",
+    "año" : 2014,
+    "genero" : "Comedia"
+  }, {
+    "id" : 34,
+    "titulo" : "Amélie",
+    "director" : "Jean-Pierre Jeunet",
+    "año" : 2001,
+    "genero" : "Comedia"
+  }, {
+    "id" : 35,
+    "titulo" : "Dune",
+    "director" : "Denis Villeneuve",
+    "año" : 2021,
+    "genero" : "Ciencia ficción"
+  }, {
+    "id" : 36,
+    "titulo" : "Spider-Man: Un nuevo universo",
+    "director" : "Bob Persichetti, Peter Ramsey, Rodney Rothman",
+    "año" : 2018,
+    "genero" : "Animación"
+  }, {
+    "id" : 37,
+    "titulo" : "Vengadores: Endgame",
+    "director" : "Anthony Russo, Joe Russo",
+    "año" : 2019,
+    "genero" : "Acción"
+  }, {
+    "id" : 38,
+    "titulo" : "The Batman",
+    "director" : "Matt Reeves",
+    "año" : 2022,
+    "genero" : "Crimen"
+  }, {
+    "id" : 40,
+    "titulo" : "Watchmen",
+    "director" : "Zack Snyder",
+    "año" : 2009,
+    "genero" : "Acción"
+  }, {
+    "id" : 2,
+    "titulo" : "Batman",
+    "director" : "Nolan",
+    "año" : 2008,
+    "genero" : "Superheroes"
+  }, {
+    "id" : 41,
+    "titulo" : "Man Of Steel",
+    "director" : "Zack Snyder",
+    "año" : 2015,
+    "genero" : "Accion"
+  }, {
+    "id" : 42,
+    "titulo" : "Logan",
+    "director" : "James",
+    "año" : 2019,
+    "genero" : "Fantasia"
+  } ]
+}

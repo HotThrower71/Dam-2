@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Productor-Consumidor: guía</title>
+<style>
+:root {
+  --bg: #f7f6f2; --card: #ffffff; --ink: #1f2430; --muted: #5d6475; --line: #e2e0d8;
+  --accent: #2f6fed; --accent-soft: #e6eefd;
+  --prod: #1f9d6b; --prod-soft: #e1f5ec;
+  --cons: #d9582b; --cons-soft: #fcebe3;
+  --warn: #b7791f; --warn-soft: #fdf3dc;
+  --code-bg: #eef0f4;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14171e; --card: #1c212b; --ink: #e6e8ee; --muted: #9aa2b4; --line: #2c3340;
+    --accent: #6c9bff; --accent-soft: #20304f;
+    --prod: #43c796; --prod-soft: #16352b;
+    --cons: #f08a63; --cons-soft: #3b2219;
+    --warn: #e5b04f; --warn-soft: #3a2f16;
+    --code-bg: #262c38;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 16px 80px; }
+header.hero { padding: 56px 0 24px; }
+header.hero h1 { font-size: clamp(30px, 6vw, 46px); line-height: 1.1; margin: 0 0 12px; letter-spacing: -0.02em; }
+header.hero p { color: var(--muted); font-size: 18px; max-width: 62ch; margin: 0; }
+nav.toc {
+  position: sticky; top: 0; z-index: 5; background: var(--bg);
+  border-bottom: 1px solid var(--line); margin: 0 -16px 8px; padding: 10px 16px;
+  display: flex; gap: 6px; overflow-x: auto; white-space: nowrap;
+}
+nav.toc a {
+  color: var(--muted); text-decoration: none; font-size: 14px; padding: 6px 12px;
+  border-radius: 999px; border: 1px solid transparent;
+}
+nav.toc a:hover { color: var(--ink); border-color: var(--line); }
+section { padding-top: 48px; }
+h2 { font-size: clamp(24px, 4vw, 32px); margin: 0 0 6px; letter-spacing: -0.01em; }
+h2 .n { color: var(--accent); font-weight: 700; margin-right: 8px; }
+h3 { font-size: 19px; margin: 28px 0 8px; }
+p.lead { color: var(--muted); margin: 0 0 20px; max-width: 70ch; }
+code, .mono { font-family: ui-monospace, "Cascadia Code", Consolas, monospace; font-size: 0.9em; }
+code { background: var(--code-bg); padding: 1px 6px; border-radius: 5px; }
+pre {
+  background: var(--code-bg); border-radius: 10px; padding: 14px 16px; overflow-x: auto;
+  font-size: 14px; line-height: 1.55; margin: 12px 0;
+}
+pre code { background: none; padding: 0; }
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 20px 22px; margin: 14px 0;
+}
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.pill {
+  display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+  padding: 2px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent);
+}
+.pill.prod { background: var(--prod-soft); color: var(--prod); }
+.pill.cons { background: var(--cons-soft); color: var(--cons); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.callout {
+  border-left: 4px solid var(--accent); background: var(--accent-soft);
+  padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 16px 0;
+}
+.callout.warn { border-color: var(--warn); background: var(--warn-soft); }
+.callout strong:first-child { display: block; margin-bottom: 2px; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+td:first-child { white-space: nowrap; }
+.tablewrap { overflow-x: auto; }
+svg { max-width: 100%; height: auto; display: block; }
+svg text { font-family: system-ui, sans-serif; fill: var(--ink); }
+svg .box { fill: var(--card); stroke: var(--line); stroke-width: 1.5; }
+svg .muted { fill: var(--muted); }
+svg .arrow { stroke: var(--muted); stroke-width: 2; fill: none; }
+svg .arrowhead { fill: var(--muted); }
+
+/* tree */
+.tree { font-family: ui-monospace, Consolas, monospace; font-size: 14px; line-height: 1.9; }
+.tree .c { color: var(--muted); font-family: system-ui, sans-serif; font-size: 14px; }
+
+/* steps */
+ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 12px 0; }
+ol.steps li {
+  counter-increment: s; position: relative; padding: 4px 0 14px 46px; border-left: 2px solid var(--line);
+  margin-left: 15px;
+}
+ol.steps li::before {
+  content: counter(s); position: absolute; left: -16px; top: 0; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-weight: 700; font-size: 14px; display: grid; place-items: center;
+}
+ol.steps li:last-child { border-left-color: transparent; }
+ol.steps b { font-weight: 650; }
+
+/* flow tabs */
+.tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+.tabs button {
+  font: inherit; font-size: 14px; padding: 7px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+}
+.tabs button[aria-selected="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.tabpanel[hidden] { display: none; }
+
+/* demo */
+.demo { display: grid; gap: 18px; }
+.shelf {
+  display: flex; gap: 6px; flex-wrap: wrap; min-height: 54px; align-items: center;
+  background: var(--code-bg); border-radius: 12px; padding: 10px;
+}
+.unit { width: 34px; height: 34px; border-radius: 8px; background: var(--prod); }
+.slot { width: 34px; height: 34px; border-radius: 8px; border: 2px dashed var(--line); }
+.actors { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+@media (max-width: 560px) { .actors { grid-template-columns: 1fr; } }
+.actor { border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+.actor h4 { margin: 0 0 8px; font-size: 16px; }
+.actor .status { min-height: 26px; font-size: 14px; color: var(--muted); margin-top: 8px; }
+.actor.blocked { border-color: var(--warn); background: var(--warn-soft); }
+.actor.blocked .status { color: var(--warn); font-weight: 600; }
+button.act {
+  font: inherit; font-weight: 600; padding: 9px 16px; border-radius: 10px; border: 0; cursor: pointer; color: #fff;
+}
+button.act.p { background: var(--prod); }
+button.act.c { background: var(--cons); }
+button.act:disabled { opacity: .45; cursor: not-allowed; }
+.log {
+  font-family: ui-monospace, Consolas, monospace; font-size: 13px; background: var(--code-bg);
+  border-radius: 10px; padding: 10px 12px; min-height: 96px; max-height: 150px; overflow: auto;
+}
+.log div { padding: 1px 0; }
+label.cap { font-size: 14px; color: var(--muted); }
+label.cap input {
+  width: 64px; font: inherit; padding: 4px 8px; margin-left: 6px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+}
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+footer { color: var(--muted); font-size: 14px; margin-top: 60px; border-top: 1px solid var(--line); padding-top: 18px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <span class="pill">Servicios y Procesos · Hilos</span>
+  <h1 style="margin-top:14px">Productor – Consumidor,<br>pieza a pieza</h1>
+  <p>Una guía para entender cómo funciona este programa en Java: qué hace cada clase, cómo se hablan entre ellas y qué ocurre dentro cuando pulsas un botón. No hace falta saber de hilos para empezar.</p>
+</header>
+
+<nav class="toc" aria-label="Índice">
+  <a href="#idea">1. La idea</a>
+  <a href="#demo">2. Pruébalo</a>
+  <a href="#mvp">3. Arquitectura</a>
+  <a href="#ficheros">4. Ficheros</a>
+  <a href="#flujo">5. Flujos</a>
+  <a href="#clases">6. Clases y métodos</a>
+  <a href="#conceptos">7. Conceptos clave</a>
+  <a href="#practica">8. Experimentos</a>
+</nav>
+
+<!-- 1 -->
+<section id="idea">
+  <h2><span class="n">1</span>La idea</h2>
+  <p class="lead">Dos tipos de trabajador comparten una estantería. Unos la llenan, otros la vacían, y todos trabajan a la vez.</p>
+
+  <div class="grid">
+    <div class="card"><span class="pill prod">Productor</span>
+      <p>Un panadero. Cada cierto tiempo deja pan en la estantería. Si la estantería tiene un límite y está llena, <b>espera</b> a que haya hueco.</p></div>
+    <div class="card"><span class="pill cons">Consumidor</span>
+      <p>Un cliente. Cada cierto tiempo coge pan. Si la estantería está vacía, <b>espera</b> a que alguien traiga más.</p></div>
+    <div class="card"><span class="pill">Recurso</span>
+      <p>La estantería: un simple número (el <b>stock</b>) que todos tocan. Es la única cosa compartida, y por eso hay que protegerla.</p></div>
+  </div>
+
+  <div class="callout warn">
+    <strong>¿Dónde está la dificultad?</strong>
+    Cada productor y cada consumidor es un <b>hilo</b>: corre por su cuenta, a la vez que los demás. Si dos hilos modifican el mismo número sin coordinarse, el resultado sale mal. Y si uno tiene que esperar, debe hacerlo sin gastar CPU. Todo el programa gira alrededor de resolver eso en la clase <code>Resource</code>.
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="demo">
+  <h2><span class="n">2</span>Pruébalo tú</h2>
+  <p class="lead">Una versión reducida de la estantería. Pulsa los botones y mira cuándo un hilo se queda esperando y cuándo lo despiertan.</p>
+
+  <div class="card demo">
+    <div>
+      <label class="cap">Stock máximo (0 = sin límite)
+        <input id="capIn" type="number" min="0" value="3">
+      </label>
+      <div style="margin:10px 0 6px;font-weight:600">Stock: <span id="stockNum">0</span></div>
+      <div class="shelf" id="shelf" aria-live="polite"></div>
+    </div>
+    <div class="actors">
+      <div class="actor" id="pBox">
+        <h4><span class="pill prod">Productor</span></h4>
+        <button class="act p" id="pBtn">Producir 1</button>
+        <div class="status" id="pStatus"></div>
+      </div>
+      <div class="actor" id="cBox">
+        <h4><span class="pill cons">Consumidor</span></h4>
+        <button class="act c" id="cBtn">Consumir 1</button>
+        <div class="status" id="cStatus"></div>
+      </div>
+    </div>
+    <div class="log" id="log" aria-live="polite"></div>
+    <div><button class="act" id="resetDemo" style="background:var(--muted)">Reiniciar demo</button></div>
+  </div>
+  <p class="lead" style="margin-top:12px">Prueba esto: con la estantería vacía pulsa <i>Consumir</i> (el consumidor se bloquea, es el <code>wait()</code>). Luego pulsa <i>Producir</i>: el productor llama a <code>notifyAll()</code> y el consumidor se despierta.</p>
+</section>
+
+<!-- 3 -->
+<section id="mvp">
+  <h2><span class="n">3</span>Arquitectura: Modelo – Vista – Presenter</h2>
+  <p class="lead">El programa se divide en tres capas. La regla importante: <b>la Vista y el Modelo nunca se conocen entre sí</b>. Todo pasa por el Presenter.</p>
+
+  <div class="card">
+  <svg viewBox="0 0 880 250" role="img" aria-label="La Vista y el Modelo se comunican solo a través del Presenter">
+    <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+    <rect class="box" x="10" y="50" width="230" height="140" rx="14"/>
+    <text x="125" y="85" text-anchor="middle" font-size="20" font-weight="700">Vista</text>
+    <text x="125" y="110" text-anchor="middle" font-size="14" class="muted">lo que ve el usuario</text>
+    <text x="125" y="140" text-anchor="middle" font-size="13">View · ControlPanel</text>
+    <text x="125" y="160" text-anchor="middle" font-size="13">DataPanel · DetailPanel</text>
+
+    <rect class="box" x="325" y="50" width="230" height="140" rx="14" style="stroke:var(--accent);stroke-width:2.5"/>
+    <text x="440" y="85" text-anchor="middle" font-size="20" font-weight="700">Presenter</text>
+    <text x="440" y="110" text-anchor="middle" font-size="14" class="muted">el intermediario</text>
+    <text x="440" y="145" text-anchor="middle" font-size="13">Presenter</text>
+
+    <rect class="box" x="640" y="50" width="230" height="140" rx="14"/>
+    <text x="755" y="85" text-anchor="middle" font-size="20" font-weight="700">Modelo</text>
+    <text x="755" y="110" text-anchor="middle" font-size="14" class="muted">la lógica y los hilos</text>
+    <text x="755" y="140" text-anchor="middle" font-size="13">Model · Resource</text>
+    <text x="755" y="160" text-anchor="middle" font-size="13">Producer · Consumer</text>
+
+    <path class="arrow" d="M242 100 H322" marker-end="url(#ah)"/>
+    <text x="282" y="90" text-anchor="middle" font-size="12" class="muted">onXxx()</text>
+    <path class="arrow" d="M322 140 H242" marker-end="url(#ah)"/>
+    <text x="282" y="160" text-anchor="middle" font-size="12" class="muted">getXxx()</text>
+    <path class="arrow" d="M557 120 H637" marker-end="url(#ah)"/>
+    <text x="597" y="110" text-anchor="middle" font-size="12" class="muted">órdenes</text>
+    <path class="arrow" d="M637 150 H557" marker-end="url(#ah)"/>
+    <text x="597" y="170" text-anchor="middle" font-size="12" class="muted">datos</text>
+    <text x="440" y="225" text-anchor="middle" font-size="13" class="muted">Cada capa se usa a través de una interfaz: IView, IPresenter, IModel</text>
+  </svg>
+  </div>
+
+  <div class="grid">
+    <div class="card"><b>Vista</b><p>Dibuja los paneles y recoge los clics. No sabe nada de hilos ni de stock: solo le pide cosas al Presenter.</p></div>
+    <div class="card"><b>Presenter</b><p>Recibe lo que hace el usuario y se lo pasa al Modelo. Cuando la Vista quiere datos para pintar, se los pide al Modelo y se los devuelve.</p></div>
+    <div class="card"><b>Modelo</b><p>Aquí viven los hilos y el stock. No sabe que existe una ventana. Podrías cambiar Swing por otra interfaz y el Modelo no se tocaría.</p></div>
+  </div>
+
+  <div class="callout">
+    <strong>¿Para qué sirven las interfaces?</strong>
+    <code>IModel</code>, <code>IView</code> e <code>IPresenter</code> son contratos: lista de métodos que una clase promete tener. El Presenter solo conoce <code>IModel</code> e <code>IView</code>, así que puede funcionar con cualquier implementación que cumpla el contrato.
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="ficheros">
+  <h2><span class="n">4</span>Qué hay en cada fichero</h2>
+  <div class="card tree">
+    <div>📁 Productor Consumidor</div>
+    <div>├─ <b>Main.java</b> <span class="c">— punto de entrada: construye las 3 piezas y arranca</span></div>
+    <div>├─ 📁 model</div>
+    <div>│&nbsp;&nbsp;├─ IModel.java <span class="c">— contrato del modelo</span></div>
+    <div>│&nbsp;&nbsp;├─ Model.java <span class="c">— orquesta hilos y ajustes</span></div>
+    <div>│&nbsp;&nbsp;├─ Resource.java <span class="c">— la estantería compartida (stock)</span></div>
+    <div>│&nbsp;&nbsp;├─ Producer.java <span class="c">— un hilo que produce</span></div>
+    <div>│&nbsp;&nbsp;└─ Consumer.java <span class="c">— un hilo que consume</span></div>
+    <div>├─ 📁 presenter</div>
+    <div>│&nbsp;&nbsp;├─ IPresenter.java <span class="c">— contrato del presenter</span></div>
+    <div>│&nbsp;&nbsp;└─ Presenter.java <span class="c">— puente Vista ↔ Modelo</span></div>
+    <div>└─ 📁 view</div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;├─ IView.java <span class="c">— contrato de la vista</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;├─ View.java <span class="c">— ventana + refresco cada 100 ms</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;├─ ControlPanel.java <span class="c">— botones (añadir, iniciar, pausa, reiniciar)</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;├─ DataPanel.java <span class="c">— campos de texto con los ajustes</span></div>
+    <div>&nbsp;&nbsp;&nbsp;&nbsp;└─ DetailPanel.java <span class="c">— panel grande con el resumen y los hilos</span></div>
+  </div>
+
+  <h3>La ventana</h3>
+  <div class="card">
+    <svg viewBox="0 0 880 330" role="img" aria-label="Distribución de la ventana: Control Panel y Data Panel a la izquierda, panel Datos a la derecha">
+      <rect class="box" x="10" y="10" width="860" height="310" rx="12"/>
+      <rect x="25" y="25" width="270" height="135" rx="10" style="fill:var(--accent-soft)"/>
+      <text x="160" y="62" text-anchor="middle" font-size="17" font-weight="700">ControlPanel</text>
+      <text x="160" y="88" text-anchor="middle" font-size="13" class="muted">Añadir productor / consumidor</text>
+      <text x="160" y="108" text-anchor="middle" font-size="13" class="muted">Iniciar · Pausa · Reiniciar</text>
+      <rect x="25" y="175" width="270" height="130" rx="10" style="fill:var(--warn-soft)"/>
+      <text x="160" y="212" text-anchor="middle" font-size="17" font-weight="700">DataPanel</text>
+      <text x="160" y="238" text-anchor="middle" font-size="13" class="muted">Campos de texto: descansos,</text>
+      <text x="160" y="258" text-anchor="middle" font-size="13" class="muted">unidades, stock máximo + Aplicar</text>
+      <rect x="310" y="25" width="545" height="280" rx="10" style="fill:var(--prod-soft)"/>
+      <text x="582" y="62" text-anchor="middle" font-size="17" font-weight="700">DetailPanel («Datos»)</text>
+      <text x="582" y="95" text-anchor="middle" font-size="13" class="muted">Estado · Stock actual · Productores · Consumidores</text>
+      <text x="582" y="115" text-anchor="middle" font-size="13" class="muted">Total producido · Total consumido</text>
+      <text x="582" y="150" text-anchor="middle" font-size="13" class="muted">Productor 1 → producidos: 12</text>
+      <text x="582" y="170" text-anchor="middle" font-size="13" class="muted">Consumidor 1 → consumidos: 9</text>
+      <text x="582" y="190" text-anchor="middle" font-size="13" class="muted">…</text>
+    </svg>
+    <p style="margin-bottom:0;color:var(--muted)">La columna izquierda ocupa 1/3 del ancho y el panel de datos 2/3. Se consigue con un <code>GridBagLayout</code> y pesos <code>weightx</code> 1, 1 y 2.</p>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="flujo">
+  <h2><span class="n">5</span>Qué pasa cuando…</h2>
+  <p class="lead">Elige un caso y sigue el camino paso a paso por las capas.</p>
+
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" aria-selected="true" data-t="t1">Arranca el programa</button>
+    <button role="tab" aria-selected="false" data-t="t2">Añado un productor</button>
+    <button role="tab" aria-selected="false" data-t="t3">Pulso Iniciar</button>
+    <button role="tab" aria-selected="false" data-t="t4">Cambio un ajuste</button>
+    <button role="tab" aria-selected="false" data-t="t5">Se refresca la pantalla</button>
+    <button role="tab" aria-selected="false" data-t="t6">Pulso Reiniciar</button>
+  </div>
+
+  <div class="card">
+  <div class="tabpanel" id="t1">
+    <ol class="steps">
+      <li><b>Main.main</b> usa <code>SwingUtilities.invokeLater</code>: todo lo gráfico debe crearse en el hilo de Swing, no en el principal.</li>
+      <li>Se crean <code>new Model()</code>, <code>new View()</code> y <code>new Presenter(model, view)</code>. El Presenter recibe a los otros dos.</li>
+      <li><code>presenter.start()</code> llama a <code>view.setPresenter(this)</code>: la Vista por fin sabe con quién hablar y se lo pasa a <code>ControlPanel</code> y <code>DataPanel</code>.</li>
+      <li><code>DataPanel.setPresenter</code> llama a <code>apply()</code>: los valores por defecto de los campos (200, 200, 1, 1, 0, 0) se mandan al Modelo.</li>
+      <li><code>view.start()</code> hace <code>pack()</code>, centra y muestra la ventana, y arranca un <code>Timer</code> que refresca cada 100 ms.</li>
+    </ol>
+  </div>
+
+  <div class="tabpanel" id="t2" hidden>
+    <ol class="steps">
+      <li>Clic en <b>Añadir productor</b>. El listener de <code>ControlPanel</code> ejecuta <code>presenter.onAddProducer()</code>.</li>
+      <li><code>Presenter.onAddProducer()</code> reenvía a <code>model.addProducer()</code>.</li>
+      <li><code>Model.addProducer()</code> crea un <code>Producer</code> con el recurso compartido, nombre («Productor N»), el descanso y las unidades actuales, y <code>paused = !running</code> (nace parado si la simulación no está en marcha).</li>
+      <li>Se guarda en la lista <code>producers</code> y <code>launch()</code> crea un <code>Thread</code> daemon con él y lo arranca.</li>
+      <li>El hilo entra en su <code>run()</code>. Si está en pausa, duerme 50 ms y vuelve a mirar. No produce nada hasta que se pulse Iniciar.</li>
+    </ol>
+    <p style="color:var(--muted)">Añadir un consumidor es idéntico, con <code>Consumer</code>.</p>
+  </div>
+
+  <div class="tabpanel" id="t3" hidden>
+    <ol class="steps">
+      <li>Clic en <b>Iniciar</b> → <code>presenter.onStart()</code> → <code>model.start()</code>.</li>
+      <li><code>start()</code> llama a <code>setPaused(false)</code>: pone <code>running = true</code> y recorre todos los productores y consumidores avisándoles con <code>setPaused(false)</code>.</li>
+      <li>Como <code>paused</code> es <code>volatile</code>, cada hilo ve el cambio en su siguiente vuelta del bucle y empieza a trabajar.</li>
+      <li>Cada vuelta: mueve sus <i>unidades</i> en el <code>Resource</code> (<code>generateNewProduct</code> / <code>consumeProduct</code>), suma al contador y duerme <code>delayMs</code>.</li>
+    </ol>
+    <p style="color:var(--muted)">Pausa hace lo mismo con <code>paused = true</code>.</p>
+  </div>
+
+  <div class="tabpanel" id="t4" hidden>
+    <ol class="steps">
+      <li>Escribes un valor en un campo de <b>DataPanel</b> y pulsas <i>Aplicar</i> (o Enter).</li>
+      <li><code>apply()</code> lee y valida los seis campos con <code>read()</code>: tienen que ser enteros y cumplir el mínimo. Además comprueba que <i>stock mínimo + unidades por consumición</i> no supere el máximo (si lo hiciera, un consumidor esperaría para siempre). Si algo falla, se lanza una excepción, se muestra el mensaje y <b>no se aplica nada</b>.</li>
+      <li>Si todo es válido llama al Presenter: <code>onProducerDelay</code>, <code>onConsumerDelay</code>, <code>onProducerUnits</code>, <code>onConsumerUnits</code>, <code>onMaxStock</code> y <code>onMinStock</code>.</li>
+      <li>El Modelo guarda cada valor (para los hilos que se creen luego) y se lo pasa a todos los hilos que ya existen. Los cambios se notan al momento.</li>
+      <li>El stock máximo va a <code>Resource.setCapacity()</code>, que hace <code>notifyAll()</code> por si algún productor bloqueado ya puede seguir.</li>
+    </ol>
+  </div>
+
+  <div class="tabpanel" id="t5" hidden>
+    <ol class="steps">
+      <li>Cada 100 ms el <code>Timer</code> de Swing ejecuta <code>View.refresh()</code> (siempre en el hilo gráfico).</li>
+      <li><code>refresh()</code> le pide al Presenter: estado, stock, nº de productores y consumidores, totales y la lista de hilos.</li>
+      <li>El Presenter lo consulta al Modelo y lo devuelve.</li>
+      <li><code>DetailPanel.update(...)</code> monta un texto con el resumen y una línea por hilo y lo pone en el <code>JTextArea</code>.</li>
+    </ol>
+    <div class="callout"><strong>Fíjate</strong>La Vista no recibe avisos del Modelo: <b>pregunta</b> cada 100 ms (polling). Es la forma más simple de que los hilos de la simulación no toquen nunca los componentes gráficos, que no son seguros entre hilos.</div>
+  </div>
+
+  <div class="tabpanel" id="t6" hidden>
+    <ol class="steps">
+      <li>Clic en <b>Reiniciar</b> → <code>presenter.onReset()</code> → <code>model.reset()</code>.</li>
+      <li>Se llama a <code>interrupt()</code> sobre todos los hilos. Eso hace saltar <code>InterruptedException</code> en su <code>sleep</code> o en su <code>wait</code>, la capturan y el <code>run()</code> termina.</li>
+      <li>Se vacían las tres listas (hilos, productores, consumidores).</li>
+      <li>Se crea un <code>Resource</code> nuevo con stock 0, conservando el stock máximo configurado, y <code>running = false</code>.</li>
+    </ol>
+  </div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section id="clases">
+  <h2><span class="n">6</span>Clases y métodos</h2>
+  <p class="lead">Todas las clases, con sus atributos y lo que hace cada método.</p>
+
+  <h3><code>Main</code></h3>
+  <div class="card"><p style="margin:0">Una sola función: <code>main</code>. Crea Modelo, Vista y Presenter dentro de <code>SwingUtilities.invokeLater</code> y llama a <code>presenter.start()</code>.</p></div>
+
+  <h3><span class="pill">Modelo</span> <code>Resource</code></h3>
+  <div class="card">
+    <p>La estantería compartida. Es la clase más importante a nivel de hilos.</p>
+    <div class="tablewrap"><table>
+      <tr><th>Miembro</th><th>Qué hace</th></tr>
+      <tr><td><code>Queue&lt;Integer&gt; queue</code></td><td>La cola de productos. Cada producto es un número de serie. Los productores añaden al final (<code>add</code>) y los consumidores sacan del principio (<code>poll</code>), así que sale primero lo que entró primero (FIFO). El stock es su tamaño.</td></tr>
+      <tr><td><code>int capacity</code></td><td>Máximo de productos en la cola. 0 significa sin límite.</td></tr>
+      <tr><td><code>int minimum</code></td><td>Productos que tienen que quedar siempre en la cola. Un consumidor no puede dejarla por debajo.</td></tr>
+      <tr><td><code>consumeProduct(units)</code></td><td><code>synchronized</code>. Si al sacar el lote quedarían menos del mínimo, espera con <code>wait()</code>. Luego saca de la cola, avisa con <code>notifyAll()</code> y devuelve cuántos consumió.</td></tr>
+      <tr><td><code>generateNewProduct(units)</code></td><td><code>synchronized</code>. Si al meter el lote se pasaría del máximo, espera con <code>wait()</code>. Luego añade a la cola, avisa con <code>notifyAll()</code> y devuelve cuántos produjo.</td></tr>
+      <tr><td><code>setCapacity(c) / setMinimum(m)</code></td><td>Cambian los límites y hacen <code>notifyAll()</code>, para que los hilos dormidos vuelvan a comprobar su condición.</td></tr>
+      <tr><td><code>limitProduce / limitConsume</code></td><td>Privados. Recortan el lote para que nunca sea mayor que el hueco posible (si no, el hilo esperaría para siempre).</td></tr>
+      <tr><td><code>getStock()</code></td><td>Devuelve el tamaño de la cola, también <code>synchronized</code>.</td></tr>
+    </table></div>
+<pre><code>public synchronized int consumeProduct(int units) throws InterruptedException {
+    while (queue.size() - limitConsume(units) &lt; minimum) {  // ¿quedaría por debajo del mínimo?
+        wait();                          // sí: me duermo y suelto el candado
+    }
+    int n = limitConsume(units);
+    for (int i = 0; i &lt; n; i++) queue.poll();
+    notifyAll();                         // despierto a los que esperaban hueco
+    return n;
+}</code></pre>
+    <div class="callout"><strong>Cómo se evitan los hilos dormidos para siempre</strong>Cada vez que cambia algo (se añade producto, se saca producto o se modifica un límite) se llama a <code>notifyAll()</code>. Así todos los hilos dormidos despiertan y comprueban otra vez su condición: los que ya pueden seguir siguen, y los demás vuelven a dormirse. Se usa <code>notifyAll()</code> y no <code>notify()</code> porque esperan a la vez productores y consumidores, y <code>notify()</code> podría despertar a uno que no puede avanzar y dejar sin despertar al que sí.</div>
+    <div class="callout warn"><strong>¿Por qué <code>while</code> y no <code>if</code>?</strong>Al despertar, otro hilo pudo llevarse el producto antes que yo. Con <code>while</code> vuelvo a comprobar la condición y, si ya no se cumple, me duermo otra vez.</div>
+  </div>
+
+  <h3><span class="pill prod">Modelo</span> <code>Producer</code></h3>
+  <div class="card">
+    <p>Un productor. Implementa <code>Runnable</code>: su método <code>run()</code> es lo que ejecuta el hilo.</p>
+    <div class="tablewrap"><table>
+      <tr><th>Miembro</th><th>Qué hace</th></tr>
+      <tr><td><code>resource, name</code></td><td>La estantería compartida y su nombre. No cambian.</td></tr>
+      <tr><td><code>delayMs, units, paused, produced</code></td><td><code>volatile</code>: cambian mientras el hilo corre (los ajusta la interfaz) y el hilo debe ver el valor nuevo.</td></tr>
+      <tr><td><code>run()</code></td><td>Mientras no lo interrumpan: si está pausado, duerme 50 ms y sigue; si no, produce <code>units</code>, suma al contador y duerme <code>delayMs</code>. Al interrumpirlo, termina.</td></tr>
+      <tr><td><code>setDelayMs / setUnits / setPaused</code></td><td>Cambian los ajustes sobre la marcha.</td></tr>
+      <tr><td><code>getProduced() / getName()</code></td><td>Para que el panel pueda mostrar los datos.</td></tr>
+    </table></div>
+  </div>
+
+  <h3><span class="pill cons">Modelo</span> <code>Consumer</code></h3>
+  <div class="card"><p style="margin:0">Es el espejo de <code>Producer</code>: mismos atributos y métodos, pero llama a <code>consumeProduct</code> y cuenta en <code>consumed</code> (<code>getConsumed()</code>).</p></div>
+
+  <h3><span class="pill">Modelo</span> <code>Model</code> <span class="mono" style="color:var(--muted)">implements IModel</span></h3>
+  <div class="card">
+    <p>El director de orquesta: guarda los hilos y los ajustes.</p>
+    <div class="tablewrap"><table>
+      <tr><th>Miembro</th><th>Qué hace</th></tr>
+      <tr><td><code>resource</code></td><td>El <code>Resource</code> actual. Se sustituye al reiniciar.</td></tr>
+      <tr><td><code>producers, consumers, threads</code></td><td>Listas <code>CopyOnWriteArrayList</code>: se pueden recorrer mientras otro hilo añade elementos, sin errores.</td></tr>
+      <tr><td><code>running</code></td><td><code>volatile boolean</code>: ¿simulación en marcha?</td></tr>
+      <tr><td><code>producerDelayMs, consumerDelayMs, producerUnits, consumerUnits, maxStock, minStock</code></td><td>Los ajustes actuales, que se aplican a los hilos nuevos.</td></tr>
+      <tr><td><code>addProducer() / addConsumer()</code></td><td>Crea el objeto con los ajustes actuales, lo guarda en su lista y lo lanza.</td></tr>
+      <tr><td><code>launch(runnable, name)</code></td><td>Privado. Crea un <code>Thread</code>, lo marca daemon, lo guarda y hace <code>start()</code>.</td></tr>
+      <tr><td><code>setProducerDelay / setConsumerDelay</code></td><td>Guarda el descanso y lo manda a todos los hilos de ese tipo.</td></tr>
+      <tr><td><code>setProducerUnits / setConsumerUnits</code></td><td>Igual, con las unidades por vuelta.</td></tr>
+      <tr><td><code>setMaxStock(n)</code></td><td>Guarda el máximo y llama a <code>resource.setCapacity(n)</code>.</td></tr>
+      <tr><td><code>setMinStock(n)</code></td><td>Guarda el mínimo y llama a <code>resource.setMinimum(n)</code>.</td></tr>
+      <tr><td><code>start() / pause()</code></td><td>Llaman a <code>setPaused(false / true)</code>.</td></tr>
+      <tr><td><code>setPaused(p)</code></td><td>Privado. Actualiza <code>running</code> y la pausa de todos los hilos.</td></tr>
+      <tr><td><code>reset()</code></td><td>Interrumpe los hilos, vacía las listas, crea un <code>Resource</code> nuevo y deja <code>running = false</code>.</td></tr>
+      <tr><td><code>isRunning, getStock, getProducerCount, getConsumerCount</code></td><td>Consultas simples.</td></tr>
+      <tr><td><code>getTotalProduced / getTotalConsumed</code></td><td>Suman los contadores de todos los hilos.</td></tr>
+      <tr><td><code>getThreadsInfo()</code></td><td>Lista de textos, una por hilo: «Productor 1  →  producidos: 12».</td></tr>
+    </table></div>
+  </div>
+
+  <h3><span class="pill warn">Presenter</span> <code>Presenter</code> <span class="mono" style="color:var(--muted)">implements IPresenter</span></h3>
+  <div class="card">
+    <p>Guarda una referencia al <code>IModel</code> y otra al <code>IView</code>. Casi todos sus métodos son una línea que delega.</p>
+    <div class="tablewrap"><table>
+      <tr><th>Método</th><th>Qué hace</th></tr>
+      <tr><td><code>start()</code></td><td>Le da el Presenter a la Vista y la arranca.</td></tr>
+      <tr><td><code>onAddProducer / onAddConsumer</code></td><td>→ <code>model.addProducer / addConsumer</code></td></tr>
+      <tr><td><code>onStart / onPause / onReset</code></td><td>→ <code>model.start / pause / reset</code></td></tr>
+      <tr><td><code>onProducerDelay, onConsumerDelay, onProducerUnits, onConsumerUnits, onMaxStock, onMinStock</code></td><td>→ el setter equivalente del Modelo.</td></tr>
+      <tr><td><code>isRunning, getStock, getProducerCount, getConsumerCount, getTotalProduced, getTotalConsumed, getThreadsInfo</code></td><td>Piden el dato al Modelo y lo devuelven.</td></tr>
+    </table></div>
+  </div>
+
+  <h3><span class="pill">Vista</span> <code>View</code></h3>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Miembro</th><th>Qué hace</th></tr>
+      <tr><td>Constructor</td><td>Crea los tres paneles, fija sus tamaños y los coloca en el <code>JFrame</code> con <code>GridBagLayout</code>.</td></tr>
+      <tr><td><code>setPresenter(p)</code></td><td>Guarda el Presenter y se lo da a <code>ControlPanel</code> y <code>DataPanel</code>.</td></tr>
+      <tr><td><code>start()</code></td><td><code>pack()</code>, centra, muestra la ventana y arranca el <code>Timer</code> (<code>REFRESH_MS = 100</code>).</td></tr>
+      <tr><td><code>refresh()</code></td><td>Privado. Pide los datos al Presenter y se los da a <code>DetailPanel.update(...)</code>.</td></tr>
+    </table></div>
+  </div>
+
+  <h3><span class="pill">Vista</span> <code>ControlPanel</code></h3>
+  <div class="card">
+    <p>Cinco botones y sus listeners (<code>addActionListener</code> con lambdas). Cada clic llama al método <code>onXxx</code> del Presenter. No hace nada más.</p>
+  </div>
+
+  <h3><span class="pill">Vista</span> <code>DataPanel</code></h3>
+  <div class="card">
+    <div class="tablewrap"><table>
+      <tr><th>Miembro</th><th>Qué hace</th></tr>
+      <tr><td>6 × <code>JTextField</code></td><td>Descanso de productores y de consumidores (ms), unidades por producción y por consumición, stock máximo y stock mínimo.</td></tr>
+      <tr><td><code>addRow(...)</code></td><td>Privado. Coloca una etiqueta y su campo en una fila de la cuadrícula.</td></tr>
+      <tr><td><code>setPresenter(p)</code></td><td>Guarda el Presenter y llama a <code>apply()</code> para mandar los valores iniciales.</td></tr>
+      <tr><td><code>apply()</code></td><td>Lee y valida todos los campos; si es válido, avisa al Presenter y muestra «Ajustes aplicados». Si no, muestra el error.</td></tr>
+      <tr><td><code>read(campo, mínimo, nombre)</code></td><td>Convierte el texto a entero con <code>Integer.parseInt</code> y comprueba el mínimo. Si falla, lanza <code>IllegalArgumentException</code> con un mensaje legible.</td></tr>
+    </table></div>
+  </div>
+
+  <h3><span class="pill">Vista</span> <code>DetailPanel</code></h3>
+  <div class="card">
+    <p style="margin:0">Un <code>JTextArea</code> no editable dentro de un <code>JScrollPane</code>. Su método <code>update(...)</code> construye con un <code>StringBuilder</code> el resumen (estado, stock, cuántos hilos, totales) seguido de una línea por hilo, y lo pone como texto.</p>
+  </div>
+</section>
+
+<!-- 7 -->
+<section id="conceptos">
+  <h2><span class="n">7</span>Conceptos clave</h2>
+  <p class="lead">Las ideas de hilos que usa el programa, explicadas sin jerga.</p>
+  <div class="grid">
+    <div class="card"><b>Hilo (<code>Thread</code>)</b><p>Una línea de ejecución independiente. Cada productor y consumidor tiene la suya, y corren a la vez.</p></div>
+    <div class="card"><b><code>Runnable</code></b><p>Interfaz con un método, <code>run()</code>, que dice qué hace el hilo. Se le pasa a <code>new Thread(runnable)</code>.</p></div>
+    <div class="card"><b><code>synchronized</code></b><p>Un candado: en un mismo <code>Resource</code>, solo un hilo a la vez puede estar dentro de un método sincronizado. Evita que dos modifiquen el stock a la vez.</p></div>
+    <div class="card"><b><code>wait()</code></b><p>«No puedo seguir, me duermo». Suelta el candado para que otros trabajen y no gasta CPU mientras espera.</p></div>
+    <div class="card"><b><code>notifyAll()</code></b><p>«He cambiado algo, despertad y comprobad». Despierta a todos los hilos que hacían <code>wait()</code> sobre el mismo objeto.</p></div>
+    <div class="card"><b><code>volatile</code></b><p>Garantiza que cuando un hilo cambia la variable, los demás ven el valor nuevo al instante. Lo usamos en los ajustes y en la pausa.</p></div>
+    <div class="card"><b><code>Thread.sleep(ms)</code></b><p>Pausa el hilo ese tiempo. Es el «descanso» entre producciones o consumiciones.</p></div>
+    <div class="card"><b><code>interrupt()</code></b><p>Pide a un hilo que pare. Si estaba en <code>sleep</code> o <code>wait</code>, saltan <code>InterruptedException</code> y el hilo termina limpio.</p></div>
+    <div class="card"><b>Hilo daemon</b><p>Un hilo «de segundo plano»: al cerrar la ventana, el programa termina aunque ellos sigan.</p></div>
+    <div class="card"><b>Swing <code>Timer</code></b><p>Ejecuta código cada cierto tiempo <i>en el hilo gráfico</i>. Por eso es seguro tocar los paneles desde ahí.</p></div>
+    <div class="card"><b><code>CopyOnWriteArrayList</code></b><p>Lista segura entre hilos: puedes recorrerla mientras otro hilo añade o quita elementos sin que explote.</p></div>
+    <div class="card"><b>Lambda</b><p>La forma corta <code>e -&gt; presenter.onStart()</code> de escribir el código que se ejecuta al hacer clic.</p></div>
+  </div>
+
+  <h3>Ciclo de vida de un hilo productor</h3>
+  <div class="card">
+    <svg viewBox="0 0 880 210" role="img" aria-label="Ciclo de un productor: comprueba pausa, produce, espera si está lleno, duerme, vuelve a empezar">
+      <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path class="arrowhead" d="M0 0L10 5L0 10z"/></marker></defs>
+      <rect class="box" x="10" y="60" width="150" height="60" rx="10"/>
+      <text x="85" y="86" text-anchor="middle" font-size="14" font-weight="600">¿Pausado?</text>
+      <text x="85" y="106" text-anchor="middle" font-size="12" class="muted">sleep(50) y repite</text>
+      <rect class="box" x="210" y="60" width="170" height="60" rx="10" style="stroke:var(--prod);stroke-width:2"/>
+      <text x="295" y="86" text-anchor="middle" font-size="14" font-weight="600">generateNewProduct</text>
+      <text x="295" y="106" text-anchor="middle" font-size="12" class="muted">suma al stock</text>
+      <rect class="box" x="430" y="60" width="150" height="60" rx="10"/>
+      <text x="505" y="86" text-anchor="middle" font-size="14" font-weight="600">produced += n</text>
+      <text x="505" y="106" text-anchor="middle" font-size="12" class="muted">cuenta lo producido</text>
+      <rect class="box" x="630" y="60" width="150" height="60" rx="10"/>
+      <text x="705" y="86" text-anchor="middle" font-size="14" font-weight="600">sleep(delayMs)</text>
+      <text x="705" y="106" text-anchor="middle" font-size="12" class="muted">el descanso</text>
+      <path class="arrow" d="M162 90 H208" marker-end="url(#ah2)"/>
+      <path class="arrow" d="M382 90 H428" marker-end="url(#ah2)"/>
+      <path class="arrow" d="M582 90 H628" marker-end="url(#ah2)"/>
+      <path class="arrow" d="M705 122 V170 H85 V122" marker-end="url(#ah2)"/>
+      <text x="400" y="190" text-anchor="middle" font-size="12" class="muted">vuelta al principio hasta que lo interrumpan</text>
+      <path class="arrow" d="M295 58 V25" />
+      <text x="295" y="16" text-anchor="middle" font-size="12" style="fill:var(--warn)">si está lleno: wait() hasta que haya hueco</text>
+    </svg>
+    <p style="margin-bottom:0;color:var(--muted)">El consumidor es igual, pero la espera ocurre cuando la estantería está vacía.</p>
+  </div>
+</section>
+
+<!-- 8 -->
+<section id="practica">
+  <h2><span class="n">8</span>Experimentos para entenderlo</h2>
+  <p class="lead">Ejecuta el programa y prueba estos casos. Observa el panel «Datos».</p>
+  <div class="grid">
+    <div class="card"><b>1. Producen más de lo que se consume</b>
+      <p>Descanso de productores 100, de consumidores 500. El stock sube sin parar.</p></div>
+    <div class="card"><b>2. Consumen más de lo que se produce</b>
+      <p>Al revés. El stock se queda en 0 y los consumidores pasan casi todo el tiempo en <code>wait()</code>.</p></div>
+    <div class="card"><b>3. Ponle límite</b>
+      <p>Stock máximo 5 con productores rápidos. El stock se queda en 5 y los productores esperan. Cambia el límite a 0 y verás cómo se liberan al instante.</p></div>
+    <div class="card"><b>4. Lotes grandes</b>
+      <p>Unidades por consumición 3 con un solo productor de 1 unidad: el consumidor tiene que esperar a juntar 3.</p></div>
+    <div class="card"><b>5. Muchos hilos</b>
+      <p>Añade 5 productores y 1 consumidor. Mira cómo se reparten el trabajo en las líneas de cada hilo.</p></div>
+    <div class="card"><b>6. Stock mínimo</b>
+      <p>Pon stock mínimo 3. Los consumidores no sacarán nada hasta que haya más de 3 productos, y siempre dejarán 3 en la cola.</p></div>
+    <div class="card"><b>7. Valor inválido</b>
+      <p>Escribe «abc» o «-3» en un campo y pulsa Aplicar. Verás el mensaje de error y que nada cambia.</p></div>
+  </div>
+
+  <h3>Preguntas para comprobar que lo has entendido</h3>
+  <div class="card">
+    <ol>
+      <li>¿Por qué la Vista no llama directamente a <code>Model</code>?</li>
+      <li>¿Qué pasaría si quitáramos <code>synchronized</code> de <code>Resource</code>?</li>
+      <li>¿Qué diferencia hay entre <code>wait()</code> y <code>Thread.sleep()</code>?</li>
+      <li>¿Por qué la comprobación está en un <code>while</code> y no en un <code>if</code>?</li>
+      <li>¿Para qué sirve <code>volatile</code> en <code>delayMs</code>?</li>
+      <li>¿Por qué se refresca la pantalla con un <code>Timer</code> en lugar de que cada hilo actualice el texto?</li>
+      <li>¿Qué ocurre si el lote es mayor que el stock máximo y no existiera <code>limit()</code>?</li>
+    </ol>
+  </div>
+</section>
+
+<footer>Servicios y Procesos · Productor–Consumidor con Java Swing y arquitectura MVP.</footer>
+</div>
+
+<script>
+// ---- Pestañas de flujos ----
+(function () {
+  var tabs = document.querySelectorAll('#tabs button');
+  tabs.forEach(function (b) {
+    b.addEventListener('click', function () {
+      tabs.forEach(function (x) {
+        var on = x === b;
+        x.setAttribute('aria-selected', on);
+        document.getElementById(x.dataset.t).hidden = !on;
+      });
+    });
+  });
+})();
+
+// ---- Demo de la estantería ----
+(function () {
+  var stock = 0, pWait = false, cWait = false;
+  var $ = function (id) { return document.getElementById(id); };
+  var capIn = $('capIn');
+
+  function cap() { var v = parseInt(capIn.value, 10); return isNaN(v) || v < 0 ? 0 : v; }
+  function log(msg) {
+    var d = document.createElement('div'); d.textContent = msg;
+    var l = $('log'); l.appendChild(d); l.scrollTop = l.scrollHeight;
+  }
+  function render() {
+    $('stockNum').textContent = stock;
+    var c = cap(), shelf = $('shelf'), total = c > 0 ? c : Math.max(stock, 8);
+    shelf.innerHTML = '';
+    for (var i = 0; i < Math.max(total, stock); i++) {
+      var d = document.createElement('div');
+      d.className = i < stock ? 'unit' : 'slot';
+      shelf.appendChild(d);
+    }
+    $('pBox').classList.toggle('blocked', pWait);
+    $('cBox').classList.toggle('blocked', cWait);
+    $('pStatus').textContent = pWait ? 'Bloqueado en wait(): estantería llena' : '';
+    $('cStatus').textContent = cWait ? 'Bloqueado en wait(): estantería vacía' : '';
+    $('pBtn').disabled = pWait;
+    $('cBtn').disabled = cWait;
+  }
+  // Resuelve los hilos bloqueados cuando cambia el estado (lo que hace notifyAll)
+  function wake() {
+    var c = cap();
+    if (cWait && stock >= 1) { stock--; cWait = false; log('notifyAll() → el consumidor despierta y consume 1'); }
+    if (pWait && (c === 0 || stock < c)) { stock++; pWait = false; log('notifyAll() → el productor despierta y produce 1'); }
+  }
+  $('pBtn').addEventListener('click', function () {
+    var c = cap();
+    if (c > 0 && stock >= c) { pWait = true; log('Productor: estantería llena (' + stock + '/' + c + ') → wait()'); }
+    else { stock++; log('Productor produce 1 → stock ' + stock + ' · notifyAll()'); wake(); }
+    render();
+  });
+  $('cBtn').addEventListener('click', function () {
+    if (stock < 1) { cWait = true; log('Consumidor: no hay stock → wait()'); }
+    else { stock--; log('Consumidor consume 1 → stock ' + stock + ' · notifyAll()'); wake(); }
+    render();
+  });
+  capIn.addEventListener('input', function () {
+    log('setCapacity(' + cap() + ') · notifyAll()');
+    wake(); render();
+  });
+  $('resetDemo').addEventListener('click', function () {
+    stock = 0; pWait = false; cWait = false; $('log').innerHTML = ''; log('Demo reiniciada'); render();
+  });
+  log('Estantería vacía. Prueba a consumir primero.');
+  render();
+})();
+</script>
+</body>
+</html>
