@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import src.presenter.IPresenter;
 
+// La ventana: pide la imagen al Presenter y se la da al Viewer para dibujarla
 public class View implements IView, Runnable {
     private IPresenter presenter;
 
@@ -27,16 +28,16 @@ public class View implements IView, Runnable {
         this.presenter = presenter;
     }
 
-    @Override 
+    @Override
     public void start(){
         //El tamaño de la ventana se define gracias a lo siguiente:
         BufferedImage first = presenter.getImage();
-        
-        //usamos first para settear la imagen 
+
+        //usamos first para settear la imagen
         viewer.setPreferredSize(new Dimension(first.getWidth(),first.getHeight()));
         viewer. setImage (first);
         // Frame -ventana principal
-        frame.pack();
+        frame.pack(); // ajusta la ventana al tamaño del lienzo
         frame.setVisible(true);
 
         //Hilos
@@ -44,6 +45,7 @@ public class View implements IView, Runnable {
         thread.setDaemon(true);
         thread.start();
     }
+    // Lo que hace el hilo: pedir imagen, pintarla y esperar, para siempre
     @Override
     public void run() {
         while (true) {

@@ -174,12 +174,6 @@
     <anio>2022</anio>
     <genero>Crimen</genero>
   </pelicula>
-  <pelicula id="39">
-    <nombre>Logan</nombre>
-    <director>James Mangold</director>
-    <anio>2017</anio>
-    <genero>Acción</genero>
-  </pelicula>
   <pelicula id="40">
     <nombre>Watchmen</nombre>
     <director>Zack Snyder</director>
@@ -197,5 +191,11 @@
     <director>Zack Snyder</director>
     <anio>2015</anio>
     <genero>Accion</genero>
+  </pelicula>
+  <pelicula id="42">
+    <nombre>Logan</nombre>
+    <director>James</director>
+    <anio>2019</anio>
+    <genero>Fantasia</genero>
   </pelicula>
 </catalogo>

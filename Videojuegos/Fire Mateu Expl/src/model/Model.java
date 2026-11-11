@@ -2,6 +2,7 @@ package src.model;
 
 import java.awt.image.BufferedImage;
 
+// Junta Fire + Palette + Render y hace avanzar el fuego en su propio hilo
 public class Model implements IModel, Runnable {
     private final int ancho = 320;
     private final int altura = 200;
@@ -23,6 +24,7 @@ public class Model implements IModel, Runnable {
 
     }
 
+    // Lo que hace el hilo: actualizar y esperar, para siempre
     @Override
     public void run() {
         while (true) {
@@ -43,7 +45,7 @@ public class Model implements IModel, Runnable {
         fire.updateFlames();
 
     }
-    
+
     @Override
     public BufferedImage getImage() {
         return render.getImage();

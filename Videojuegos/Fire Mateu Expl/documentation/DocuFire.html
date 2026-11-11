@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fire Expl - Documentación interactiva</title>
+<style>
+:root{
+  --bg:#f7f6f3; --surface:#ffffff; --surface2:#efede8; --text:#1d1b18; --muted:#6a655d; --line:#dcd8d0;
+  --accent:#d9480f; --accent-soft:#fde8dc;
+  --main:#b26a00; --model:#2563c9; --view:#12805a; --pres:#9333c4;
+  --code-bg:#1e1e24; --code-text:#e8e6e3; --shadow:0 1px 2px rgba(0,0,0,.06),0 4px 14px rgba(0,0,0,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#141311; --surface:#1d1c19; --surface2:#262420; --text:#ece9e3; --muted:#a09a8f; --line:#3a3731;
+    --accent:#ff8a4c; --accent-soft:#3a2417;
+    --main:#f0b24a; --model:#6ea2ff; --view:#4fd1a0; --pres:#cf8cf5;
+    --code-bg:#0f0f13; --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141311; --surface:#1d1c19; --surface2:#262420; --text:#ece9e3; --muted:#a09a8f; --line:#3a3731;
+  --accent:#ff8a4c; --accent-soft:#3a2417;
+  --main:#f0b24a; --model:#6ea2ff; --view:#4fd1a0; --pres:#cf8cf5;
+  --code-bg:#0f0f13; --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}
+code,pre,.mono{font-family:ui-monospace,Consolas,"Courier New",monospace}
+code{font-size:.88em;background:var(--surface2);padding:1px 6px;border-radius:5px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* barra superior */
+.top{position:sticky;top:0;z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+.top-in{max-width:1080px;margin:0 auto;padding:10px 16px;display:flex;gap:14px;align-items:center}
+.brand{font-weight:700;white-space:nowrap}
+.brand span{color:var(--accent)}
+.nav{display:flex;gap:4px;overflow-x:auto;flex:1;scrollbar-width:thin}
+.nav a{white-space:nowrap;text-decoration:none;color:var(--muted);padding:6px 10px;border-radius:8px;font-size:.92rem}
+.nav a:hover,.nav a.on{background:var(--accent-soft);color:var(--accent)}
+.theme{border:1px solid var(--line);background:var(--surface2);border-radius:8px;padding:5px 10px;font-size:.9rem}
+
+main{max-width:1080px;margin:0 auto;padding:0 16px 80px}
+section{padding-top:56px}
+h1{font-size:clamp(1.9rem,5vw,2.8rem);line-height:1.15;margin:44px 0 12px;letter-spacing:-.02em}
+h2{font-size:1.6rem;margin:0 0 6px;letter-spacing:-.01em}
+h3{font-size:1.1rem;margin:22px 0 8px}
+.lead{color:var(--muted);max-width:62ch;margin:0 0 20px}
+.hero p{max-width:62ch;color:var(--muted);font-size:1.05rem}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 16px;box-shadow:var(--shadow)}
+.stat b{display:block;font-size:1.5rem;line-height:1.2}
+.stat span{color:var(--muted);font-size:.85rem}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:760px){.grid2{grid-template-columns:1fr}}
+.note{background:var(--accent-soft);border-left:4px solid var(--accent);padding:10px 14px;border-radius:0 10px 10px 0;font-size:.95rem;margin:14px 0}
+.small{font-size:.85rem;color:var(--muted)}
+
+/* etiquetas por capa */
+.tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.03em;padding:2px 8px;border-radius:99px;border:1px solid currentColor;text-transform:uppercase;white-space:nowrap}
+.t-main{color:var(--main)} .t-model{color:var(--model)} .t-view{color:var(--view)} .t-presenter{color:var(--pres)}
+
+/* funcionalidades */
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
+.search{flex:1;min-width:200px;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--text);font:inherit}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:5px 14px;font-size:.9rem}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.count{color:var(--muted);font-size:.9rem;margin-left:auto}
+.feat-list{display:grid;gap:8px}
+details.feat{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+details.feat[open]{box-shadow:var(--shadow);border-color:var(--accent)}
+details.feat summary{list-style:none;cursor:pointer;padding:12px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center}
+details.feat summary::-webkit-details-marker{display:none}
+.feat-name{font-weight:650}
+.feat-name small{display:block;font-weight:400;color:var(--muted);font-size:.88rem}
+.chev{transition:transform .2s;color:var(--muted)}
+details[open] .chev{transform:rotate(90deg)}
+.feat-body{padding:4px 18px 18px;border-top:1px solid var(--line)}
+.feat-body ul{margin:10px 0;padding-left:20px}
+.feat-body li{margin:4px 0}
+.loc{font-size:.82rem;color:var(--muted)}
+pre.code{background:var(--code-bg);color:var(--code-text);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:.85rem;line-height:1.55;margin:10px 0}
+.demo-link{display:inline-block;margin-top:6px;font-size:.9rem}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+@media (max-width:560px){details.feat summary{grid-template-columns:1fr auto}.feat-name{grid-column:1/-1;order:3}}
+
+/* flujo */
+.flow{display:grid;gap:14px;margin:12px 0}
+.flow-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+@media (max-width:700px){.flow-row{grid-template-columns:1fr}}
+.node{border:2px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--surface);transition:all .25s;opacity:.55}
+.node.on{opacity:1;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.node b{display:block}
+.node small{color:var(--muted)}
+.node.n-main{border-color:var(--main)} .node.n-main.on{background:color-mix(in srgb,var(--main) 14%,var(--surface))}
+.node.n-model{border-color:var(--model)} .node.n-model.on{background:color-mix(in srgb,var(--model) 14%,var(--surface))}
+.node.n-view{border-color:var(--view)} .node.n-view.on{background:color-mix(in srgb,var(--view) 14%,var(--surface))}
+.node.n-presenter{border-color:var(--pres)} .node.n-presenter.on{background:color-mix(in srgb,var(--pres) 14%,var(--surface))}
+.sub{margin-top:8px;border:1px dashed var(--line);border-radius:8px;padding:4px 10px;font-size:.88rem;transition:all .25s;opacity:.6}
+.sub.on{opacity:1;border-style:solid;background:var(--surface2)}
+.flow-main{max-width:320px}
+.stepbox{margin-top:12px;border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface2);min-height:132px}
+.stepbox .msg{font-weight:650;margin-bottom:6px}
+.ctrl{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:7px 14px}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:disabled{opacity:.4;cursor:default}
+.tabs{display:flex;gap:6px;margin-bottom:8px}
+.dots{display:flex;gap:5px;margin-left:auto}
+.dots i{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--accent)}
+
+/* simulador */
+.sim-wrap{display:grid;grid-template-columns:1fr 280px;gap:16px;align-items:start}
+@media (max-width:820px){.sim-wrap{grid-template-columns:1fr}}
+canvas.fire{width:100%;aspect-ratio:16/10;background:#000;border-radius:12px;display:block;image-rendering:pixelated;cursor:crosshair}
+.field{margin:0 0 14px}
+.field label{display:flex;justify-content:space-between;font-size:.92rem;margin-bottom:4px}
+.field label b{font-variant-numeric:tabular-nums;color:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.probe{display:flex;gap:10px;align-items:center;font-size:.9rem;margin-top:10px;min-height:34px}
+.sw{width:28px;height:28px;border-radius:6px;border:1px solid var(--line);flex:none;background-image:conic-gradient(#8884 25%,transparent 0 50%,#8884 0 75%,transparent 0);background-size:10px 10px;position:relative;overflow:hidden}
+.sw i{position:absolute;inset:0}
+
+/* paleta */
+.pal-bar{position:relative;height:56px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#000}
+.pal-bar canvas{width:100%;height:100%;display:block}
+.pal-marks{position:relative;height:96px;margin-top:4px}
+.mark{position:absolute;transform:translateX(-50%);text-align:center;font-size:.75rem;color:var(--muted);line-height:1.2}
+.mark::before{content:"";display:block;width:2px;height:10px;background:var(--muted);margin:0 auto 2px}
+.cursor{position:absolute;top:-4px;bottom:-4px;width:3px;background:#fff;box-shadow:0 0 0 1.5px #000;pointer-events:none}
+table.calc{width:100%;border-collapse:collapse;font-size:.9rem;margin-top:8px}
+table.calc th,table.calc td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+table.calc th{color:var(--muted);font-weight:600;font-size:.8rem}
+.res{display:flex;gap:14px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.res .sw{width:56px;height:56px;border-radius:10px}
+.barmix{position:relative;height:26px;background:var(--surface2);border-radius:8px;margin:10px 0 4px;border:1px solid var(--line)}
+.barmix .fill{position:absolute;left:0;top:0;bottom:0;background:var(--accent-soft);border-right:3px solid var(--accent);border-radius:8px 0 0 8px}
+.barmix span{position:absolute;top:2px;font-size:.78rem;font-weight:600}
+
+/* cuadricula de calor */
+.heat{display:grid;gap:4px;margin:8px 0}
+.cell{aspect-ratio:1;border-radius:7px;border:2px solid transparent;display:grid;place-items:center;font-size:.8rem;font-weight:700;font-variant-numeric:tabular-nums;color:#fff;text-shadow:0 1px 2px #000;background:#111;cursor:pointer;user-select:none;position:relative;min-width:0}
+.cell.base{outline:1px dashed var(--muted);outline-offset:-4px}
+.cell.sel{border-color:#fff;box-shadow:0 0 0 3px var(--accent)}
+.cell.nb{border-color:#fff;box-shadow:0 0 0 3px var(--model)}
+.cell small{position:absolute;bottom:1px;right:4px;font-size:.55rem;font-weight:600;opacity:.9}
+.explain{font-size:.95rem;min-height:120px}
+.explain .eq{font-family:ui-monospace,Consolas,monospace;background:var(--surface2);border-radius:8px;padding:8px 12px;margin:6px 0;display:block;overflow-x:auto;white-space:pre}
+
+/* hilos */
+canvas.lanes{width:100%;height:150px;background:var(--surface2);border-radius:12px;display:block}
+.chips2{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.pill{background:var(--surface2);border-radius:10px;padding:8px 14px;font-size:.92rem}
+.pill b{font-variant-numeric:tabular-nums}
+
+/* paint */
+.chain{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:12px 0}
+.chain .step{background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:.9rem}
+.chain .arrow{color:var(--muted)}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+@media (max-width:640px){.cmp{grid-template-columns:1fr}}
+.cmp .panel h3{margin-top:0}
+
+dl.gloss{display:grid;grid-template-columns:max-content 1fr;gap:8px 18px;margin:0}
+dl.gloss dt{font-weight:650}
+dl.gloss dd{margin:0;color:var(--muted)}
+@media (max-width:560px){dl.gloss{grid-template-columns:1fr}dl.gloss dd{margin-bottom:8px}}
+footer{margin-top:60px;color:var(--muted);font-size:.85rem;text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* ===== colores extra ===== */
+:root{--red:#d12f3a;--teal:#0e8fa0;--pink:#d6336c}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--red:#ff7b84;--teal:#4fd0e0;--pink:#ff7eb0}}
+:root[data-theme="dark"]{--red:#ff7b84;--teal:#4fd0e0;--pink:#ff7eb0}
+
+/* palabras de colores dentro de las explicaciones */
+.c1{color:var(--accent);font-weight:650}
+.c2{color:var(--model);font-weight:650}
+.c3{color:var(--view);font-weight:650}
+.c4{color:var(--pres);font-weight:650}
+.c5{color:var(--red);font-weight:650}
+.c6{color:var(--teal);font-weight:650}
+.c7{color:var(--pink);font-weight:650}
+.cm{color:var(--main);font-weight:650}
+
+/* cada seccion tiene su color */
+#funcionalidades{--sc:var(--accent)}
+#flujo{--sc:var(--pres)}
+#simulador{--sc:var(--accent)}
+#calor{--sc:var(--red)}
+#paleta{--sc:var(--pink)}
+#hilos{--sc:var(--teal)}
+#vista{--sc:var(--view)}
+#glosario{--sc:var(--model)}
+section h2{border-left:7px solid var(--sc,var(--accent));padding-left:12px;border-radius:2px}
+section h3{color:var(--sc,var(--text))}
+.panel{border-top:4px solid var(--sc,var(--line))}
+.note{background:color-mix(in srgb,var(--sc,var(--accent)) 13%,var(--surface));border-left-color:var(--sc,var(--accent))}
+section .chip[aria-pressed="true"],section .btn.primary{background:var(--sc,var(--accent));border-color:var(--sc,var(--accent))}
+#funcionalidades .chip[aria-pressed="true"]{background:var(--accent)}
+.dots i.on{background:var(--sc,var(--accent))}
+.stepbox .msg{color:var(--lc,var(--accent))}
+.stepbox{border-left:6px solid var(--lc,var(--accent))}
+
+/* datos de arriba */
+.stat{border-top:4px solid var(--sc)}
+.stat b{color:var(--sc)}
+
+/* menu: un punto de color por seccion */
+.nav a::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--dc,var(--muted));margin-right:6px}
+
+/* tarjetas de funcionalidades: borde del color de su capa */
+details.feat{border-left:6px solid var(--lc,var(--line))}
+details.feat[data-g="main"]{--lc:var(--main)}
+details.feat[data-g="model"]{--lc:var(--model)}
+details.feat[data-g="view"]{--lc:var(--view)}
+details.feat[data-g="presenter"]{--lc:var(--pres)}
+details.feat[open]{border-color:var(--lc)}
+details.feat[open] summary{background:color-mix(in srgb,var(--lc) 9%,var(--surface))}
+.feat-name{color:var(--lc)}
+.feat-body li::marker{color:var(--lc)}
+.feat-body code{background:color-mix(in srgb,var(--lc) 15%,var(--surface2))}
+.feat-body .demo-link{color:var(--lc);font-weight:650}
+.chips .chip[data-g="main"][aria-pressed="true"]{background:var(--main);border-color:var(--main)}
+.chips .chip[data-g="model"][aria-pressed="true"]{background:var(--model);border-color:var(--model)}
+.chips .chip[data-g="view"][aria-pressed="true"]{background:var(--view);border-color:var(--view)}
+.chips .chip[data-g="presenter"][aria-pressed="true"]{background:var(--pres);border-color:var(--pres)}
+#flow .node.n-main.on{border-width:3px}
+
+/* deslizadores de colores */
+#sSpark{accent-color:var(--accent)} #sCool{accent-color:var(--model)} #sLoss{accent-color:var(--teal)} #sSpeed{accent-color:var(--view)}
+#hLoss{accent-color:var(--red)}
+#sT{accent-color:var(--pink)}
+#mA{accent-color:var(--model)} #mB{accent-color:var(--pres)} #mR{accent-color:var(--accent)}
+#sSlow{accent-color:var(--teal)}
+.field:has(#sSpark) label b{color:var(--accent)} .field:has(#sCool) label b{color:var(--model)}
+.field:has(#sLoss) label b{color:var(--teal)} .field:has(#sSpeed) label b{color:var(--view)}
+.field:has(#hLoss) label b{color:var(--red)} .field:has(#sT) label b{color:var(--pink)}
+.field:has(#mA) label b{color:var(--model)} .field:has(#mB) label b{color:var(--pres)} .field:has(#mR) label b{color:var(--accent)}
+.field:has(#sSlow) label b{color:var(--teal)}
+
+/* leyenda de la cuadricula de calor */
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.88rem;margin:0 0 8px}
+.legend span::before{content:"";display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px;background:var(--lg)}
+.explain .eq .c1,.explain .eq .c2,.explain .eq .c3,.explain .eq .c5{display:inline}
+.explain .big{font-size:1.05rem}
+
+/* tabla de la paleta: una fila de color por canal */
+table.calc tr.ch-a td:first-child{border-left:5px solid var(--muted)}
+table.calc tr.ch-r td:first-child{border-left:5px solid var(--red)}
+table.calc tr.ch-g td:first-child{border-left:5px solid var(--view)}
+table.calc tr.ch-b td:first-child{border-left:5px solid var(--model)}
+table.calc tr.ch-r td:first-child,table.calc tr.ch-r td:last-child{color:var(--red)}
+table.calc tr.ch-g td:first-child,table.calc tr.ch-g td:last-child{color:var(--view)}
+table.calc tr.ch-b td:first-child,table.calc tr.ch-b td:last-child{color:var(--model)}
+table.calc tr.ch-r{background:color-mix(in srgb,var(--red) 7%,transparent)}
+table.calc tr.ch-g{background:color-mix(in srgb,var(--view) 7%,transparent)}
+table.calc tr.ch-b{background:color-mix(in srgb,var(--model) 7%,transparent)}
+table.calc tr.ch-a{background:color-mix(in srgb,var(--muted) 8%,transparent)}
+table.calc td:first-child{font-weight:700}
+
+/* cadena de dibujo: un color por paso */
+.chain .step:nth-of-type(1){border-top:4px solid var(--model)}
+.chain .step:nth-of-type(2){border-top:4px solid var(--main)}
+.chain .step:nth-of-type(3){border-top:4px solid var(--pres)}
+.chain .step:nth-of-type(4){border-top:4px solid var(--view)}
+.panel.bad{--sc:var(--red)} .panel.good{--sc:var(--view)}
+.cmp .panel.bad h3{color:var(--red)} .cmp .panel.good h3{color:var(--view)}
+
+/* glosario con colores */
+dl.gloss dt:nth-of-type(6n+1){color:var(--accent)} dl.gloss dt:nth-of-type(6n+2){color:var(--model)}
+dl.gloss dt:nth-of-type(6n+3){color:var(--view)} dl.gloss dt:nth-of-type(6n+4){color:var(--pres)}
+dl.gloss dt:nth-of-type(6n+5){color:var(--red)} dl.gloss dt:nth-of-type(6n+6){color:var(--teal)}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">🔥 Fire <span> Expl</span></div>
+    <nav class="nav" id="nav">
+      <a href="#funcionalidades" style="--dc:var(--accent)">Funcionalidades</a>
+      <a href="#flujo" style="--dc:var(--pres)">Flujo</a>
+      <a href="#simulador" style="--dc:var(--accent)">Fuego</a>
+      <a href="#calor" style="--dc:var(--red)">Calor</a>
+      <a href="#paleta" style="--dc:var(--pink)">Paleta</a>
+      <a href="#hilos" style="--dc:var(--teal)">Hilos</a>
+      <a href="#vista" style="--dc:var(--view)">Vista</a>
+      <a href="#glosario" style="--dc:var(--model)">Glosario</a>
+    </nav>
+    <button class="theme" id="themeBtn" type="button" aria-label="Cambiar tema claro u oscuro">◐ Tema</button>
+  </div>
+</header>
+
+<main>
+
+<div class="hero">
+  <h1>Documentación interactiva del fuego</h1>
+  <p>Una animación de fuego en una ventana. Cada punto tiene una <span class="c1">temperatura</span> (0 a 255) y cada temperatura tiene un <span class="c5">color</span>. Aquí ves el código funcionando y puedes tocarlo.</p>
+  <div class="stats">
+    <div class="stat" style="--sc:var(--accent)"><b id="statFeat">31</b><span>funcionalidades</span></div>
+    <div class="stat" style="--sc:var(--model)"><b>12</b><span>archivos .java</span></div>
+    <div class="stat" style="--sc:var(--view)"><b>3</b><span>capas (Modelo, Vista, Presenter)</span></div>
+    <div class="stat" style="--sc:var(--pres)"><b>2</b><span>hilos a la vez</span></div>
+  </div>
+</div>
+
+<!-- 1. FUNCIONALIDADES -->
+<section id="funcionalidades">
+  <h2>1. Todas las funcionalidades</h2>
+  <p class="lead">Todos los métodos del proyecto. Pulsa uno para ver qué hace y su código. El color de cada tarjeta es el de su capa: <span class="cm">Main</span>, <span class="c2">Modelo</span>, <span class="c3">Vista</span> y <span class="c4">Presenter</span>.</p>
+  <div class="tools">
+    <input class="search" id="q" type="search" placeholder="Buscar: updateFlames, hilo, color…" aria-label="Buscar funcionalidades">
+    <div class="chips" id="chips" role="group" aria-label="Filtrar por capa">
+      <button class="chip" type="button" data-g="all" aria-pressed="true">Todo</button>
+      <button class="chip" type="button" data-g="main" aria-pressed="false">Main</button>
+      <button class="chip" type="button" data-g="model" aria-pressed="false">Modelo</button>
+      <button class="chip" type="button" data-g="view" aria-pressed="false">Vista</button>
+      <button class="chip" type="button" data-g="presenter" aria-pressed="false">Presenter</button>
+    </div>
+    <span class="count" id="count" aria-live="polite"></span>
+  </div>
+  <div class="feat-list" id="featList"></div>
+</section>
+
+<!-- 2. FLUJO -->
+<section id="flujo">
+  <h2>2. Cómo se conectan las piezas</h2>
+  <p class="lead">El <span class="c2">modelo</span> y la <span class="c3">vista</span> no se conocen: todo pasa por el <span class="c4">Presenter</span>. Avanza paso a paso.</p>
+  <div class="panel">
+    <div class="tabs" role="tablist">
+      <button class="chip" role="tab" type="button" data-sc="boot" aria-pressed="true">Arranque</button>
+      <button class="chip" role="tab" type="button" data-sc="frame" aria-pressed="false">Un fotograma</button>
+    </div>
+    <div class="flow" id="flow">
+      <div class="node n-main flow-main" data-id="main"><b>Main</b><small>punto de entrada</small></div>
+      <div class="flow-row">
+        <div class="node n-view" data-id="view"><b>View</b><small>la ventana y su hilo</small>
+          <div class="sub" data-id="viewer">Viewer · el lienzo</div></div>
+        <div class="node n-presenter" data-id="presenter"><b>Presenter</b><small>el intermediario</small></div>
+        <div class="node n-model" data-id="model"><b>Model</b><small>el fuego y su hilo</small>
+          <div class="sub" data-id="fire">Fire · las temperaturas</div>
+          <div class="sub" data-id="palette">Palette · los colores</div>
+          <div class="sub" data-id="render">Render · la imagen</div></div>
+      </div>
+    </div>
+    <div class="stepbox" aria-live="polite">
+      <div class="msg" id="stepMsg"></div>
+      <div id="stepTxt"></div>
+      <pre class="code" id="stepCode" style="margin-bottom:0"></pre>
+    </div>
+    <div class="ctrl">
+      <button class="btn" type="button" id="prev">← Anterior</button>
+      <button class="btn primary" type="button" id="next">Siguiente →</button>
+      <button class="btn" type="button" id="auto">▶ Auto</button>
+      <div class="dots" id="dots" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. SIMULADOR -->
+<section id="simulador">
+  <h2>3. El fuego funcionando</h2>
+  <p class="lead">El mismo algoritmo de <code>Fire.java</code>. Mueve los deslizadores y mira qué cambia.</p>
+  <div class="panel sim-wrap">
+    <div>
+      <canvas class="fire" id="fireCv" width="320" height="200" aria-label="Simulación del fuego"></canvas>
+      <div class="probe" id="probe">Pasa el ratón por encima para ver la temperatura de un punto.</div>
+    </div>
+    <div>
+      <div class="field"><label for="sSpark">Chispas en la base <b id="vSpark"></b></label>
+        <input type="range" id="sSpark" min="0" max="100" value="40"><div class="small">Probabilidad de encender cada punto de la base.</div></div>
+      <div class="field"><label for="sCool">Puntos fríos en la base <b id="vCool"></b></label>
+        <input type="range" id="sCool" min="0" max="100" value="30"><div class="small">Probabilidad de apagar cada punto de la base.</div></div>
+      <div class="field"><label for="sLoss">Enfriamiento máximo <b id="vLoss"></b></label>
+        <input type="range" id="sLoss" min="0" max="8" value="2"><div class="small">Lo que se resta al azar al subir. En el código real es 2.</div></div>
+      <div class="field"><label for="sSpeed">Velocidad <b id="vSpeed"></b></label>
+        <input type="range" id="sSpeed" min="1" max="8" value="4"><div class="small">1× = el ritmo real del programa (33 ms por paso).</div></div>
+      <div class="ctrl" style="margin-top:0">
+        <button class="btn primary" type="button" id="simPlay">⏸ Pausa</button>
+        <button class="btn" type="button" id="simReset">Reiniciar</button>
+      </div>
+    </div>
+  </div>
+  <div class="note"><b>Prueba:</b> enfriamiento a <b>0</b> → las llamas llegan hasta arriba. A <b>8</b> → casi no salen de la base.</div>
+</section>
+
+<!-- 4. CALOR -->
+<section id="calor">
+  <h2>4. Cómo sube el calor</h2>
+  <p class="lead">Es <code>updateFlames()</code> en pequeño. Pulsa una celda de arriba para ver su cuenta.</p>
+  <div class="panel grid2">
+    <div>
+      <div class="legend"><span style="--lg:var(--accent)">la celda</span><span style="--lg:var(--model)">las 3 de abajo</span><span style="--lg:var(--view)">el resultado</span></div>
+      <div class="heat" id="heat"></div>
+      <div class="ctrl">
+        <button class="btn primary" type="button" id="heatStep">Aplicar un paso</button>
+        <button class="btn" type="button" id="heatRand">Base al azar</button>
+        <button class="btn" type="button" id="heatReset">Reiniciar</button>
+      </div>
+      <div class="field" style="margin-top:14px"><label for="hLoss">Enfriamiento restado <b id="vhLoss"></b></label>
+        <input type="range" id="hLoss" min="0" max="3" value="1"></div>
+      <div class="small">La fila de abajo es la <b>base</b> (no se calcula). Púlsala para encenderla o apagarla.</div>
+    </div>
+    <div class="explain" id="heatExplain"></div>
+  </div>
+</section>
+
+<!-- 5. PALETA -->
+<section id="paleta">
+  <h2>5. La paleta de colores</h2>
+  <p class="lead">Solo hay 4 colores clave. El resto se calcula mezclando. Mueve el deslizador.</p>
+  <div class="panel">
+    <div class="pal-bar"><canvas id="palCv" width="256" height="1"></canvas><div class="cursor" id="palCursor"></div></div>
+    <div class="pal-marks" id="palMarks"></div>
+    <div class="field"><label for="sT">Temperatura <b id="vT"></b></label><input type="range" id="sT" min="0" max="255" value="50"></div>
+    <div id="palOut"></div>
+  </div>
+
+  <h3>La fórmula de <code>mix</code>, con tus números</h3>
+  <div class="panel grid2">
+    <div>
+      <div class="field"><label for="mA">v1 (inicio) <b id="vmA"></b></label><input type="range" id="mA" min="0" max="255" value="0"></div>
+      <div class="field"><label for="mB">v2 (final) <b id="vmB"></b></label><input type="range" id="mB" min="0" max="255" value="224"></div>
+      <div class="field"><label for="mR">ratio <b id="vmR"></b></label><input type="range" id="mR" min="0" max="100" value="50"></div>
+    </div>
+    <div id="mixOut"></div>
+  </div>
+</section>
+
+<!-- 6. HILOS -->
+<section id="hilos">
+  <h2>6. Dos hilos a la vez</h2>
+  <p class="lead">Un hilo es un trabajador independiente. Hay dos: uno <span class="c2">mueve el fuego</span> y otro <span class="c3">refresca la ventana</span>. Cada punto es una vuelta de su bucle.</p>
+  <div class="panel">
+    <canvas class="lanes" id="laneCv"></canvas>
+    <div class="field" style="margin-top:12px"><label for="sSlow">Cámara lenta <b id="vSlow"></b></label><input type="range" id="sSlow" min="1" max="20" value="6"></div>
+    <div class="chips2">
+      <div class="pill"><span class="tag t-model">Model-Fire</span> cada 33 ms · pasos: <b id="cM">0</b></div>
+      <div class="pill"><span class="tag t-view">fire-view</span> cada 16 ms · refrescos: <b id="cV">0</b></div>
+      <div class="pill">Refrescos por cada paso del fuego: <b id="cR">–</b></div>
+    </div>
+  </div>
+  <div class="note">La ventana refresca el <b>doble de rápido</b> de lo que el fuego cambia, así que a veces repinta lo mismo. No pasa nada: ninguno espera al otro.</div>
+</section>
+
+<!-- 7. VISTA -->
+<section id="vista">
+  <h2>7. Qué pasa al dibujar</h2>
+  <p class="lead">La vista no dibuja directamente. Sigue esta cadena:</p>
+  <div class="chain">
+    <div class="step"><code>viewer.setImage(img)</code><br><span class="small">guarda la imagen</span></div><span class="arrow">→</span>
+    <div class="step"><code>repaint()</code><br><span class="small">avisa de que hay que redibujar</span></div><span class="arrow">→</span>
+    <div class="step"><code>update(g)</code><br><span class="small">Java lo llama cuando puede</span></div><span class="arrow">→</span>
+    <div class="step"><code>paint(g)</code><br><span class="small">dibuja la imagen estirada</span></div>
+  </div>
+  <div class="cmp">
+    <div class="panel bad"><h3>✗ Sin sobrescribir <code>update</code></h3>
+      <p>El <code>Canvas</code> normal <b class="c5">borra todo</b> y luego dibuja. Eso se ve como un parpadeo.</p>
+      <pre class="code">borrar todo → dibujar imagen
+borrar todo → dibujar imagen   ← parpadea</pre></div>
+    <div class="panel good"><h3>✓ Como está en <code>Viewer.java</code></h3>
+      <p><code>update</code> solo llama a <code>paint</code>: <b class="c3">no se borra nada</b> y la imagen nueva se pone encima.</p>
+      <pre class="code">@Override
+public void update(Graphics g){
+    paint(g);
+}</pre></div>
+  </div>
+  <div class="note"><code>drawImage(...)</code> estira la imagen para llenar el lienzo. Por eso el fuego crece si agrandas la ventana.</div>
+</section>
+
+<!-- 8. GLOSARIO -->
+<section id="glosario">
+  <h2>8. Glosario</h2>
+  <div class="panel">
+    <dl class="gloss">
+      <dt>Temperatura</dt><dd>Número de 0 (apagado) a 255 (lo más caliente). Cada punto tiene una.</dd>
+      <dt>Píxel</dt><dd>Un punto de la imagen. Hay uno por cada temperatura.</dd>
+      <dt>Tramo</dt><dd>El trozo entre dos colores clave (por ejemplo, de la temperatura 20 a la 80).</dd>
+      <dt>ratio</dt><dd>En qué punto del tramo estás: 0 = al principio, 1 = al final, 0.5 = a la mitad.</dd>
+      <dt>Canal</dt><dd>Cada número de un color: alpha (transparencia), rojo, verde y azul.</dd>
+      <dt>ARGB</dt><dd>Los 4 canales juntos en un solo número (<code>int</code>).</dd>
+      <dt>Hilo</dt><dd>Un trabajador independiente. Aquí hay dos.</dd>
+      <dt>Daemon</dt><dd>Un hilo que se cierra solo al terminar el programa.</dd>
+      <dt>Interfaz</dt><dd>Un contrato: dice qué métodos hay que tener, no cómo se hacen.</dd>
+      <dt>DTO</dt><dd>Una clase que solo guarda datos (<code>ColorTargetDTO</code>).</dd>
+      <dt>MVP</dt><dd>Modelo - Vista - Presenter. Modelo y vista no se conocen: hablan por el Presenter.</dd>
+    </dl>
+  </div>
+</section>
+
+<footer>Documentación generada a partir del código de <code>src/</code>. Los números de línea pueden desfasarse si cambias los archivos.</footer>
+</main>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+/* ---------- tema ---------- */
+(function(){
+  const root = document.documentElement;
+  try { const s = localStorage.getItem("fire-theme"); if (s) root.setAttribute("data-theme", s); } catch (e) {}
+  $("#themeBtn").addEventListener("click", () => {
+    const dark = root.getAttribute("data-theme") === "dark" ||
+      (!root.getAttribute("data-theme") && matchMedia("(prefers-color-scheme: dark)").matches);
+    const next = dark ? "light" : "dark";
+    root.setAttribute("data-theme", next);
+    try { localStorage.setItem("fire-theme", next); } catch (e) {}
+  });
+})();
+
+/* ---------- paleta (misma logica que Palette.java) ---------- */
+const TARGETS = [
+  { t: 0,   r: 0,   g: 0,   b: 0,   a: 0,   name: "negro transparente" },
+  { t: 20,  r: 224, g: 58,  b: 0,   a: 255, name: "rojo anaranjado" },
+  { t: 80,  r: 255, g: 208, b: 32,  a: 255, name: "amarillo" },
+  { t: 255, r: 255, g: 255, b: 255, a: 255, name: "blanco" }
+];
+const mix = (v1, v2, ratio) => Math.round(v1 + (v2 - v1) * ratio);
+const COLORS = new Array(256);
+for (let i = 0; i < TARGETS.length - 1; i++) {
+  const from = TARGETS[i], to = TARGETS[i + 1], range = to.t - from.t;
+  for (let t = from.t; t <= to.t; t++) {
+    const ratio = (t - from.t) / range;
+    COLORS[t] = { r: mix(from.r, to.r, ratio), g: mix(from.g, to.g, ratio), b: mix(from.b, to.b, ratio), a: mix(from.a, to.a, ratio) };
+  }
+}
+const css = c => `rgba(${c.r},${c.g},${c.b},${(c.a / 255).toFixed(3)})`;
+const hex2 = n => n.toString(16).padStart(2, "0").toUpperCase();
+
+/* ---------- datos de funcionalidades ---------- */
+const FEATURES = [
+ { g:"main", cls:"Main", name:"main", sig:"public static void main(String[] args)", loc:"Main.java:11",
+   sum:"Arranca el programa: crea las 3 piezas y las pone en marcha.",
+   pts:["Crea el <span class='c2'>Model</span>, la <span class='c3'>View</span> y el <span class='c4'>Presenter</span>.",
+        "Llama a <code>presenter.start()</code> y todo empieza.",
+        "<code>invokeLater</code> es obligatorio para crear ventanas en Swing."],
+   code:`SwingUtilities.invokeLater(() -> {
+    IModel model = new Model();
+    IView view = new View();
+    IPresenter presenter = new Presenter(model, view);
+
+    presenter.start();
+});`, demo:["#flujo","Ver el arranque paso a paso"] },
+
+ { g:"presenter", cls:"Presenter", name:"Presenter(model, view)", sig:"public Presenter(IModel model, IView view)", loc:"Presenter.java:15",
+   sum:"Guarda el modelo y la vista.",
+   pts:["Se los da el <code>Main</code>: el Presenter no los crea."],
+   code:`public Presenter (IModel model,IView view){
+    this.model = model;
+    this.view = view;
+}`, demo:["#flujo","Ver el flujo"] },
+ { g:"presenter", cls:"Presenter", name:"start", sig:"public void start()", loc:"Presenter.java:21",
+   sum:"Lo pone todo en marcha, en 3 pasos.",
+   pts:["<span class='c1'>1.</span> <code>setPresenter</code>: la vista conoce al Presenter.",
+        "<span class='c2'>2.</span> <code>model.start()</code>: el fuego empieza a moverse.",
+        "<span class='c3'>3.</span> <code>view.start()</code>: se abre la ventana.",
+        "El orden importa: la vista necesita al Presenter antes de abrirse."],
+   code:`@Override
+public void start(){
+    view.setPresenter(this);
+    model.start();
+    view.start();
+}`, demo:["#flujo","Ver el arranque paso a paso"] },
+ { g:"presenter", cls:"Presenter", name:"getImage", sig:"public BufferedImage getImage()", loc:"Presenter.java:28",
+   sum:"Pasa la petición de imagen al modelo.",
+   pts:["No calcula nada: solo hace de puente."],
+   code:`@Override
+public BufferedImage getImage(){ return model.getImage();}`, demo:["#flujo","Ver un fotograma"] },
+ { g:"presenter", cls:"IPresenter", name:"IPresenter (contrato)", sig:"interface IPresenter", loc:"IPresenter.java:5",
+   sum:"Contrato: start() y getImage().",
+   pts:["La vista solo conoce este contrato, por eso <code>getImage()</code> está aquí."],
+   code:`public interface IPresenter {
+    void start();
+    BufferedImage getImage();
+}` },
+
+ { g:"model", cls:"Model", name:"Model()", sig:"public Model()", loc:"Model.java:14",
+   sum:"Crea el fuego, la paleta y el render.",
+   pts:["Un <span class='c2'>Fire</span> de 320 × 200 puntos, todos apagados (0)."],
+   code:`public Model() {
+    fire = new Fire(ancho, altura);
+    render = new Render(fire, Palette.createPalette());
+}` },
+ { g:"model", cls:"Model", name:"start", sig:"public void start()", loc:"Model.java:20",
+   sum:"Arranca el hilo que mueve el fuego.",
+   pts:["El <code>this</code> le dice al hilo qué hacer: ejecutar su <code>run()</code>.",
+        "Daemon = el hilo se cierra solo al cerrar el programa."],
+   code:`Thread thread = new Thread(this,"Model-Fire");
+thread.setDaemon(true);
+thread.start();`, demo:["#hilos","Ver los dos hilos"] },
+ { g:"model", cls:"Model", name:"run", sig:"public void run()", loc:"Model.java:29",
+   sum:"Repite siempre: avanzar un paso y esperar 33 ms.",
+   pts:["33 ms son unos <span class='c3'>30 pasos por segundo</span>."],
+   code:`while (true) {
+    update();
+    try {
+        Thread.sleep(frameMS);   // 33
+    } catch (InterruptedException e) {
+        return;
+    }
+}`, demo:["#hilos","Ver los dos hilos"] },
+ { g:"model", cls:"Model", name:"update", sig:"public void update()", loc:"Model.java:42",
+   sum:"Un paso: chispas, puntos fríos y subir el calor.",
+   pts:["El orden importa: primero la base, luego el calor sube desde ella."],
+   code:`fire.sparksGeneration();
+fire.coolPointsGeneration();
+fire.updateFlames();`, demo:["#simulador","Ver el fuego funcionando"] },
+ { g:"model", cls:"Model", name:"getImage", sig:"public BufferedImage getImage()", loc:"Model.java:50",
+   sum:"Pide la imagen al Render.",
+   pts:["El Render la rehace entera cada vez que se pide."],
+   code:`return render.getImage();` },
+ { g:"model", cls:"IModel", name:"IModel (contrato)", sig:"interface IModel", loc:"IModel.java:5",
+   sum:"Contrato: update(), start() y getImage().",
+   pts:["El Presenter solo conoce estos 3 métodos."],
+   code:`public interface IModel {
+    void update();
+    void start();
+    BufferedImage getImage();
+}` },
+
+ { g:"model", cls:"Fire", name:"Fire(ancho, altura)", sig:"public Fire(int ancho, int altura)", loc:"Fire.java:19",
+   sum:"Crea la tabla de temperaturas, todas a 0.",
+   pts:["Tabla <code>[fila][columna]</code> con valores de 0 a 255.",
+        "Fila 0 = <span class='c2'>arriba</span>. Última fila = <span class='c1'>base</span>, donde nace el fuego."],
+   code:`this.temperatures = new int[altura][ancho];` },
+ { g:"model", cls:"Fire", name:"sparksGeneration", sig:"public void sparksGeneration()", loc:"Fire.java:26",
+   sum:"Enciende el 40% de la base (a 255).",
+   pts:["<code>nextInt(100)</code> da de 0 a 99. Si sale menos de 40, el punto se enciende."],
+   code:`int base = altura - 1;
+for (int x = 0; x < ancho; x++) {
+    if (random.nextInt(100) < sparksPercentage){
+        temperatures[base][x] = 255;
+    }
+}`, demo:["#simulador","Probar el % de chispas"] },
+ { g:"model", cls:"Fire", name:"coolPointsGeneration", sig:"public void coolPointsGeneration()", loc:"Fire.java:36",
+   sum:"Apaga el 30% de la base (a 0).",
+   pts:["Así la base parpadea y las llamas salen irregulares."],
+   code:`for (int x = 0; x < ancho; x++) {
+    if (random.nextInt(100) < CoolPointsPercentage){
+        temperatures[base][x] = 0;
+    }
+}`, demo:["#simulador","Probar el % de puntos fríos"] },
+ { g:"model", cls:"Fire", name:"updateFlames", sig:"public void updateFlames()", loc:"Fire.java:47",
+   sum:"Sube el calor: cada punto es la media de 4 valores, menos un poco.",
+   pts:["Va de <span class='c2'>abajo hacia arriba</span>.",
+        "Media de <span class='c1'>él mismo</span> y <span class='c2'>los 3 de la fila de abajo</span>.",
+        "Resta 0, 1 o 2 al azar: por eso el fuego se apaga al subir.",
+        "<code>max</code> y <code>min</code> evitan salirse por los bordes."],
+   code:`int actual = temperatures[y][x];
+int left   = temperatures[y+1][Math.max(x-1,0)];
+int center = temperatures[y+1][x];
+int right  = temperatures[y+1][Math.min(x+1,ancho-1)];
+
+int t = (actual + left + right + center)/4 - random.nextInt(2+1);
+temperatures[y][x] = Math.max(t, 0);`, demo:["#calor","Ver el cálculo celda a celda"] },
+ { g:"model", cls:"Fire", name:"getTemperature / getAncho / getAltura", sig:"getters", loc:"Fire.java:66-68",
+   sum:"Dejan leer la tabla y el tamaño.",
+   pts:["Solo devuelven datos."],
+   code:`public int [][] getTemperature(){return temperatures;}
+public int getAncho() {return ancho;}
+public int getAltura() {return altura;}` },
+
+ { g:"model", cls:"Palette", name:"Palette(targets)", sig:"public Palette(List<ColorTargetDTO> targets)", loc:"Palette.java:11",
+   sum:"Rellena los 256 colores mezclando entre los 4 colores clave.",
+   pts:["Cada vuelta es un <span class='c5'>tramo</span> (hay 3, por eso el <code>-1</code>).",
+        "En cada temperatura calcula el <span class='c4'>ratio</span> y mezcla los 4 canales.",
+        "<code>getRGB()</code> junta los canales en un solo número."],
+   code:`for (int i = 0; i < targets.size()-1; i++) {
+    ColorTargetDTO from = targets.get(i);
+    ColorTargetDTO to   = targets.get(i+1);
+    int range = to.getTemperature() - from.getTemperature();
+    for (int t = from.getTemperature(); t <= to.getTemperature(); t++){
+        double ratio = (double)(t - from.getTemperature())/range;
+        int alpha = mix(from.getAlpha(), to.getAlpha(), ratio);
+        // ... lo mismo con green, blue y red
+        colors[t] = new Color(red,green,blue,alpha).getRGB();
+    }
+}`, demo:["#paleta","Ver el cálculo de cada color"] },
+ { g:"model", cls:"Palette", name:"color", sig:"public int color(int temperatura)", loc:"Palette.java:36",
+   sum:"Da el color de una temperatura.",
+   pts:["Solo lee la tabla: es muy rápido."],
+   code:`return colors[temperatura];` },
+ { g:"model", cls:"Palette", name:"mix", sig:"private int mix(int v1, int v2, double ratio)", loc:"Palette.java:41",
+   sum:"Da un valor entre dos números.",
+   pts:["<span class='c4'>ratio</span> 0 → el primero, 1 → el segundo, 0.5 → el medio.",
+        "<code>Math.round</code> quita los decimales."],
+   code:`return (int) Math.round(v1 + (v2-v1)*ratio);`, demo:["#paleta","Probar la fórmula"] },
+ { g:"model", cls:"Palette", name:"createPalette", sig:"public static Palette createPalette()", loc:"Palette.java:46",
+   sum:"Define los 4 colores clave.",
+   pts:["Orden: temperatura, rojo, verde, azul, alpha.",
+        "negro → <span class='c5'>rojo anaranjado</span> → <span class='cm'>amarillo</span> → blanco."],
+   code:`targets.add(new ColorTargetDTO(0,   0,   0,   0,   0));
+targets.add(new ColorTargetDTO(20,  224, 58,  0,   255));
+targets.add(new ColorTargetDTO(80,  255, 208, 32,  255));
+targets.add(new ColorTargetDTO(255, 255, 255, 255, 255));`, demo:["#paleta","Ver la paleta"] },
+
+ { g:"model", cls:"ColorTargetDTO", name:"ColorTargetDTO + getters", sig:"public ColorTargetDTO(int temperature, int red, int green, int blue, int alpha)", loc:"ColorTargetDTO.java:11",
+   sum:"Un color clave: «a esta temperatura, este color».",
+   pts:["Solo guarda datos y no cambia (todo es <code>final</code>).",
+        "Orden: temperatura, <span class='c5'>rojo</span>, <span class='c3'>verde</span>, <span class='c2'>azul</span>, alpha."],
+   code:`new ColorTargetDTO(20, 224, 58, 0, 255)
+//                 temp rojo verde azul alpha`, demo:["#paleta","Ver los colores clave"] },
+
+ { g:"model", cls:"Render", name:"Render(fire, palette)", sig:"public Render(Fire fire, Palette palette)", loc:"Render.java:11",
+   sum:"Crea la imagen: 1 píxel por cada punto.",
+   pts:["Se crea una vez y se reutiliza."],
+   code:`this.image = new BufferedImage(fire.getAncho(), fire.getAltura(),
+                               BufferedImage.TYPE_INT_ARGB);` },
+ { g:"model", cls:"Render", name:"getImage", sig:"public BufferedImage getImage()", loc:"Render.java:18",
+   sum:"Pinta cada píxel con el color de su temperatura.",
+   pts:["Temperatura → Paleta → color → píxel.",
+        "<b>Ojo:</b> se lee <code>[y][x]</code> pero <code>setRGB</code> pide <code>x, y</code>."],
+   code:`for (int y = 0; y < fire.getAltura(); y++) {
+    for (int x = 0; x < fire.getAncho(); x++) {
+        image.setRGB(x, y, palette.color(temperatures[y][x]));
+    }
+}`, demo:["#simulador","Ver el resultado"] },
+
+ { g:"view", cls:"View", name:"View()", sig:"public View()", loc:"View.java:18",
+   sum:"Crea la ventana y el lienzo.",
+   pts:["Todavía no se muestra: eso pasa en <code>start()</code>."],
+   code:`viewer = new Viewer();
+frame = new JFrame("Fire Animation");
+frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+frame.add(viewer);` },
+ { g:"view", cls:"View", name:"setPresenter", sig:"public void setPresenter(IPresenter presenter)", loc:"View.java:27",
+   sum:"Recibe al Presenter.",
+   pts:["Llega después porque el Presenter se crea después de la vista."],
+   code:`this.presenter = presenter;`, demo:["#flujo","Ver el arranque paso a paso"] },
+ { g:"view", cls:"View", name:"start", sig:"public void start()", loc:"View.java:32",
+   sum:"Abre la ventana y arranca su hilo.",
+   pts:["Pide una imagen solo para saber el tamaño.",
+        "<code>pack()</code> ajusta la ventana y <code>setVisible</code> la muestra."],
+   code:`BufferedImage first = presenter.getImage();
+viewer.setPreferredSize(new Dimension(first.getWidth(), first.getHeight()));
+viewer.setImage(first);
+frame.pack();
+frame.setVisible(true);
+
+Thread thread = new Thread(this,"fire-view");
+thread.setDaemon(true);
+thread.start();` },
+ { g:"view", cls:"View", name:"run", sig:"public void run()", loc:"View.java:50",
+   sum:"Repite siempre: pedir imagen, pintar y esperar 16 ms.",
+   pts:["16 ms son unos <span class='c3'>60 refrescos por segundo</span>."],
+   code:`while (true) {
+    viewer.setImage(presenter.getImage());
+    Thread.sleep(FRAME_MS);   // 16
+}`, demo:["#hilos","Ver los dos hilos"] },
+ { g:"view", cls:"IView", name:"IView (contrato)", sig:"interface IView", loc:"IView.java:5",
+   sum:"Contrato: setPresenter() y start().",
+   pts:["Lo que el Presenter puede pedirle a la vista."],
+   code:`public interface IView {
+    void setPresenter(IPresenter presenter);
+    void start();
+}` },
+
+ { g:"view", cls:"Viewer", name:"setImage", sig:"public void setImage(BufferedImage image)", loc:"Viewer.java:10",
+   sum:"Guarda la imagen y pide redibujar.",
+   pts:["<code>repaint()</code> no dibuja: solo avisa de que hay que dibujar."],
+   code:`this.image = image;
+repaint();`, demo:["#vista","Ver la cadena de dibujo"] },
+ { g:"view", cls:"Viewer", name:"paint", sig:"public void paint(Graphics g)", loc:"Viewer.java:18",
+   sum:"Dibuja la imagen estirada al tamaño del lienzo.",
+   pts:["Por eso el fuego crece si agrandas la ventana."],
+   code:`g.drawImage(image, 0, 0, getWidth(), getHeight(), null);`, demo:["#vista","Ver la cadena de dibujo"] },
+ { g:"view", cls:"Viewer", name:"update", sig:"public void update(Graphics g)", loc:"Viewer.java:24",
+   sum:"Evita el parpadeo.",
+   pts:["Sin esto, <code>Canvas</code> borra todo antes de dibujar y la imagen parpadea."],
+   code:`@Override
+public void update (Graphics g){
+    paint(g);
+}`, demo:["#vista","Ver por qué evita el parpadeo"] }
+];
+
+/* ---------- lista de funcionalidades ---------- */
+(function(){
+  const list = $("#featList"), q = $("#q"), count = $("#count");
+  let group = "all";
+  $("#statFeat").textContent = FEATURES.length;
+  const labels = { main: "Main", model: "Modelo", view: "Vista", presenter: "Presenter" };
+
+  FEATURES.forEach(f => {
+    const d = document.createElement("details");
+    d.className = "feat";
+    d.dataset.g = f.g;
+    d.dataset.text = (f.cls + " " + f.name + " " + f.sum + " " + f.sig).toLowerCase();
+    const s = document.createElement("summary");
+    s.innerHTML = `<span class="tag t-${f.g}">${f.cls}</span><span class="feat-name"></span><span class="chev" aria-hidden="true">▸</span>`;
+    const fn = $(".feat-name", s);
+    fn.append(Object.assign(document.createElement("span"), { textContent: f.name }));
+    fn.append(Object.assign(document.createElement("small"), { textContent: f.sum }));
+    const body = document.createElement("div");
+    body.className = "feat-body";
+    body.innerHTML = `<ul>${f.pts.map(p => `<li>${p}</li>`).join("")}</ul>`;
+    const pre = document.createElement("pre"); pre.className = "code"; pre.textContent = f.code;
+    const loc = document.createElement("div"); loc.className = "loc"; loc.textContent = f.sig + "  ·  " + f.loc;
+    body.append(pre, loc);
+    if (f.demo) {
+      const a = document.createElement("a"); a.className = "demo-link"; a.href = f.demo[0]; a.textContent = "→ " + f.demo[1];
+      body.append(a);
+    }
+    d.append(s, body);
+    list.append(d);
+  });
+
+  function apply(){
+    const term = q.value.trim().toLowerCase();
+    let n = 0;
+    $$("details.feat", list).forEach(d => {
+      const ok = (group === "all" || d.dataset.g === group) && (!term || d.dataset.text.includes(term));
+      d.hidden = !ok;
+      if (ok) n++;
+    });
+    count.textContent = n + " de " + FEATURES.length;
+    let e = $(".empty", list);
+    if (!n) { if (!e) { e = document.createElement("div"); e.className = "empty"; e.textContent = "Nada coincide con la búsqueda."; list.append(e); } }
+    else if (e) e.remove();
+  }
+  q.addEventListener("input", apply);
+  $("#chips").addEventListener("click", ev => {
+    const b = ev.target.closest(".chip"); if (!b) return;
+    group = b.dataset.g;
+    $$(".chip", $("#chips")).forEach(c => c.setAttribute("aria-pressed", c === b ? "true" : "false"));
+    apply();
+  });
+  apply();
+})();
+
+/* ---------- flujo paso a paso ---------- */
+(function(){
+  const SCEN = {
+    boot: [
+      { on:["main","model","fire","palette","render"], msg:"Main crea el Model", txt:"Crea el <span class='c2'>Fire</span> (320 × 200 puntos a 0), la <span class='c5'>Palette</span> y el <span class='c6'>Render</span>.", code:"IModel model = new Model();" },
+      { on:["main","view","viewer"], msg:"Main crea la View", txt:"Crea la ventana y el lienzo. Todavía no se ve nada.", code:"IView view = new View();" },
+      { on:["main","presenter"], msg:"Main crea el Presenter", txt:"Recibe el modelo y la vista: es el único que conoce a los dos.", code:"IPresenter presenter = new Presenter(model, view);" },
+      { on:["main","presenter"], msg:"Main llama a presenter.start()", txt:"Desde aquí el Presenter lo pone todo en marcha, en 3 pasos.", code:"presenter.start();" },
+      { on:["presenter","view"], msg:"Presenter → View: setPresenter(this)", txt:"La vista guarda al Presenter para poder pedirle imágenes. Va <b>lo primero</b>.", code:"view.setPresenter(this);" },
+      { on:["presenter","model","fire"], msg:"Presenter → Model: start()", txt:"Arranca el hilo <b>Model-Fire</b>: el fuego empieza a moverse.", code:"model.start();" },
+      { on:["presenter","view","viewer"], msg:"Presenter → View: start()", txt:"Abre la ventana y arranca el hilo <b>fire-view</b>.", code:"view.start();" }
+    ],
+    frame: [
+      { on:["model","fire"], msg:"Hilo Model-Fire: update()", txt:"Enciende chispas, apaga puntos y sube el calor. Luego espera 33 ms.", code:"fire.sparksGeneration();\nfire.coolPointsGeneration();\nfire.updateFlames();" },
+      { on:["view"], msg:"Hilo fire-view: pide imagen", txt:"Cada 16 ms la vista pide la imagen nueva.", code:"viewer.setImage(presenter.getImage());" },
+      { on:["view","presenter"], msg:"View → Presenter: getImage()", txt:"La vista no conoce el modelo: se lo pide al Presenter.", code:"return model.getImage();" },
+      { on:["presenter","model"], msg:"Presenter → Model: getImage()", txt:"El Presenter solo pasa la petición.", code:"return render.getImage();" },
+      { on:["model","render","fire","palette"], msg:"Render construye la imagen", txt:"Por cada punto: lee su <span class='c2'>temperatura</span>, pide su <span class='c5'>color</span> y pinta el <span class='c6'>píxel</span>.", code:"image.setRGB(x, y, palette.color(temperatures[y][x]));" },
+      { on:["presenter","view"], msg:"La imagen vuelve a la View", txt:"Viaja de vuelta: Render → Model → Presenter → View.", code:"viewer.setImage(imagen);" },
+      { on:["view","viewer"], msg:"El Viewer dibuja", txt:"<code>repaint()</code> → <code>update()</code> → <code>paint()</code>. Luego espera 16 ms y repite.", code:"g.drawImage(image, 0, 0, getWidth(), getHeight(), null);" }
+    ]
+  };
+  const LAYER = { main: "--main", presenter: "--pres", view: "--view", viewer: "--view", model: "--model", fire: "--model", palette: "--model", render: "--model" };
+  let sc = "boot", i = 0, timer = null;
+  const dots = $("#dots");
+  function draw(){
+    const steps = SCEN[sc], s = steps[i];
+    $$("#flow [data-id]").forEach(n => n.classList.toggle("on", s.on.includes(n.dataset.id)));
+    $(".stepbox").style.setProperty("--lc", `var(${LAYER[s.on[0]]})`);
+    $("#stepMsg").textContent = (i + 1) + "/" + steps.length + " · " + s.msg;
+    $("#stepTxt").innerHTML = s.txt;
+    $("#stepCode").textContent = s.code;
+    dots.innerHTML = steps.map((_, k) => `<i class="${k === i ? "on" : ""}"></i>`).join("");
+    $("#prev").disabled = i === 0;
+    $("#next").disabled = i === steps.length - 1;
+  }
+  function stopAuto(){ clearInterval(timer); timer = null; $("#auto").textContent = "▶ Auto"; }
+  $("#next").addEventListener("click", () => { if (i < SCEN[sc].length - 1) { i++; draw(); } });
+  $("#prev").addEventListener("click", () => { if (i > 0) { i--; draw(); } });
+  $("#auto").addEventListener("click", () => {
+    if (timer) return stopAuto();
+    $("#auto").textContent = "⏸ Parar";
+    if (i === SCEN[sc].length - 1) { i = 0; draw(); }
+    timer = setInterval(() => { if (i < SCEN[sc].length - 1) { i++; draw(); } else stopAuto(); }, 2600);
+  });
+  $$("[data-sc]").forEach(b => b.addEventListener("click", () => {
+    stopAuto(); sc = b.dataset.sc; i = 0;
+    $$("[data-sc]").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+    draw();
+  }));
+  draw();
+})();
+
+/* ---------- simulador del fuego (misma logica que Fire.java) ---------- */
+(function(){
+  const W = 320, H = 200;
+  const cv = $("#fireCv"), ctx = cv.getContext("2d");
+  const img = ctx.createImageData(W, H);
+  let T = new Int16Array(W * H);
+  const P = { spark: 40, cool: 30, loss: 2, speed: 4 };
+  let running = true, visible = true, timer = null;
+
+  function sparks(){ const b = (H - 1) * W; for (let x = 0; x < W; x++) if (Math.floor(Math.random() * 100) < P.spark) T[b + x] = 255; }
+  function cools(){ const b = (H - 1) * W; for (let x = 0; x < W; x++) if (Math.floor(Math.random() * 100) < P.cool) T[b + x] = 0; }
+  function flames(){
+    for (let y = H - 2; y >= 0; y--) {
+      const row = y * W, below = (y + 1) * W;
+      for (let x = 0; x < W; x++) {
+        const actual = T[row + x];
+        const left = T[below + Math.max(x - 1, 0)];
+        const center = T[below + x];
+        const right = T[below + Math.min(x + 1, W - 1)];
+        const t = Math.floor((actual + left + right + center) / 4) - Math.floor(Math.random() * (P.loss + 1));
+        T[row + x] = Math.max(t, 0);
+      }
+    }
+  }
+  function render(){
+    const d = img.data;
+    for (let i = 0, p = 0; i < T.length; i++, p += 4) {
+      const c = COLORS[T[i]];
+      d[p] = c.r; d[p + 1] = c.g; d[p + 2] = c.b; d[p + 3] = c.a;
+    }
+    ctx.putImageData(img, 0, 0);
+  }
+  function tick(){ sparks(); cools(); flames(); render(); }
+  function schedule(){
+    clearInterval(timer); timer = null;
+    if (running && visible) timer = setInterval(tick, 132 / P.speed);
+  }
+  const bind = (id, key, out, fmt) => {
+    const el = $(id), o = $(out);
+    const upd = () => { P[key] = +el.value; o.textContent = fmt(+el.value); if (key === "speed") schedule(); };
+    el.addEventListener("input", upd); upd();
+  };
+  bind("#sSpark", "spark", "#vSpark", v => v + "%");
+  bind("#sCool", "cool", "#vCool", v => v + "%");
+  bind("#sLoss", "loss", "#vLoss", v => "0 a " + v);
+  bind("#sSpeed", "speed", "#vSpeed", v => (v / 4).toFixed(2).replace(/\.?0+$/, "") + "×");
+  $("#simPlay").addEventListener("click", e => { running = !running; e.target.textContent = running ? "⏸ Pausa" : "▶ Seguir"; schedule(); });
+  $("#simReset").addEventListener("click", () => { T.fill(0); render(); });
+
+  cv.addEventListener("mousemove", ev => {
+    const r = cv.getBoundingClientRect();
+    const x = clamp(Math.floor((ev.clientX - r.left) / r.width * W), 0, W - 1);
+    const y = clamp(Math.floor((ev.clientY - r.top) / r.height * H), 0, H - 1);
+    const t = T[y * W + x], c = COLORS[t];
+    $("#probe").innerHTML = `<span class="sw"><i style="background:${css(c)}"></i></span><span>Punto (x=${x}, y=${y}) · temperatura <b>${t}</b> · color <code>rgba(${c.r},${c.g},${c.b},${c.a})</code></span>`;
+  });
+  new IntersectionObserver(es => { visible = es[0].isIntersecting; schedule(); }, { threshold: 0.05 }).observe(cv);
+  render(); schedule();
+})();
+
+/* ---------- cuadricula de calor ---------- */
+(function(){
+  const R = 6, C = 9, grid = $("#heat"), ex = $("#heatExplain");
+  let T, sel = null, loss = 1;
+  const PRESET = [255, 0, 255, 255, 0, 255, 0, 255, 255];
+  grid.style.gridTemplateColumns = `repeat(${C}, 1fr)`;
+  const reset = () => { T = Array.from({ length: R }, () => Array(C).fill(0)); T[R - 1] = PRESET.slice(); sel = null; draw(); };
+
+  function neighbours(y, x){ return { l: [y + 1, Math.max(x - 1, 0)], c: [y + 1, x], r: [y + 1, Math.min(x + 1, C - 1)] }; }
+  function draw(){
+    grid.innerHTML = "";
+    const nb = sel ? neighbours(sel[0], sel[1]) : null;
+    for (let y = 0; y < R; y++) for (let x = 0; x < C; x++) {
+      const d = document.createElement("div");
+      d.className = "cell" + (y === R - 1 ? " base" : "");
+      d.tabIndex = 0;
+      d.setAttribute("role", "button");
+      d.setAttribute("aria-label", `fila ${y}, columna ${x}, temperatura ${T[y][x]}`);
+      d.style.background = `linear-gradient(${css(COLORS[T[y][x]])},${css(COLORS[T[y][x]])}), #111`;
+      d.textContent = T[y][x];
+      if (T[y][x] > 110) { d.style.color = "#111"; d.style.textShadow = "none"; }
+      if (sel && sel[0] === y && sel[1] === x) { d.classList.add("sel"); d.insertAdjacentHTML("beforeend", "<small>actual</small>"); }
+      if (nb) for (const k of ["l", "c", "r"]) if (nb[k][0] === y && nb[k][1] === x) {
+        d.classList.add("nb"); d.insertAdjacentHTML("beforeend", `<small>${{ l: "left", c: "center", r: "right" }[k]}</small>`);
+      }
+      const act = () => {
+        if (y === R - 1) { T[y][x] = T[y][x] ? 0 : 255; } else { sel = [y, x]; }
+        draw();
+      };
+      d.addEventListener("click", act);
+      d.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); act(); } });
+      grid.append(d);
+    }
+    explain();
+  }
+  function explain(){
+    if (!sel) {
+      ex.innerHTML = `<p class="big"><b>Pulsa una celda</b> de las 5 filas de arriba.</p>
+        <p>Cada celda pasa a ser la <span class="c3">media</span> de <span class="c1">ella misma</span> y <span class="c2">las 3 de abajo</span>, menos un poco de <span class="c5">enfriamiento</span>.</p>
+        <p class="small">Por eso el calor sube y se va apagando.</p>`;
+      return;
+    }
+    const [y, x] = sel, nb = neighbours(y, x);
+    const a = T[y][x], l = T[nb.l[0]][nb.l[1]], c = T[nb.c[0]][nb.c[1]], r = T[nb.r[0]][nb.r[1]];
+    const sum = a + l + r + c, avg = Math.floor(sum / 4), t = avg - loss, res = Math.max(t, 0);
+    let edge = "";
+    if (x === 0) edge = `<p class="small">Primera columna: <code>x-1</code> sería -1, así que <b>left</b> usa la columna 0.</p>`;
+    if (x === C - 1) edge = `<p class="small">Última columna: <b>right</b> usa la misma columna para no salirse.</p>`;
+    ex.innerHTML = `<p>Celda <b>[y=${y}][x=${x}]</b>, ahora vale <span class="c1">${a}</span>.</p>
+      <span class="eq"><span class="c1">actual = ${a}</span>
+<span class="c2">left   = ${l}</span>
+<span class="c2">center = ${c}</span>
+<span class="c2">right  = ${r}</span></span>
+      <span class="eq">media = (<span class="c1">${a}</span> + <span class="c2">${l}</span> + <span class="c2">${r}</span> + <span class="c2">${c}</span>) / 4 = <b>${avg}</b>
+resta  = <span class="c5">${loss}</span>  →  ${avg} − ${loss} = ${t}
+nuevo  = <span class="c3">${res}</span></span>${edge}`;
+  }
+  $("#heatStep").addEventListener("click", () => {
+    for (let y = R - 2; y >= 0; y--) for (let x = 0; x < C; x++) {
+      const nb = neighbours(y, x);
+      const t = Math.floor((T[y][x] + T[nb.l[0]][nb.l[1]] + T[nb.r[0]][nb.r[1]] + T[nb.c[0]][nb.c[1]]) / 4) - loss;
+      T[y][x] = Math.max(t, 0);
+    }
+    draw();
+  });
+  $("#heatRand").addEventListener("click", () => { T[R - 1] = Array.from({ length: C }, () => Math.random() < 0.4 ? 255 : 0); draw(); });
+  $("#heatReset").addEventListener("click", reset);
+  $("#hLoss").addEventListener("input", e => { loss = +e.target.value; $("#vhLoss").textContent = loss; explain(); });
+  $("#vhLoss").textContent = loss;
+  reset();
+})();
+
+/* ---------- paleta ---------- */
+(function(){
+  const cv = $("#palCv"), ctx = cv.getContext("2d");
+  for (let t = 0; t < 256; t++) { ctx.fillStyle = css(COLORS[t]); ctx.fillRect(t, 0, 1, 1); }
+  const marks = $("#palMarks");
+  TARGETS.forEach(g => {
+    const m = document.createElement("div");
+    m.className = "mark"; m.style.left = (g.t / 255 * 100) + "%";
+    if (g.t === 255) m.style.transform = "translateX(-85%)";
+    if (g.t === 0) m.style.transform = "translateX(-15%)";
+    // 0 y 20 están muy juntos: el de 20 va una fila más abajo para que no se pisen
+    if (g.t === 20) m.style.top = "44px";
+    m.innerHTML = `<b>${g.t}</b><br>${g.name}`;
+    marks.append(m);
+  });
+  const s = $("#sT"), out = $("#palOut");
+  function show(){
+    const t = +s.value;
+    $("#vT").textContent = t;
+    $("#palCursor").style.left = `calc(${t / 255 * 100}% - 1.5px)`;
+    let i = 0; for (let k = 0; k < TARGETS.length - 1; k++) if (TARGETS[k].t <= t) i = k;
+    const from = TARGETS[i], to = TARGETS[i + 1], range = to.t - from.t, ratio = (t - from.t) / range, c = COLORS[t];
+    const rows = [["alpha", "a"], ["rojo", "r"], ["verde", "g"], ["azul", "b"]].map(([n, k]) => {
+      const raw = from[k] + (to[k] - from[k]) * ratio;
+      return `<tr class="ch-${k}"><td>${n}</td><td>${from[k]}</td><td>${to[k]}</td><td class="mono">${from[k]} + (${to[k]} − ${from[k]}) × ${ratio.toFixed(3)} = ${raw.toFixed(2)}</td><td><b>${c[k]}</b></td></tr>`;
+    }).join("");
+    const argb = ((c.a << 24) | (c.r << 16) | (c.g << 8) | c.b) | 0;
+    out.innerHTML = `
+      <p>La temperatura <b class="c7">${t}</b> está en el <span class="c5">tramo ${i + 1}</span> de 3: de <b>${from.t}</b> (${from.name}) a <b>${to.t}</b> (${to.name}).</p>
+      <span class="mono small">range = ${to.t} − ${from.t} = ${range}      <span class="c4">ratio</span> = (${t} − ${from.t}) / ${range} = <span class="c4">${ratio.toFixed(3)}</span></span>
+      <table class="calc"><thead><tr><th>Canal</th><th>from</th><th>to</th><th>from + (to − from) × ratio</th><th>Resultado</th></tr></thead><tbody>${rows}</tbody></table>
+      <div class="res"><span class="sw"><i style="background:${css(c)}"></i></span>
+        <div><b>Color final</b>: rgba(${c.r}, ${c.g}, ${c.b}, ${c.a})<br><span class="small mono">getRGB() = 0x${hex2(c.a)}${hex2(c.r)}${hex2(c.g)}${hex2(c.b)} = ${argb}</span></div></div>`;
+  }
+  s.addEventListener("input", show); show();
+
+  // calculadora de mix
+  const a = $("#mA"), b = $("#mB"), r = $("#mR"), mo = $("#mixOut");
+  function mixShow(){
+    const v1 = +a.value, v2 = +b.value, ratio = +r.value / 100;
+    $("#vmA").textContent = v1; $("#vmB").textContent = v2; $("#vmR").textContent = ratio.toFixed(2);
+    const raw = v1 + (v2 - v1) * ratio, res = Math.round(raw);
+    const lo = Math.min(v1, v2), hi = Math.max(v1, v2), span = Math.max(hi - lo, 1);
+    const pos = ((res - lo) / span * 100);
+    mo.innerHTML = `<span class="mono">v1 + (v2 − v1) × ratio</span>
+      <span class="eq" style="display:block;font-family:ui-monospace,Consolas,monospace;background:var(--surface2);border-radius:8px;padding:8px 12px;margin:8px 0;overflow-x:auto;white-space:pre"><span class="c2">${v1}</span> + (<span class="c4">${v2}</span> − <span class="c2">${v1}</span>) × <span class="c1">${ratio.toFixed(2)}</span>
+= <span class="c2">${v1}</span> + ${v2 - v1} × <span class="c1">${ratio.toFixed(2)}</span>
+= ${raw.toFixed(2)}   →   Math.round   →   <b class="c3">${res}</b></span>
+      <div class="barmix"><div class="fill" style="width:${clamp(pos, 0, 100)}%"></div></div>
+      <div class="small" style="display:flex;justify-content:space-between"><span>${v1 <= v2 ? "v1" : "v2"} = ${lo}</span><span>${v1 <= v2 ? "v2" : "v1"} = ${hi}</span></div>`;
+  }
+  [a, b, r].forEach(el => el.addEventListener("input", mixShow)); mixShow();
+})();
+
+/* ---------- hilos ---------- */
+(function(){
+  const cv = $("#laneCv"), ctx = cv.getContext("2d");
+  const WINDOW = 330;
+  let slow = 6, simT = 0, last = performance.now(), running = true;
+  const lanes = [
+    { name: "Model-Fire", period: 33, next: 33, ticks: [], n: 0, col: "--model" },
+    { name: "fire-view",  period: 16, next: 16, ticks: [], n: 0, col: "--view" }
+  ];
+  $("#sSlow").addEventListener("input", e => { slow = +e.target.value; $("#vSlow").textContent = slow + "×"; });
+  $("#vSlow").textContent = slow + "×";
+  function size(){
+    const d = devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+    if (cv.width !== Math.round(w * d)) { cv.width = Math.round(w * d); cv.height = Math.round(h * d); }
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+    return [w, h];
+  }
+  const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  function frame(now){
+    requestAnimationFrame(frame);
+    const dt = Math.min(now - last, 100); last = now;
+    if (!running) return;
+    simT += dt / slow;
+    lanes.forEach(l => { while (l.next <= simT) { l.ticks.push(l.next); l.next += l.period; l.n++; } l.ticks = l.ticks.filter(t => t > simT - WINDOW - 10); });
+    const [w, h] = size();
+    ctx.clearRect(0, 0, w, h);
+    const left = 92, track = w - left - 10;
+    const txt = cssVar("--text"), muted = cssVar("--muted"), line = cssVar("--line");
+    ctx.font = "600 13px system-ui, sans-serif"; ctx.textBaseline = "middle";
+    lanes.forEach((l, i) => {
+      const y = 42 + i * 62;
+      ctx.fillStyle = muted; ctx.fillText(l.name, 8, y);
+      ctx.strokeStyle = line; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(left + track, y); ctx.stroke();
+      ctx.fillStyle = cssVar(l.col);
+      l.ticks.forEach(t => {
+        const x = left + track - (simT - t) / WINDOW * track, age = (simT - t) / WINDOW;
+        ctx.globalAlpha = 1 - age * 0.7;
+        ctx.beginPath(); ctx.arc(x, y, age < 0.04 ? 9 : 6, 0, 6.2832); ctx.fill();
+      });
+      ctx.globalAlpha = 1;
+    });
+    ctx.strokeStyle = txt; ctx.globalAlpha = .5; ctx.setLineDash([4, 4]);
+    ctx.beginPath(); ctx.moveTo(left + track, 12); ctx.lineTo(left + track, h - 12); ctx.stroke();
+    ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.fillStyle = muted; ctx.font = "12px system-ui, sans-serif"; ctx.textAlign = "right";
+    ctx.fillText("ahora", left + track - 4, h - 8); ctx.textAlign = "left";
+    $("#cM").textContent = lanes[0].n; $("#cV").textContent = lanes[1].n;
+    $("#cR").textContent = (lanes[1].n / Math.max(lanes[0].n, 1)).toFixed(2);
+  }
+  new IntersectionObserver(es => { running = es[0].isIntersecting; last = performance.now(); }, { threshold: 0.05 }).observe(cv);
+  requestAnimationFrame(frame);
+})();
+
+/* ---------- navegacion: marcar seccion activa ---------- */
+(function(){
+  const links = $$("#nav a"), map = new Map(links.map(a => [a.getAttribute("href").slice(1), a]));
+  const io = new IntersectionObserver(es => {
+    es.forEach(e => { if (e.isIntersecting) { links.forEach(l => l.classList.remove("on")); const a = map.get(e.target.id); if (a) a.classList.add("on"); } });
+  }, { rootMargin: "-40% 0px -55% 0px" });
+  $$("main section").forEach(s => io.observe(s));
+})();
+</script>
+</body>
+</html>

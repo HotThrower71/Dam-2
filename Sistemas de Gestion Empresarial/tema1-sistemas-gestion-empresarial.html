@@ -1,0 +1,1241 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tema 1 · Sistemas de gestión empresarial</title>
+<style>
+:root{
+  --bg:#f5f8fb; --card:#ffffff; --ink:#1c2733; --muted:#5b6b7b; --line:#dbe4ec;
+  --brand:#1f8ac0; --brand-d:#0f5f8a; --brand-l:#e3f2fa;
+  --note:#fff6d6; --note-b:#e6b800; --tip:#e4f6ea; --tip-b:#2e9e5b; --warn:#fde8e6; --warn-b:#d9534f;
+  --act:#efe9fb; --act-b:#7b55c9; --code:#eef3f7;
+  --c1:#1f8ac0; --c2:#2e9e5b; --c3:#e08a1e; --c4:#7b55c9; --c5:#d9534f; --c6:#12a3a3; --c7:#c2478a;
+  --shadow:0 1px 2px rgba(20,40,60,.06),0 4px 14px rgba(20,40,60,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1720; --card:#17222d; --ink:#e6edf3; --muted:#9db0c2; --line:#2a3947;
+    --brand:#4bb3e6; --brand-d:#8fd3f5; --brand-l:#14303f;
+    --note:#3a3414; --note-b:#d6ad1c; --tip:#143323; --tip-b:#45b878; --warn:#3b1e1c; --warn-b:#e5726e;
+    --act:#271f3d; --act-b:#a58bec; --code:#1d2b38;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1720; --card:#17222d; --ink:#e6edf3; --muted:#9db0c2; --line:#2a3947;
+  --brand:#4bb3e6; --brand-d:#8fd3f5; --brand-l:#14303f;
+  --note:#3a3414; --note-b:#d6ad1c; --tip:#143323; --tip-b:#45b878; --warn:#3b1e1c; --warn-b:#e5726e;
+  --act:#271f3d; --act-b:#a58bec; --code:#1d2b38;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--brand)}
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+nav.side{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding:22px 16px;border-right:1px solid var(--line);background:var(--card)}
+nav.side h2{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+nav.side a{display:block;padding:6px 10px;border-radius:8px;color:var(--ink);text-decoration:none;font-size:.9rem;border-left:3px solid transparent}
+nav.side a.sub{margin-left:14px;font-size:.84rem;color:var(--muted)}
+nav.side a:hover{background:var(--brand-l)}
+nav.side a.active{background:var(--brand-l);border-left-color:var(--brand);color:var(--brand-d);font-weight:600}
+.theme{margin-top:16px;width:100%;padding:8px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;cursor:pointer;font:inherit;font-size:.85rem}
+main{padding:0 0 80px;min-width:0}
+.wrap{max-width:900px;margin:0 auto;padding:0 28px}
+.hero{background:linear-gradient(135deg,var(--brand-d),var(--brand));color:#fff;padding:60px 0 50px}
+.hero .wrap{display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.hero .num{font-size:6rem;font-weight:800;line-height:1;background:rgba(255,255,255,.18);border-radius:22px;padding:6px 28px}
+.hero h1{margin:0;font-size:clamp(1.7rem,4vw,2.6rem);line-height:1.15}
+.hero p{margin:6px 0 0;opacity:.85}
+section{padding-top:46px}
+h2.sec{font-size:1.65rem;margin:0 0 6px;color:var(--brand-d);display:flex;gap:12px;align-items:center}
+h2.sec .n{background:var(--brand);color:#fff;border-radius:10px;padding:2px 12px;font-size:1.1rem}
+h3{font-size:1.2rem;margin:30px 0 8px;color:var(--ink)}
+h3 .n{color:var(--brand);margin-right:6px}
+h4{margin:20px 0 6px;font-size:1.05rem}
+p{margin:.6em 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);margin:16px 0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.callout{border-radius:12px;padding:14px 18px 14px 16px;margin:20px 0;border-left:6px solid;position:relative}
+.callout .tag{display:block;font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;margin-bottom:4px}
+.callout.note{background:var(--note);border-color:var(--note-b)}
+.callout.note .tag{color:var(--note-b)}
+.callout.tip{background:var(--tip);border-color:var(--tip-b)}
+.callout.tip .tag{color:var(--tip-b)}
+.callout.more{background:var(--brand-l);border-color:var(--brand)}
+.callout.more .tag{color:var(--brand)}
+.callout.web{background:var(--warn);border-color:var(--warn-b)}
+.callout.web .tag{color:var(--warn-b)}
+.callout p:last-child{margin-bottom:0}
+.activity{background:var(--act);border:1px solid var(--act-b);border-radius:12px;padding:14px 18px;margin:22px 0}
+.activity .tag{font-weight:800;color:var(--act-b);display:block;margin-bottom:4px}
+.activity ol,.activity ul{margin:6px 0 0;padding-left:22px}
+.term{background:var(--code);border-radius:6px;padding:0 6px;font-weight:600}
+.key{background:linear-gradient(transparent 60%,rgba(230,184,0,.4) 60%);font-weight:600}
+em.en{color:var(--muted)}
+.obj{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.obj li{display:flex;gap:12px;align-items:flex-start;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.obj li b.i{flex:none;width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:.9rem}
+.map{overflow-x:auto}
+.map svg{min-width:640px;width:100%;height:auto}
+.map text{font:600 13px system-ui,sans-serif;fill:var(--ink)}
+.map .sm{font-size:11px;font-weight:500;fill:var(--muted)}
+.map .lbl{font-size:11px;font-style:italic;fill:var(--muted);font-weight:500}
+.map rect{fill:var(--brand-l);stroke:var(--brand);stroke-width:1.5}
+.map rect.hi{fill:var(--brand);}
+.map text.w{fill:#fff}
+.map path,.map line{stroke:var(--brand);stroke-width:1.5;fill:none}
+.search{width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit;margin-bottom:14px}
+.gl{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.gl .it{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--brand);border-radius:12px;padding:12px 15px}
+.gl .it h5{margin:0 0 4px;font-size:1rem;color:var(--brand-d)}
+.gl .it h5 i{font-weight:400;color:var(--muted)}
+.gl .it p{margin:0;font-size:.92rem}
+.eq{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
+.eq .b{background:var(--card);border:2px solid var(--brand);border-radius:12px;padding:12px;text-align:center;font-size:.92rem}
+.eq .b h5{margin:0 0 4px;color:var(--brand-d);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
+.arrow{text-align:center;font-size:1.8rem;color:var(--brand);line-height:1}
+.result{background:var(--brand);color:#fff;border-radius:12px;padding:14px 18px;text-align:center}
+@media(max-width:700px){.eq{grid-template-columns:1fr}}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+.flow .s{background:var(--brand-l);border:1.5px solid var(--brand);border-radius:10px;padding:8px 14px;font-weight:600;font-size:.92rem}
+.flow .a{color:var(--brand);font-size:1.3rem}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.pillars div{border-radius:12px;padding:14px;color:#fff;font-weight:600;text-align:center}
+.pillars small{display:block;font-weight:400;opacity:.9;margin-top:4px}
+@media(max-width:700px){.pillars{grid-template-columns:1fr}}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{padding:8px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--brand-l);color:var(--brand-d);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
+td:first-child{font-weight:700;color:var(--brand-d);white-space:nowrap}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+tr.hide{display:none}
+.stack{display:grid;gap:10px;margin:14px 0}
+.lvl{display:grid;grid-template-columns:70px 1fr;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+.lvl .k{display:grid;place-items:center;color:#fff;font-weight:800;font-size:1.2rem;text-align:center;padding:8px}
+.lvl .k small{display:block;font-size:.7rem;font-weight:600;opacity:.9}
+.lvl .b{padding:14px 18px}
+.lvl .b h4{margin:0 0 4px}
+.lvl .b h4 i{font-weight:400;color:var(--muted)}
+.lvl .b p{margin:.35em 0}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{background:var(--code);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.82rem}
+.axis{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);font-weight:600;margin-top:2px}
+.tl{position:relative;margin:20px 0;padding-left:26px}
+.tl:before{content:"";position:absolute;left:9px;top:6px;bottom:6px;width:3px;background:var(--brand);border-radius:2px}
+.tl .ev{position:relative;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:14px 0;box-shadow:var(--shadow)}
+.tl .ev:before{content:"";position:absolute;left:-26px;top:18px;width:15px;height:15px;border-radius:50%;background:var(--bg);border:4px solid var(--brand)}
+.tl .yr{font-weight:800;color:var(--brand-d);font-size:1.15rem}
+.tl .yr span{font-weight:500;color:var(--muted);font-size:.9rem;margin-left:8px}
+.tl ul{margin:4px 0 0;padding-left:20px}
+.fun{display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));padding:0;list-style:none;margin:10px 0}
+.fun li{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:flex;gap:10px}
+.fun li:before{content:"✓";color:var(--tip-b);font-weight:900}
+.rank{counter-reset:r;display:grid;gap:6px;padding:0;list-style:none;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.rank li{counter-increment:r;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 12px;display:flex;gap:10px;align-items:center}
+.rank li:before{content:counter(r);background:var(--brand);color:#fff;border-radius:7px;width:26px;height:26px;display:grid;place-items:center;font-weight:700;font-size:.85rem}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 14px;margin:10px 0}
+summary{cursor:pointer;font-weight:600;color:var(--brand-d)}
+.sum{list-style:none;padding:0;display:grid;gap:8px}
+.sum li{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+.sum li:before{content:"■";color:var(--brand);flex:none}
+.q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0}
+.q h5{margin:0 0 8px;font-size:1rem}
+.q label{display:flex;gap:10px;padding:8px 12px;border:1.5px solid var(--line);border-radius:9px;margin:6px 0;cursor:pointer}
+.q label:hover{border-color:var(--brand)}
+.q label.ok{border-color:var(--tip-b);background:var(--tip)}
+.q label.ko{border-color:var(--warn-b);background:var(--warn)}
+.q.done label{cursor:default}
+.score{position:sticky;bottom:12px;background:var(--brand);color:#fff;border-radius:12px;padding:10px 18px;font-weight:700;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:var(--shadow)}
+.score button{background:#fff;color:var(--brand-d);border:0;border-radius:8px;padding:6px 12px;font-weight:700;cursor:pointer}
+.fig{font-size:.88rem;color:var(--muted);margin-top:4px}
+/* ejercicios de clase */
+.part{margin-top:60px;padding:26px 0 0;border-top:4px dashed var(--line)}
+.part-h{background:linear-gradient(135deg,var(--act-b),var(--brand));color:#fff;border-radius:16px;padding:22px 26px;margin:0 0 6px}
+.part-h h2{margin:0;font-size:1.6rem}
+.part-h p{margin:4px 0 0;opacity:.9}
+h2.ex{font-size:1.45rem;margin:0 0 8px;color:var(--act-b);display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+h2.ex .n{background:var(--act-b);color:#fff;border-radius:10px;padding:2px 12px;font-size:1rem}
+.enun{background:var(--act);border-left:6px solid var(--act-b);border-radius:12px;padding:12px 16px;margin:12px 0}
+.enun .tag{display:block;font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--act-b);margin-bottom:4px}
+.enun p{margin:.3em 0}
+.kv td:first-child{white-space:normal;width:170px;font-weight:700}
+.kv td{font-size:.92rem}
+.sw{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);margin:14px 0}
+.sw>h5{margin:0;padding:12px 16px;background:var(--brand-l);color:var(--brand-d);font-size:1.02rem}
+.sw>h5 span{font-weight:500;color:var(--muted);font-size:.88rem;margin-left:6px}
+.sw>p{margin:0;padding:10px 16px 4px;font-size:.93rem}
+.sw .tblwrap{border:0;border-radius:0}
+.sys{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--brand);border-radius:12px;padding:14px 18px;margin:14px 0;box-shadow:var(--shadow)}
+.sys h4{margin:0 0 6px;color:var(--brand-d)}
+.sys .meta{display:grid;gap:6px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin:8px 0}
+.sys .meta div{background:var(--code);border-radius:8px;padding:8px 12px;font-size:.9rem}
+.sys .meta b{display:block;font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.sys ul{margin:6px 0 0;padding-left:20px;font-size:.93rem}
+.formula{background:var(--code);border-radius:10px;padding:10px 14px;text-align:center;font-weight:600;margin:10px 0;overflow-x:auto}
+.kpi{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--c2);border-radius:12px;overflow:hidden;margin:14px 0;box-shadow:var(--shadow)}
+.kpi>h5{margin:0;padding:10px 16px;font-size:1rem;color:var(--brand-d)}
+.stepsbox{display:grid;gap:10px;margin:12px 0}
+.stepsbox .st{display:grid;grid-template-columns:44px 1fr;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.stepsbox .st b.i{width:34px;height:34px;border-radius:50%;background:var(--act-b);color:#fff;display:grid;place-items:center;font-size:.9rem}
+.stepsbox .st p{margin:.2em 0}
+.pc{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.pc>div{border-radius:12px;padding:12px 16px;border-left:6px solid}
+.pc .pro{background:var(--tip);border-color:var(--tip-b)}
+.pc .con{background:var(--warn);border-color:var(--warn-b)}
+.pc h5{margin:0 0 4px}
+.pc ul{margin:4px 0 0;padding-left:18px}
+.menu-btn{display:none}
+@media(max-width:860px){
+  .layout{grid-template-columns:1fr}
+  nav.side{position:fixed;inset:0 auto 0 0;width:280px;z-index:20;transform:translateX(-100%);transition:transform .25s;height:100%}
+  nav.side.open{transform:none;box-shadow:6px 0 30px rgba(0,0,0,.3)}
+  .menu-btn{display:block;position:fixed;right:14px;top:14px;z-index:30;background:var(--brand);color:#fff;border:0;border-radius:10px;padding:9px 14px;font-weight:700}
+  .wrap{padding:0 16px}
+  .hero .num{font-size:4rem}
+}
+@media print{nav.side,.menu-btn,.score{display:none}.layout{display:block}}
+</style>
+</head>
+<body>
+<button class="menu-btn" onclick="document.querySelector('nav.side').classList.toggle('open')">☰ Índice</button>
+<div class="layout">
+
+<nav class="side" id="nav">
+  <h2>Tema 1</h2>
+  <a href="#inicio">Objetivos</a>
+  <a href="#mapa">Mapa conceptual</a>
+  <a href="#glosario">Glosario</a>
+  <a href="#s11">1.1 Introducción</a>
+  <a href="#s12">1.2 La gestión empresarial</a>
+  <a class="sub" href="#s121">1.2.1 Objetivo de la empresa</a>
+  <a class="sub" href="#s122">1.2.2 Procesos, datos y workflow</a>
+  <a href="#s13">1.3 Sistemas de información de gestión</a>
+  <a class="sub" href="#s131">1.3.1 La sopa de letras</a>
+  <a class="sub" href="#s132">1.3.2 Clasificación</a>
+  <a class="sub" href="#s133">1.3.3 Mercados verticales</a>
+  <a href="#s14">1.4 Un poco de historia</a>
+  <a href="#s15">1.5 Fidelización y CRM</a>
+  <a class="sub" href="#s151">1.5.1 Funcionalidades</a>
+  <a class="sub" href="#s152">1.5.2 ¿Solo grandes empresas?</a>
+  <a class="sub" href="#s153">1.5.3 Fabricantes</a>
+  <a href="#practica">Actividades y supuesto práctico</a>
+  <a href="#resumen">Resumen</a>
+  <a href="#quiz">Autoevaluación</a>
+  <h2 style="margin-top:18px">Ejercicios de clase (UT01)</h2>
+  <a href="#ex0">Presentación</a>
+  <a class="sub" href="#ex1">01 Objetivos de empresa</a>
+  <a class="sub" href="#ex2">02 Sistemas no gerenciales</a>
+  <a class="sub" href="#ex3">03 Sistemas de gestión</a>
+  <a class="sub" href="#ex4">04 Mercados vert./horiz.</a>
+  <a class="sub" href="#ex5">05 Soluciones de negocio</a>
+  <a class="sub" href="#ex6">06 Soluciones CRM</a>
+  <a class="sub" href="#ex7">07 Servicios Cloud</a>
+  <button class="theme" onclick="toggleTheme()">🌓 Cambiar claro / oscuro</button>
+</nav>
+
+<main>
+<header class="hero" id="inicio">
+  <div class="wrap">
+    <div class="num">1</div>
+    <div>
+      <h1>Introducción a los sistemas de gestión empresarial</h1>
+      <p>Sistemas de gestión empresarial · Capítulo 1 · incluye ejercicios resueltos en clase</p>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <h2 class="sec">🎯 Objetivos</h2>
+  <ul class="obj">
+    <li><b class="i">1</b><span>Entender la función de la empresa en la sociedad actual y la problemática asociada a su gestión.</span></li>
+    <li><b class="i">2</b><span>Conocer el concepto de sistema de información y las distintas herramientas informáticas que ayudan a la gestión empresarial.</span></li>
+    <li><b class="i">3</b><span>Establecer el concepto de <b>MIS</b> <em class="en">(Management Information System)</em> [SIG o sistemas de información de gestión o gerencial, en español].</span></li>
+    <li><b class="i">4</b><span>Estudiar la evolución que los sistemas de información de gestión han experimentado desde los años sesenta del siglo pasado.</span></li>
+    <li><b class="i">5</b><span>Entender la importancia de la gestión de clientes.</span></li>
+    <li><b class="i">6</b><span>Reconocer las principales soluciones CRM, tanto comerciales como <em>Open Source</em>.</span></li>
+  </ul>
+</section>
+
+<section id="mapa">
+  <h2 class="sec">🗺️ Mapa conceptual</h2>
+  <p>Vista general de todo el tema: la empresa vive de sus clientes, se compone de procesos, datos y workflow, y el SIG gestiona todo eso mediante distintos sistemas.</p>
+  <div class="card map">
+  <svg viewBox="0 0 760 470" role="img" aria-label="Mapa conceptual del tema">
+    <rect class="hi" x="300" y="20" width="110" height="40" rx="10"/><text class="w" x="355" y="45" text-anchor="middle">Empresa</text>
+    <rect x="450" y="20" width="100" height="40" rx="10"/><text x="500" y="45" text-anchor="middle">Historia</text>
+    <line x1="410" y1="40" x2="450" y2="40"/>
+    <rect x="590" y="6" width="165" height="124" rx="10"/>
+    <text class="sm" x="600" y="26">· '60 Listas de materiales - BOM</text>
+    <text class="sm" x="600" y="48">· '70 MRP - Bosch - IBM</text>
+    <text class="sm" x="600" y="70">· '80 MRP II - Microinformática</text>
+    <text class="sm" x="600" y="92">· '90 ERP</text>
+    <text class="sm" x="600" y="114">· '00 SCM y ERP II · '10 ERP Cloud - BI</text>
+    <line x1="550" y1="40" x2="590" y2="40"/>
+    <rect x="20" y="170" width="100" height="40" rx="10"/><text x="70" y="195" text-anchor="middle">Clientes</text>
+    <path d="M355 20 V8 H70 V170"/><text class="lbl" x="170" y="2">Vive de</text>
+    <path d="M355 60 V80 H110 V110"/><path d="M355 80 H275 V110"/><path d="M355 80 H440 V110"/>
+    <text class="lbl" x="170" y="74">Se compone de</text>
+    <rect x="50" y="110" width="110" height="38" rx="10"/><text x="105" y="134" text-anchor="middle">Procesos</text>
+    <rect x="220" y="110" width="110" height="38" rx="10"/><text x="275" y="134" text-anchor="middle">Datos</text>
+    <rect x="385" y="110" width="110" height="38" rx="10"/><text x="440" y="134" text-anchor="middle">Workflow</text>
+    <rect class="hi" x="290" y="230" width="130" height="56" rx="10"/>
+    <text class="w" x="355" y="254" text-anchor="middle">SIG</text><text class="w" x="355" y="272" text-anchor="middle" style="font-size:11px;font-weight:500">Sistema de información gerencial</text>
+    <path d="M355 230 V62" /><text class="lbl" x="362" y="170">Gestiona</text>
+    <path d="M290 258 H105 V148"/><path d="M290 258 H275" /><path d="M275 258 V148"/><path d="M355 258 H440"/><path d="M440 258 V148"/>
+    <text class="lbl" x="150" y="252">Gestiona</text>
+    <rect class="hi" x="20" y="400" width="100" height="40" rx="10"/><text class="w" x="70" y="425" text-anchor="middle">CRM</text>
+    <path d="M70 400 V210"/><text class="lbl" x="76" y="320">Gestiona</text>
+    <path d="M355 286 V320"/><path d="M185 320 H625"/>
+    <g>
+      <path d="M185 320 V400"/><path d="M255 320 V400"/><path d="M325 320 V400"/><path d="M395 320 V400"/><path d="M465 320 V400"/><path d="M535 320 V400"/><path d="M605 320 V400"/>
+      <rect x="160" y="400" width="50" height="40" rx="8"/><text x="185" y="425" text-anchor="middle">TPS</text>
+      <rect x="230" y="400" width="50" height="40" rx="8"/><text x="255" y="425" text-anchor="middle">BPM</text>
+      <rect x="300" y="400" width="50" height="40" rx="8"/><text x="325" y="425" text-anchor="middle">MIS</text>
+      <rect x="370" y="400" width="50" height="40" rx="8"/><text x="395" y="425" text-anchor="middle">ERP</text>
+      <rect x="440" y="400" width="50" height="40" rx="8"/><text x="465" y="425" text-anchor="middle">DSS</text>
+      <rect x="510" y="400" width="50" height="40" rx="8"/><text x="535" y="425" text-anchor="middle">EIS</text>
+      <rect x="580" y="400" width="50" height="40" rx="8"/><text x="605" y="425" text-anchor="middle">BSC</text>
+    </g>
+  </svg>
+  </div>
+</section>
+
+<section id="glosario">
+  <h2 class="sec">📖 Glosario</h2>
+  <input class="search" id="gsearch" placeholder="Buscar un término…" aria-label="Buscar en el glosario">
+  <div class="gl" id="gl">
+    <div class="it"><h5>Acrónimo</h5><p>Conjunto de siglas o partes ordenadas de varias palabras que se lee y pronuncia como una palabra.</p></div>
+    <div class="it"><h5>Cumplimiento <i>(compliance)</i></h5><p>Procedimientos que garantizan la observancia de la normativa interna, así como de la legislación actual y los códigos éticos, por parte de directivos, empleados y demás actores relacionados con una empresa.</p></div>
+    <div class="it"><h5>DataMining</h5><p>Minería de datos. Conjunto de técnicas y tecnologías orientadas a buscar patrones no evidentes, tendencias y reglas que expliquen el comportamiento de los datos en un contexto determinado en grandes bases de datos.</p></div>
+    <div class="it"><h5>DataWarehouse</h5><p>Almacén de datos que se caracteriza por contener también los metadatos (datos sobre la procedencia, periodicidad de refresco, fiabilidad, cálculos realizados para su obtención) sobre los propios datos.</p></div>
+    <div class="it"><h5>Flujo de trabajo <i>(workflow)</i></h5><p>Es la automatización regulada de los procesos de la empresa para que la información y las tareas circulen entre los distintos departamentos siguiendo un cierto orden.</p></div>
+    <div class="it"><h5>KPI <i>(Key Performance Indicator)</i></h5><p>Indicadores clave de desempeño. Indicadores que permiten medir magnitudes de interés.</p></div>
+    <div class="it"><h5>OLAP <i>(On-Line Analytics Processing)</i></h5><p>Bases de datos multidimensionales orientadas al procesamiento analítico.</p></div>
+    <div class="it"><h5>ROI <i>(Return On Investment)</i></h5><p>Retorno de la inversión. Cálculo del tiempo que se necesita para recuperar lo invertido en un sistema con los beneficios generados por él.</p></div>
+    <div class="it"><h5>Sistemas de información</h5><p>Conjunto de datos convertidos en información mediante procesos y mecanismos automatizados e interrelacionados.</p></div>
+    <div class="it"><h5>Sostenibilidad</h5><p>Búsqueda del equilibrio entre el crecimiento económico y el cuidado del medio ambiente. Cualidad de satisfacer necesidades actuales sin comprometer a generaciones futuras.</p></div>
+    <div class="it"><h5>Tecnologías de información y comunicación <i>(TIC)</i></h5><p>Dícese del conjunto de herramientas hardware y software utilizadas para el almacenamiento, tratamiento y transmisión de la información.</p></div>
+    <div class="it"><h5>Transacción</h5><p>Todo aquello que modifica o genera datos de un sistema de información.</p></div>
+  </div>
+</section>
+
+<section id="s11">
+  <h2 class="sec"><span class="n">1.1</span> Introducción</h2>
+  <p>A lo largo de la vida profesional de un programador, es altamente probable que este participe en proyectos relacionados con los sistemas de información-gestión empresarial, ya sea como desarrollador, como soporte técnico o como usuario.</p>
+  <p>Por eso, es necesario entender la función de la empresa en la sociedad actual, la problemática asociada a su gestión, así como familiarizarse con los sistemas de información y las distintas herramientas informáticas que ayudan a la gestión empresarial aplicando las tecnologías de la información y las comunicaciones (TIC) para el tratamiento y manipulación de la ingente información que se maneja, así como la evolución que han experimentado desde los años sesenta del siglo pasado.</p>
+  <p>La vital importancia de conseguir clientes y, sobre todo, de mantenerlos, explica la aparición de los sistemas de gestión de las relaciones con clientes, más conocidos por sus siglas en inglés, <b>CRM</b> <em class="en">(Customer Relationship Management)</em> que ayudan en el día a día de la fuerza comercial de cualquier empresa o negocio.</p>
+  <div class="callout note"><span class="tag">📝 Toma nota</span>La finalidad de la gestión empresarial es conseguir que la empresa sea <b>viable</b> mediante una correcta <b>planificación</b> y un <b>control</b> de los aspectos productivos, comerciales, financieros, logísticos, etc., del negocio.</div>
+</section>
+
+<section id="s12">
+  <h2 class="sec"><span class="n">1.2</span> La gestión empresarial</h2>
+  <p>Se entiende por <b>gestión empresarial</b> el conjunto de acciones y estrategias que persigue el objetivo de <span class="key">mejorar el funcionamiento general de una empresa</span>. Mediante ellas, el personal responsable procura conseguir el necesario:</p>
+  <div class="grid">
+    <div class="card" style="text-align:center;border-top:4px solid var(--c2)"><div style="font-size:1.8rem">📈</div><b>Aumento de la productividad</b></div>
+    <div class="card" style="text-align:center;border-top:4px solid var(--c3)"><div style="font-size:1.8rem">🏆</div><b>Mejora de la competitividad</b></div>
+    <div class="card" style="text-align:center;border-top:4px solid var(--c4)"><div style="font-size:1.8rem">💰</div><b>Crecimiento de la rentabilidad</b></div>
+  </div>
+
+  <h3 id="s121"><span class="n">1.2.1</span> Objetivo de la empresa</h3>
+  <p>Con sus recursos <b>humanos, materiales y financieros</b>, la empresa genera los productos y servicios que, debidamente comercializados, producen los <b>beneficios</b> que son la razón de su existencia.</p>
+  <p>Estos beneficios se obtienen mejorando distintos aspectos de la actividad empresarial. Generalmente, se consiguen:</p>
+  <div class="grid">
+    <div class="card" style="margin:0">💶 Maximizando ventas.</div>
+    <div class="card" style="margin:0">✂️ Minimizando costes.</div>
+    <div class="card" style="margin:0">🗑️ Eliminando tareas innecesarias.</div>
+    <div class="card" style="margin:0">⚡ Agilizando los procesos cotidianos.</div>
+    <div class="card" style="margin:0">🤖 Automatizando tareas.</div>
+    <div class="card" style="margin:0">🎛️ Optimizando recursos.</div>
+  </div>
+  <p style="margin-top:14px">Y, en definitiva:</p>
+  <div class="result">🔍 Controlando de manera minuciosa todos los detalles de la empresa.</div>
+  <p>De hecho, la mejor forma de incrementar los beneficios de una empresa es mediante una <b>acción combinada</b> sobre todos estos aspectos anteriormente relacionados.</p>
+  <p>En la actualidad, las empresas no solo deben ser <b>competitivas</b>, sino que además deben preocuparse por ser cada vez más <b>sostenibles</b> y conseguir un mayor nivel de <b>cumplimiento normativo</b> <em class="en">(compliance)</em>.</p>
+  <p>Por otra parte, es sobradamente sabido que la <b>eficiencia</b> y la <b>efectividad</b> influyen en el diferencial de beneficio.</p>
+  <p>Por todo ello, en la práctica, hacer crecer los beneficios se convierte en una tarea ardua que entraña dificultades que dependen, como se ha podido comprobar, de distintos factores.</p>
+  <div class="activity"><span class="tag">✏️ Actividad propuesta 1.1</span>
+    <ol type="a"><li>Reflexiona sobre las diferencias entre empresa pública y privada.</li><li>¿Deben las empresas públicas obtener beneficios? Razona la respuesta.</li><li>Estudia la diferencia entre objetivos y propósito.</li></ol></div>
+
+  <h3 id="s122"><span class="n">1.2.2</span> Procesos de negocio, datos y flujo de trabajo</h3>
+  <p>La actividad de una empresa está basada en los llamados <b>procesos de negocio</b>, conjunto de tareas relacionadas y ordenadas que proporcionan un producto o servicio, ya sea <b>interno</b> (para otro departamento de la propia empresa) o <b>externo</b> (para el cliente final).</p>
+  <p>A menudo, los procesos son <b>secuenciales</b>, de tal manera que la salida obtenida de un proceso es el inicio para otro proceso.</p>
+  <div class="flow"><div class="s">Proceso A</div><div class="a">→ salida =</div><div class="s">entrada de Proceso B</div><div class="a">→</div><div class="s">Proceso C …</div></div>
+  <p>Los procesos empresariales pueden descomponerse en otros procesos de menor entidad hasta llegar al nivel que se considere elemental, momento en el que reciben el nombre de <b>transacciones</b>.</p>
+  <div class="flow"><div class="s">Proceso</div><div class="a">→</div><div class="s">Subprocesos</div><div class="a">→</div><div class="s">…</div><div class="a">→</div><div class="s" style="background:var(--brand);color:#fff">Transacciones (nivel elemental)</div></div>
+
+  <h4>Los datos</h4>
+  <p>Por otra parte, los <b>datos</b> que se manejan en el desempeño diario de la actividad principal de una empresa son de un volumen considerable.</p>
+  <p>Desde los que son proporcionados por las distintas máquinas empleadas en los procesos de fabricación, si los hubiere, los detalles de las transacciones que se realizan en el día a día, los datos de contacto con el exterior, el histórico de las relaciones con proveedores y clientes, hasta la relación de recursos materiales y humanos internos, el control del almacén, los datos económicos, la publicidad y el marketing, la presencia en la web y en las redes sociales, etc., las empresas van acumulando a lo largo de su existencia datos obtenidos por los distintos departamentos que la componen, que se pueden y deben convertir en <b>información vital</b>.</p>
+  <p>El manejo de estos datos, y, sobre todo, su tratamiento para la extracción de información relevante, así como la relación entre los distintos departamentos y el intercambio de informaciones entre ellos de forma ordenada y eficiente (<b>flujo del trabajo</b>) son aspectos primordiales para mejorar el funcionamiento de la empresa e incrementar así el beneficio.</p>
+  <div class="pillars">
+    <div style="background:var(--c1)">⚙️ Procesos de negocio<small>tareas ordenadas que dan un producto o servicio</small></div>
+    <div style="background:var(--c2)">🗄️ Datos<small>se convierten en información vital</small></div>
+    <div style="background:var(--c3)">🔀 Flujo de trabajo<small>información y tareas entre departamentos, en orden</small></div>
+  </div>
+  <p class="fig">Los tres pilares sobre los que se construye una gestión eficiente (según el resumen del capítulo).</p>
+</section>
+
+<section id="s13">
+  <h2 class="sec"><span class="n">1.3</span> Sistemas de información de gestión</h2>
+  <p>Gran variedad de sistemas de información, como la mensajería, los sistemas bancarios, la venta en línea, las bibliotecas de recursos académicos, los sistemas de concertación de citas, etc., son utilizados a diario de forma casi inconsciente por un considerable y creciente número de usuarios cada vez más inmersos en el mundo digital.</p>
+  <p>Como en tantos otros ámbitos, la utilización de las TIC y, en particular, el desarrollo de soluciones tecnológicas para la revisión de los procesos, para el control del flujo de trabajo <em class="en">(workflow)</em> y, sobre todo, para el tratamiento centralizado de todos esos datos generados por los distintos departamentos, ha supuesto un paso fundamental en la gestión de negocios: ha significado la aparición de los <b>sistemas de información de gestión empresarial</b>, conjunto de herramientas muy útiles sin las que hoy día sería imposible sobrevivir como negocio.</p>
+  <p>Se trata de sistemas de información orientados a <b>resolver problemas empresariales</b>. Suponen la aplicación de soluciones basadas en las TIC a los requerimientos específicos de los negocios, es decir, están enfocados al negocio y por tanto se dicen empresariales o gerenciales y sustentan el gobierno de las organizaciones y empresas.</p>
+  <div class="callout tip"><span class="tag">💡 Ten en cuenta</span>Un sistema de información no es solo el conjunto de recursos tecnológicos que lo soporta, sino también la <b>organización</b> de esos recursos y los <b>métodos de obtención de la información</b> necesaria para el correcto funcionamiento del sistema.</div>
+  <p>En particular, se puede definir <b>sistema de información empresarial (SIE)</b> o <b>sistema de información gerencial (SIG)</b> como el conjunto de aplicaciones que acometen las necesidades de tratamiento simultáneo de la información necesaria para el funcionamiento de la empresa por parte de un grupo de usuarios, y proporcionan así una gestión automatizada del negocio en sentido amplio.</p>
+  <p>No solo se trata de aprovechar las aplicaciones de escritorio y de productividad personal como procesadores de texto, hojas de cálculo y bases de datos más o menos compartidas, sino desarrollar plataformas de uso simultáneo y común que incluyan los módulos específicos que sostienen todos los aspectos de las necesidades de administración de una empresa.</p>
+
+  <div class="card">
+    <h4 style="margin-top:0">Figura 1.1 · Definición de SIG como composición de conceptos</h4>
+    <div class="eq">
+      <div class="b"><h5>Sistema</h5>Conjunto de elementos que interactúan en busca de un objetivo común.</div>
+      <div class="b"><h5>Información</h5>Conjunto de datos relacionados no redundantes y relevantes.</div>
+      <div class="b"><h5>Gestión</h5>Relación de actividades enfocadas a gobernar, organizar, resolver algo o administrar una cosa, situación u organización.</div>
+    </div>
+    <div class="arrow">⬇</div>
+    <div class="result"><b>Sistema de información y gestión (SIG)</b><br>Conjunto de elementos (infraestructura y recursos TIC) capaces de transformar los datos producidos por la actividad empresarial en información relevante para la mejora del negocio, proporcionando una ayuda para la toma de decisiones empresariales que mejoren la productividad, competitividad y rendimiento de una empresa o negocio.</div>
+  </div>
+
+  <div class="activity"><span class="tag">✏️ Actividad propuesta 1.2</span>Existen también sistemas de información no gerenciales. Busca al menos tres y explica sus procesos, los datos que almacenan y estudia el flujo de información que se produce. <a href="#ex2">→ Resuelta en clase (Actividad 02)</a></div>
+
+  <h3 id="s131"><span class="n">1.3.1</span> La sopa de letras: MIS, SIG, SIE…</h3>
+  <p>El sector tecnológico utiliza su propia jerga e, intentando simplificar, abusa con frecuencia de la utilización de abreviaturas y acrónimos.</p>
+  <p>Llegados a este punto, y ante el planteamiento de intentar entender el entorno, es fácil encontrarse con una primera dificultad provocada por la abrumadora existencia de acrónimos (normalmente en inglés con su consiguiente adaptación o traducción directa al español) de conceptos que tienen que ver con alguna fase de los procesos empresariales.</p>
+  <p>Por eso, es recomendable entender bien lo que el autor consultado expresa con esas siglas que utilizará a lo largo de su escrito. A veces se utilizan las siglas <b>MIS</b> <em class="en">(Management Information System)</em> para referirse, en general, a estos sistemas de información relacionados con la administración de empresas.</p>
+  <p>Académicamente, se puede convenir que engloban a las distintas herramientas informáticas enfocadas a proporcionar, mediante el tratamiento de datos generados en una actividad empresarial, todo tipo de procesos automatizados, informes, controles, sistemas de aviso, análisis de resultados, etc., de los distintos estamentos de una empresa.</p>
+  <p>En la práctica, las herramientas comercializadas no se corresponden estrictamente con las definiciones y ocurre que, a veces, los departamentos de marketing de los desarrolladores de software empresarial las utilizan en sentido laxo.</p>
+  <div class="callout more"><span class="tag">MIS</span><b>MIS (Management Information System)</b> son sistemas de información que se alimentan de los datos proporcionados por procesos propios de la actividad de la empresa, los procesan mediante diversos tratamientos y elaboran información “cocinada” como estadísticas, informes, gráficos, simulaciones, tendencias, etc., que reflejan el funcionamiento corporativo de la organización.</div>
+
+  <div class="callout note"><span class="tag">📝 Toma nota · Acrónimos</span>En la actualidad es posible encontrar distintos tipos de sistemas de información aplicados a la gestión empresarial en alguno de sus procedimientos, tales como:</div>
+  <input class="search" id="asearch" placeholder="Filtrar acrónimos (ej. ERP, clientes, decisiones…)" aria-label="Filtrar acrónimos">
+  <div class="tblwrap"><table id="atable">
+    <thead><tr><th>Sigla</th><th>Inglés</th><th>Significado</th></tr></thead>
+    <tbody>
+      <tr><td>TPS</td><td><em>Transaction Processing System</em></td><td>Sistema de procesamiento de transacciones.</td></tr>
+      <tr><td>OAS</td><td><em>Office Automation System</em></td><td>Sistema de automatización de oficinas.</td></tr>
+      <tr><td>MRP</td><td><em>Material Requirements Planning</em></td><td>Planificación de los requisitos de material.</td></tr>
+      <tr><td>MRPII</td><td><em>Manufacture Resource Planning</em></td><td>Planificación de los recursos de fabricación.</td></tr>
+      <tr><td>PLM</td><td><em>Product Lifecycle Management</em></td><td>Gestión del ciclo de vida de productos.</td></tr>
+      <tr><td>SCM</td><td><em>Supply Chain Management</em></td><td>Gestión de la cadena de suministro.</td></tr>
+      <tr><td>SRM</td><td><em>Supplier Relationship Management</em></td><td>Gestión de la relación con proveedores.</td></tr>
+      <tr><td>MIS</td><td><em>Management Information System</em></td><td>Sistema de información de gestión (SIG).</td></tr>
+      <tr><td>BPM</td><td><em>Business Process Management</em></td><td>Administración de procesos de negocio.</td></tr>
+      <tr><td>ERP</td><td><em>Enterprise Resource Planning</em></td><td>Planificación de recursos empresariales.</td></tr>
+      <tr><td>CRM</td><td><em>Customer Relationship Management</em></td><td>Gestión de la relación con los clientes.</td></tr>
+      <tr><td>POS</td><td><em>Point Of Sale</em></td><td>Terminal punto de venta (TPV).</td></tr>
+      <tr><td>CMS</td><td><em>Content Management System</em></td><td>Sistema de gestión de contenidos.</td></tr>
+      <tr><td>DMS</td><td><em>Document Management System</em></td><td>Sistema de gestión documental.</td></tr>
+      <tr><td>KMS</td><td><em>Knowledge Management System</em></td><td>Sistema de gestión del conocimiento.</td></tr>
+      <tr><td>BI</td><td><em>Business Intelligence</em></td><td>Inteligencia de negocio.</td></tr>
+      <tr><td>DSS</td><td><em>Decision Support System</em></td><td>Sistema de apoyo a la toma de decisiones.</td></tr>
+      <tr><td>EIS</td><td><em>Executive Information System</em></td><td>Sistema de información ejecutiva.</td></tr>
+      <tr><td>BSC</td><td><em>Balanced Score Card</em></td><td>Cuadro de mando integral.</td></tr>
+      <tr><td>GIS</td><td><em>Geographical Information System</em></td><td>Sistema de información geográfica.</td></tr>
+      <tr><td>Blog</td><td><em>Weblog</em></td><td>Bitácora.</td></tr>
+    </tbody></table></div>
+  <p>En castellano, hablamos de sistemas de información gerencial (SIG) o incluso sistemas de inteligencia empresarial (SIE). Quizá, los matices que las diferencian serían objeto de un estudio más avanzado.</p>
+
+  <h3 id="s132"><span class="n">1.3.2</span> Una clasificación de los sistemas de gestión empresarial</h3>
+  <p>Es fácil encontrar diferentes clasificaciones de los sistemas de información empresarial. Para verlo en perspectiva respecto a las áreas que cubren, se podría considerar la siguiente clasificación general de los sistemas de información empresarial más destacados, <b>empezando desde su nivel inferior</b>:</p>
+  <div class="axis"><span>⬆ Nivel superior: estratégico</span></div>
+  <div class="stack" style="flex-direction:column-reverse;display:flex;gap:10px">
+    <div class="lvl"><div class="k" style="background:var(--c1)">A<small>TPS</small></div><div class="b">
+      <h4>Sistemas de procesamiento de transacciones <i>(TPS)</i></h4>
+      <p>Son el <b>nivel operacional más bajo</b>. Soportan la <b>rutina diaria</b> del negocio (transacciones comerciales, económicas, existencias, etc.), pero son muy importantes desde el punto de vista de la <b>consistencia y la integridad</b> de estas. Constituyen la <b>base</b> que utilizarán los sistemas de capa superior.</p></div></div>
+    <div class="lvl"><div class="k" style="background:var(--c2)">B<small>BPM</small></div><div class="b">
+      <h4>Sistemas de gestión por procesos de negocio <i>(BPM)</i></h4>
+      <p>Gestionan los <b>procesos</b> de la organización, es decir, las acciones que deben realizar personas y máquinas de forma ordenada para lograr un determinado objetivo y, en particular, los procesos físicos de producción, generalmente mediante la monitorización de sensores electrónicos.</p></div></div>
+    <div class="lvl"><div class="k" style="background:var(--c3)">C<small>MIS</small></div><div class="b">
+      <h4>Sistemas de información de gestión <i>(MIS)</i></h4>
+      <p>Como ya se ha comentado, recogen información de diferentes <b>fuentes internas</b> y la procesan para proporcionar <b>informes, estadísticas y proyecciones a futuro</b> que ayuden a la gerencia a tener una visión fidedigna de la situación de una parte de la empresa.</p></div></div>
+    <div class="lvl"><div class="k" style="background:var(--c4)">D<small>ERP</small></div><div class="b">
+      <h4>Sistemas de colaboración empresarial <i>(ERP)</i></h4>
+      <p>Es un <b>MIS integrado</b>. Son sistemas <b>integrales</b> de información que, en una <b>única base de datos</b>, recogen, procesan y analizan datos de todos los estamentos de la organización empresarial proporcionando así información relevante sobre procesos de producción, ventas, logística, recursos humanos, gestión de proyectos, contabilidad y finanzas de la empresa, con el fin de mejorar la gestión empresarial.</p>
+      <p>Son utilizados por una amplia gama de usuarios que tienen acceso autorizado a la información en función del trabajo que desempeñan.</p></div></div>
+    <div class="lvl"><div class="k" style="background:var(--c5)">E<small>DSS</small></div><div class="b">
+      <h4>Sistemas de apoyo a la toma de decisiones <i>(DSS)</i></h4>
+      <p>Son sistemas <b>interactivos</b> basados en la combinación de los datos para su análisis que proporcionan un paso más: información organizacional y funciones de <b>simulación y modelado</b> que podrá utilizar el responsable para seleccionar la mejor opción entre varios escenarios.</p>
+      <p>Es un tipo especial de sistema de inteligencia de negocio (BI) que almacena información interna y mediante <b>OLAP, DataWarehouse y DataMining</b> facilita la toma de decisiones (por ejemplo: gestión de tráfico, aprobación de créditos, diagnósticos médicos, etc.) mediante simulaciones, análisis estadísticos y estudios de tendencia.</p>
+      <div class="chips"><span class="chip">OLAP</span><span class="chip">DataWarehouse</span><span class="chip">DataMining</span></div></div></div>
+    <div class="lvl"><div class="k" style="background:var(--c6)">F<small>EIS</small></div><div class="b">
+      <h4>Sistemas de información ejecutiva <i>(EIS)</i></h4>
+      <p>Proporcionan, generalmente en <b>formato gráfico e intuitivo</b>, acceso con distintos niveles de detalle a la información interna y también a la proporcionada por <b>fuentes externas</b>. Ayudan en la <b>toma de decisiones estratégicas</b> que afectan a toda la organización mediante la elaboración de informes, consultas y listados de las distintas áreas de la empresa de forma consolidada.</p></div></div>
+    <div class="lvl"><div class="k" style="background:var(--c7)">G<small>BSC</small></div><div class="b">
+      <h4>Cuadro de mando integral <i>(BSC)</i></h4>
+      <p>El BSC, <em>Balanced Scorecard</em> o <em>Dashboard</em> (cuadro de mando) es la herramienta de <b>control</b> que monitoriza el grado de consecución de los objetivos de los distintos departamentos o áreas de negocio de una empresa.</p>
+      <p>Lo hace mediante el establecimiento de <b>indicadores</b>, conocidos como <b>KPI</b> <em class="en">(Key Performance Indicators)</em>, organizados normalmente en cuatro tipos: <b>financiero, conocimiento del cliente, procesos internos y de aprendizaje y crecimiento</b>. Están más orientados a la monitorización de indicadores que al análisis meticuloso de la información.</p>
+      <div class="chips"><span class="chip">💰 Financiero</span><span class="chip">🧑‍🤝‍🧑 Conocimiento del cliente</span><span class="chip">⚙️ Procesos internos</span><span class="chip">🌱 Aprendizaje y crecimiento</span></div></div></div>
+  </div>
+  <div class="axis"><span>⬇ Nivel inferior: operacional (base)</span></div>
+  <div class="callout more"><span class="tag">🔎 Para saber más</span>Se podrían considerar otros tales como los sistemas expertos basados en la inteligencia artificial (IA) o los sistemas de ayuda a decisiones de grupo (GDSS).</div>
+
+  <h3 id="s133"><span class="n">1.3.3</span> Los mercados verticales</h3>
+  <p>Como no podía ser menos, en un campo tan heterogéneo como la actividad empresarial, existen también las llamadas <b>soluciones verticales</b>, es decir, soluciones específicamente desarrolladas para un tipo de negocio o mercado en particular. A diferencia del software <b>horizontal</b>, generalista, y sin llegar a ser un software a medida, suelen constituir la solución para sectores específicos como pueden ser el agrícola, el inmobiliario, el industrial, los despachos profesionales, etc.</p>
+  <p>Son productos normalmente desarrollados a partir de la experiencia en el sector y en ocasiones participan asociaciones sectoriales en su elaboración por lo que incluyen las <b>mejores prácticas</b> y los <b>indicadores propios</b> del negocio.</p>
+  <div class="grid">
+    <div class="card" style="margin:0"><b>↔ Software horizontal</b><br>Generalista, para cualquier empresa.</div>
+    <div class="card" style="margin:0;border-color:var(--brand)"><b>↕ Solución vertical</b><br>Para un tipo de negocio concreto (agrícola, inmobiliario, industrial, despachos profesionales…). No es software a medida.</div>
+  </div>
+  <p class="fig">Figura 1.2: página web de un proveedor de soluciones verticales, Ceesa (ERP para joyerías, clínicas y consultas, supermercados, peritajes, talleres, alquiler de maquinaria pesada, tresteros, canal HORECA, inmobiliarias…).</p>
+  <div class="activity"><span class="tag">✏️ Actividad propuesta 1.3</span>Estudia en qué casos un software vertical puede ser la mejor solución de gestión para una empresa. <a href="#ex4">→ Ver Actividad 04 de clase</a></div>
+</section>
+
+<section id="s14">
+  <h2 class="sec"><span class="n">1.4</span> Un poco de historia</h2>
+  <p>A menudo, al comparar estudios históricos, se pueden advertir diferencias de décadas según el autor y las fuentes utilizadas. Eso es debido, normalmente, al desfase que solía y suele producirse entre la expansión de los desarrollos tecnológicos en EEUU y su aparición y despliegue en Europa y, en particular, en España.</p>
+  <p>A mediados del siglo pasado, las empresas utilizaban procesos de gestión manuales y poco automatizados.</p>
+
+  <p class="fig"><b>Figura 1.3 · Evolución temporal de los sistemas de información empresarial</b></p>
+  <div class="tl">
+    <div class="ev"><div class="yr">Años 60 <span>Mainframe</span></div>
+      <ul><li>Heredados de los sistemas militares, se establecieron los conceptos de gestión automatizada y se empezaron a utilizar herramientas de planificación en el ámbito comercial.</li>
+      <li><b>BOM</b> <em class="en">(Bill of Materials)</em>: gestores de listas de materiales.</li>
+      <li><b>IMC</b> <em class="en">(Inventory Management Control)</em>: control de inventario. Ambos adaptados desde el mundo militar al empresarial.</li>
+      <li>Se fundan numerosas empresas de software que en una versión básica se incluía con la venta del hardware. Los departamentos empiezan a usar software específico para sus funciones.</li>
+      <li>Primeras áreas funcionales informatizadas: <b>contabilidad, financiera y almacén</b>.</li></ul></div>
+    <div class="ev"><div class="yr">Finales 60 – años 70 <span>PCs / minis</span></div>
+      <ul><li><b>MRP</b> <em class="en">(Material Requirements Planning)</em>: primeros sistemas de planificación de la producción o de las necesidades materiales.</li>
+      <li>Se ejecutaban en <b>mainframes</b>, sistemas propietarios tipo <b>IBM S36</b>, u ordenadores “mini” tipo <b>DEC</b> <em class="en">(Digital Equipment Corporation)</em> con sistema operativo <b>VAX/VMS</b>…, naciendo un mercado dominado por IBM. El primero de los MRP se atribuye a la empresa alemana <b>Bosch</b> unos años antes.</li>
+      <li>Basados en el BOM, resolvían el mayor problema de las empresas con procesos de fabricación en etapas: calcular el material que se necesita, compararlo con lo que se tenía en el almacén y obtener así cuándo se debía abastecer.</li></ul></div>
+    <div class="ev"><div class="yr">Años 80 <span>Microinformática · Redes · EDI</span></div>
+      <ul><li>La revolución de la microinformática con la aparición de las primeras computadoras personales (<b>IBM PC</b>) provocó que más empresas de menor tamaño empezaran a utilizarlas para administrar su negocio.</li>
+      <li>Los MRP evolucionaron a <b>MRP II</b> <em class="en">(Manufacturing Resource Planning)</em>: incluían también la gestión de los costes de la materia prima, de la mano de obra, los logísticos, es decir, integraron los MRP con componentes financieros.</li>
+      <li>Se empezaron a utilizar sistemas informáticos para mecanizar tareas de algunos departamentos de forma <b>independiente</b>: un sistema de contabilidad, a veces un programa de facturación, después un programa de nóminas, casi siempre alguno específico para fabricación o prestación de servicios… hasta que se empezó a buscar la <b>integración</b> y se constató la necesidad de conectar los PC, apareciendo la <b>estructura cliente-servidor</b>.</li></ul></div>
+    <div class="ev"><div class="yr">Años 90 <span>ERP · arquitectura cliente-servidor (Gartner)</span></div>
+      <ul><li>Los fabricantes proporcionan aplicaciones que permiten a varios usuarios acceder a los datos de forma simultánea. Así aparecieron los <b>ERP</b>, añadiendo la gestión de la fabricación, de las relaciones con proveedores y clientes, de los recursos y, de forma incipiente, la inteligencia de negocio.</li>
+      <li><b>Idea base:</b> utilizar una <b>fuente de información centralizada común</b> a todos. Los datos se introducían una sola vez y estaban disponibles para el resto: una única base de datos y la posibilidad de extraer, de forma regulada, la información en función de necesidades y privilegios de cada usuario.</li>
+      <li>Un <b>ERP</b> es una aplicación de software estructurada en módulos que se complementan y que utilizan una base de datos centralizada, y que se puede utilizar para gestionar todo el negocio de una empresa. Se trataba de organizar el trabajo mediante una planificación previa de las necesidades de recursos, el control del consumo de los mismos y la gestión por procesos.</li>
+      <li>Durante mucho tiempo y enfocada a grandes empresas fue un mercado liderado por la alemana <b>SAP</b>.</li></ul></div>
+    <div class="ev"><div class="yr">Años 2000 <span>ERP II · Pymes · e-commerce · Internet</span></div>
+      <ul><li>Década de la expansión del <b>comercio electrónico</b> <em class="en">(e-commerce)</em>.</li>
+      <li>Evolución hacia la <b>externalización</b> de operaciones: necesidad de coordinación con el exterior → <b>SCM</b> <em class="en">(Supply Chain Management)</em>, gestión del intercambio de información electrónica <b>EDI</b> <em class="en">(Electronic Data Interchange)</em> entre los sistemas de gestión de las empresas y sus proveedores → <b>ERP II</b>, que añade estas funcionalidades al ERP clásico.</li>
+      <li>Aparecen <b>CRM</b> (relaciones con los clientes) y <b>PLM</b> (información técnica del producto fabricado a lo largo de todo su ciclo de vida).</li>
+      <li>La explosión de las TIC y su adopción generalizada por parte de las pequeñas empresas universaliza los ERP y aparecen soluciones adaptadas a cualquier tamaño de organización.</li></ul>
+      <div class="callout tip" style="margin-bottom:0"><span class="tag">👀 ¿Sabías que…</span>Los 2000 son la década de la expansión del comercio electrónico (<em>e-commerce</em>), es decir, la comercialización de productos y servicios utilizando únicamente las TIC en un espacio digital sin un contacto físico, ya sea entre empresas (<b>B2B</b>-<em>Business to Business</em>) o al cliente final (<b>B2C</b>-<em>Business to Customer</em>).</div></div>
+    <div class="ev"><div class="yr">Desde 2010 <span>ERP Cloud · BI · SaaS · Nube</span></div>
+      <ul><li>La aparición del <b>Cloud Computing</b> y el <b>SaaS</b> permite una explosión de crecimiento: basta un dispositivo y un navegador para disponer de todas las funcionalidades de gestión empresarial que se desee, independientemente del tamaño de la empresa.</li>
+      <li>Actualmente, y englobados bajo el nombre de ERP de nuevo, todos estos sistemas han pasado de una función meramente <b>operativa</b> a jugar un rol <b>estratégico</b> como sistemas de ayuda a la gerencia y soporte fundamental para la toma de decisiones tanto operativas como estratégicas, dando paso a <b>BI, DSS y EIS</b>.</li></ul></div>
+  </div>
+
+  <div class="callout more"><span class="tag">Resumen rápido de siglas por década</span>
+  <b>'60</b> BOM → <b>'70</b> MRP → <b>'80</b> MRP II → <b>'90</b> ERP → <b>'00</b> SCM y ERP II → <b>'10</b> ERP Cloud, BI</div>
+  <div class="activity"><span class="tag">✏️ Actividad propuesta 1.4</span>Averigua qué significado tienen las siglas JIT. Estudia dónde se creó y las consecuencias de su utilización en las cadenas de producción. <a href="#ex5">→ JIT resuelta en clase (Actividad 05)</a></div>
+</section>
+
+<section id="s15">
+  <h2 class="sec"><span class="n">1.5</span> La fidelización de clientes. Concepto de CRM</h2>
+  <p>Conseguir clientes, y lo que a la postre se convierte en más importante, mantenerlos, es un objetivo fundamental de la gestión empresarial.</p>
+  <p><b>Fidelizar</b> es conseguir una venta recurrente en el tiempo, es decir, aplicar estrategias para que el cliente se convierta en habitual. La importancia de la fidelización estriba en que mantener un cliente a lo largo de su vida útil es siempre mucho menos costoso que conseguir nuevos.</p>
+  <p>Pero los clientes se han vuelto más exigentes y la oferta se ha globalizado, por lo que es importante conocer sus necesidades y aspirar a satisfacerlos incluso antes de que el cliente sepa de su necesidad.</p>
+  <p>Por eso, las empresas han evolucionado hacia un planteamiento <b>basado en el cliente</b> y no en el producto, enfoque habitual del siglo pasado.</p>
+  <p>La visión del comercial con su cartera de clientes y libretas de pedido y, todo lo más, una hoja de cálculo en el caso más informatizado, ha dado paso a otra visión más moderna, englobada en la denominada <b>automatización de la fuerza de venta</b>, basada en la utilización de sistemas apoyados en la movilidad y el acceso desde cualquier dispositivo que gestionan todo tipo de interacciones con el cliente con el objetivo de mejorar las relaciones comerciales con él.</p>
+  <div class="callout more"><span class="tag">CRM</span>Un <b>sistema de gestión de las relaciones con el cliente</b>, CRM por sus siglas en inglés <em class="en">(Customer Relationship Management)</em>, es un software colaborativo basado en la orientación al cliente que registra toda su información de contacto, pero también, y lo que es más importante, almacena las <b>transacciones de todo tipo</b> mantenidas con él de manera que proporcionan una visión global de un ecosistema al que pertenecen los productos, los servicios, los clientes actuales y potenciales y los recursos de la empresa.</div>
+  <p>Engloban y centralizan las bases de datos de las interacciones que se tienen con los clientes. Esta centralización de información, accesible en mayor o menor medida por el personal de la empresa en función de sus privilegios, proporciona un <b>conocimiento profundo del cliente</b> y permite establecer fácilmente y de forma personalizada las estrategias comerciales, de marketing y de servicio al cliente que proporcionarán en definitiva su fidelización.</p>
+  <p>Puede decirse que son la <b>evolución inteligente de las hojas de cálculo</b> que gerentes, comerciales y muchos profesionales en general suelen utilizar al comenzar su actividad.</p>
+  <p class="fig">Figura 1.4: pantalla de GoldMine, uno de los primeros CRM.</p>
+
+  <h3 id="s151"><span class="n">1.5.1</span> Funcionalidades de un CRM</h3>
+  <p>Un CRM es una herramienta de implementación, normalmente sencilla, dirigida en especial a los departamentos comerciales y de marketing de las empresas, aunque no únicamente a ellos, que maneja la gestión de datos de clientes, las oportunidades de venta, los presupuestos, los ingresos por ventas y las campañas publicitarias y de marketing.</p>
+  <p>Las principales funcionalidades, sin pretender ser exhaustivos, de un CRM son las siguientes:</p>
+  <ul class="fun">
+    <li>Recopila y organiza toda la información de contacto de los clientes.</li>
+    <li>Permite múltiples clasificaciones de estos (actuales y potenciales y dentro de cada categoría clasificaciones por cualquier aspecto: localización, tamaño, sector, etc.).</li>
+    <li>Gestiona oportunidades de venta desde el inicio.</li>
+    <li>Dispone de plantillas personalizables de mail y casi cualquier tipo de documento relacionado con el proceso de venta, como presupuestos, órdenes de compra).</li>
+    <li>Realiza el seguimiento de las operaciones y del personal de ventas involucrado.</li>
+    <li>Dispone de calendario y sistema de avisos para los usuarios.</li>
+    <li>Calcula previsiones, obtiene estadísticas y elabora informes.</li>
+    <li>Permite personalizar el trato en el servicio de atención al cliente.</li>
+    <li>Automatiza el marketing.</li>
+  </ul>
+
+  <h4>Evolución del software de CRM <span class="fig">(Figura 1.5)</span></h4>
+  <div class="grid">
+    <div class="card" style="margin:0;border-top:4px solid var(--c1)"><b>Años 80</b><br>Gestores de contactos (Palm)<br>GoldMine (1989)</div>
+    <div class="card" style="margin:0;border-top:4px solid var(--c2)"><b>Años 90</b><br>Siebel<br>Automatización de <em>call centers</em><br>Salesforce SaaS (1999)</div>
+    <div class="card" style="margin:0;border-top:4px solid var(--c3)"><b>Años 2000</b><br>SAGE, Microsoft<br>Pymes y autónomos</div>
+    <div class="card" style="margin:0;border-top:4px solid var(--c4)"><b>Años 2010</b><br>Más pequeñas y baratas<br>Cloud<br>CRM Social</div>
+  </div>
+
+  <div class="callout more"><span class="tag">Un CRM es…</span>una herramienta de <b>seguimiento</b>, de <b>comunicación</b> y de <b>análisis</b>.</div>
+  <p>Un CRM permite hacer un <b>seguimiento automatizado</b> de las oportunidades de venta, desde la fase de obtención de datos, proporcionando normalmente:</p>
+  <ul>
+    <li>Sistemas de captura automatizada desde ficheros de estructura simple como “.csv”.</li>
+    <li>Campos especiales como fechas de contacto o de marcado de hitos.</li>
+    <li>Campos para notas amplias.</li>
+    <li>Histórico de operaciones y comunicaciones.</li>
+    <li>Recordatorios y avisos.</li>
+    <li>Archivos adjuntados en las comunicaciones.</li>
+  </ul>
+  <p>Usándolo como herramienta básica de comunicación, permite controlar las “conversaciones” en el tiempo, disponer de plantillas de respuesta o primer contacto tipo, utilizarla en muchos casos como plataforma de e-mailing.</p>
+  <p>Y, por supuesto, proporciona información analítica mediante estadísticas e informes por cliente, por tipo de propuesta, por estimación de ventas, etc.</p>
+  <div class="callout tip"><span class="tag">🧠 Recuerda</span>Estudiar la <b>tasa de retención de clientes</b>, la <b>cantidad de nuevos clientes referenciados</b> por clientes actuales, la <b>evolución del gasto</b> de cada cliente, y el <b>factor de reiteración</b> de las compras, entre otras cosas, permitirá ponderar los beneficios que se están obteniendo después de implementar un CRM, lo que proporcionará el <b>ROI</b> de su implementación.</div>
+
+  <h3 id="s152"><span class="n">1.5.2</span> ¿Solo para grandes empresas?</h3>
+  <p>Independientemente de su tamaño y del número de clientes que tenga una empresa, esta debe preocuparse de gestionar sus relaciones con ellos de la mejor forma.</p>
+  <p>Los gestores actuales ya no tienen esa idea preconcebida hasta hace relativamente poco tiempo de que los CRM son herramientas complicadas y costosas y que, por tanto, solo las grandes empresas les podrían sacar partido.</p>
+  <p>Existe en el mercado actual una gran variedad de sistemas CRM para todo tipo de empresas. Un CRM no solo proporciona valor añadido a organizaciones grandes, sino que las pymes y los autónomos también pueden beneficiarse de la automatización de la gestión con sus clientes.</p>
+  <p>Hay una solución para cada negocio y lo importante es saber calcular el retorno de la inversión (<b>ROI</b>) para encontrar la apropiada al tamaño y a la actividad de la empresa.</p>
+  <p>Existen incluso soluciones <b>monousuario</b>.</p>
+  <p class="fig">Figura 1.6: captura de pantalla de ACT!, otro CRM con historia.</p>
+
+  <h3 id="s153"><span class="n">1.5.3</span> Principales fabricantes</h3>
+  <p>La diferenciación entre soluciones <b>Open Source</b>, semigratuitas y comerciales, se ha ido reduciendo en los últimos años. Varias de las aplicaciones que en sus inicios tuvieron licencia Open Source han evolucionado hacia una oferta mixta con versiones sin coste hasta un cierto número de usuarios o que incluyen un número limitado de funcionalidades o, algunas como OpenBravo, directamente, se han convertido en versiones totalmente comerciales.</p>
+  <p>Las grandes compañías fabricantes de software empresarial como <b>Microsoft, Oracle, Salesforce o SAP</b> proporcionan soluciones CRM de forma independiente o como parte integrante de sistemas ERP, sobre los que se trabajará en el próximo capítulo.</p>
+  <div class="grid">
+    <div class="card" style="margin:0;border-top:4px solid var(--c3)"><b>🏢 Comerciales</b><br>Microsoft, Oracle, Salesforce, SAP.</div>
+    <div class="card" style="margin:0;border-top:4px solid var(--c2)"><b>🔓 Siguen siendo Open Source</b><br>(aunque la comunidad que las desarrolló puede haber abandonado el mantenimiento y encontrarse bajo el control de empresas que además proporcionan servicios con coste): <b>Suite CRM, vTiger CRM, OroCRM y Zurmo</b>.</div>
+  </div>
+  <p class="fig" style="margin-top:12px">Figura 1.7 · Cuadrante mágico de aplicaciones CRM de implantación en el mercado europeo y español (fuente: SoftwareReviews). Un estudio semejante se realizará en el próximo capítulo con los ERP, pues sus resultados son totalmente aplicables a los CRM.</p>
+
+  <div class="callout web"><span class="tag">🌐 Recurso web · Información sobre software empresarial</span>
+    <ul style="margin:4px 0 0;padding-left:20px">
+      <li>SoftwareReviews: <a href="https://www.softwarereviews.com">https://www.softwarereviews.com</a></li>
+      <li>Capterra: <a href="http://www.capterra.com">http://www.capterra.com</a></li>
+      <li>Technology Evaluation Centers (TEC): <a href="https://www3.technologyevaluation.com">https://www3.technologyevaluation.com</a></li>
+    </ul></div>
+  <p>La variedad de soluciones es considerable. Sería imposible relacionar los innumerables fabricantes que ofrecen soluciones CRM.</p>
+  <p><b>Capterra</b> es una compañía parte de Gartner que, situada en una posición intermedia entre compradores y proveedores, proporciona una de las mayores fuentes de información y de opiniones verificadas sobre software.</p>
+  <p>Según un informe elaborado por esta empresa en 2018, que recoge, entre otros, datos relativos a clientes y usuarios, las diez marcas más populares son las de la figura 1.8:</p>
+  <ol class="rank">
+    <li>Salesforce</li><li>Zoho CRM</li><li>Odoo</li><li>Dynamics CRM</li><li>Act!</li>
+    <li>Hubspot CRM</li><li>Agile CRM</li><li>Pipedrive</li><li>SAP CRM</li><li>Insightly</li>
+  </ol>
+  <p class="fig">Figura 1.8: resumen informe Capterra.</p>
+</section>
+
+<section id="practica">
+  <h2 class="sec">🛠️ Actividades y supuesto práctico</h2>
+  <div class="activity"><span class="tag">✏️ Actividad propuesta 1.5</span>De los CRM citados, escoge tres y realiza una comparativa entre ellos. <a href="#ex6">→ Ver Actividad 06 de clase</a></div>
+  <div class="card">
+    <h4 style="margin-top:0">Supuesto práctico</h4>
+    <p><b>1.</b> Para practicar el uso de una solución cloud de CRM, abre una cuenta en la página web de Zoho CRM (www.zoho.com) y configura una instancia de la aplicación, para lo que necesitarás proporcionar una cuenta de correo. Haz un recorrido por la aplicación y consulta la ayuda que proporciona el fabricante. A continuación:</p>
+    <ol type="a">
+      <li>Elabora un informe de usuario básico de no más de ocho páginas sobre este CRM de uso gratuito y explica las condiciones.</li>
+      <li>Haz la importación de los datos contenidos en la hoja de cálculo <em>listado clientes</em> disponible en los recursos digitales. Quizá haya que manipularla para adaptarla al formato que necesita Zoho.</li>
+      <li>Configuración: realiza la configuración básica, introduciendo los datos completos de una empresa ficticia.</li>
+      <li>Configura el correo electrónico de la aplicación y finaliza el proceso de confirmación.</li>
+      <li>Crea tres tareas diferentes en tres clientes distintos.</li>
+      <li>Crea una plantilla con el <em>layout</em> de dos columnas con una imagen. Personaliza la plantilla con, por ejemplo, una oferta comercial de un producto.</li>
+      <li>Envíaselo a un cliente (haz el envío a una cuenta de un compañero para comprobar que está bien configurado y ver lo que recibe el supuesto cliente).</li>
+    </ol>
+  </div>
+</section>
+
+<section id="resumen">
+  <h2 class="sec">📌 Resumen del capítulo</h2>
+  <ul class="sum">
+    <li>Un programador debe conocer conceptos básicos de la actividad empresarial que le permita participar en el desarrollo de sistemas de gestión empresarial, una de las actividades más demandadas en el mercado laboral actual.</li>
+    <li>Las empresas deben ser competitivas, sostenibles y con un alto nivel de cumplimiento.</li>
+    <li>Los beneficios se consiguen maximizando ventas, minimizando costes, eliminando tareas innecesarias, agilizando los procesos cotidianos, automatizando tareas, optimizando recursos y, en definitiva, controlando con detalle todos los aspectos de la empresa.</li>
+    <li>Los tres pilares sobre los que se construye una gestión eficiente de la empresa son los procesos de negocio, los datos y el flujo de la información.</li>
+    <li>Las TIC han proporcionado herramientas cada vez más sofisticadas para la gestión empresarial.</li>
+    <li>Un sistema de información empresarial (SIE) o sistema de información gerencial (SIG), es un conjunto de aplicaciones que proporcionan una gestión automatizada del negocio en sentido amplio.</li>
+    <li>Los sistemas de gestión empresarial, en sus numerosas variedades, han contribuido al éxito de los negocios.</li>
+    <li>Existe infinidad de acrónimos relacionados con herramientas de gestión empresarial.</li>
+    <li>Aunque a veces se solapan algunos, se puede categorizar los tipos de sistemas de información según que actúen sobre determinados procesos de la actividad empresarial, en: sistemas de procesamiento de transacciones (TPS), sistemas de gestión por procesos de negocio (BPM), sistemas de información de gestión (MIS), sistemas de colaboración empresarial (ERP), sistemas de apoyo a la toma de decisiones (DSS), sistemas de información ejecutiva (EIS) y cuadro de mando integral (BSC).</li>
+    <li>La evolución experimentada desde los años sesenta hasta la actualidad ha llevado a estos sistemas a jugar un rol estratégico en la gestión de empresas.</li>
+    <li>Se llaman "soluciones verticales" a las específicamente desarrolladas para un tipo de negocio o mercado en particular.</li>
+    <li>La vital importancia de conseguir clientes y, sobre todo, de mantenerlos, explica la aparición de los sistemas de gestión de las relaciones con clientes (CRM).</li>
+    <li>Un CRM es una herramienta de seguimiento, de comunicación y de análisis.</li>
+    <li>Hay una solución para cada negocio, independientemente del tamaño y su actividad. Solo hay que encontrar la que asegura el retorno de la inversión (ROI) apropiado.</li>
+    <li>Con un CRM se vende más y mejor.</li>
+  </ul>
+</section>
+
+<section id="quiz">
+  <h2 class="sec">✅ Actividades de autoevaluación</h2>
+  <p>Elige una opción en cada pregunta: se corrige al momento.</p>
+  <div id="quizbox"></div>
+  <div class="score"><span id="scoretxt">Aciertos: 0 / 10</span><button onclick="resetQuiz()">Reiniciar</button></div>
+</section>
+
+<!-- ===================== EJERCICIOS DE CLASE ===================== -->
+<div class="part" id="ex0">
+  <div class="part-h">
+    <h2>📓 Ejercicios resueltos en clase · UT 01</h2>
+    <p>Sistemas de gestión empresarial – 0491 · Prof.: Alberto Acuña · Actividades 01 a 07 (autora: Irene Gil García)</p>
+  </div>
+  <div class="grid" style="margin-top:14px">
+    <a class="card" style="margin:0;text-decoration:none;color:inherit" href="#ex1"><b>01</b> Objetivos de empresa</a>
+    <a class="card" style="margin:0;text-decoration:none;color:inherit" href="#ex2"><b>02</b> Sistemas de información no gerencial</a>
+    <a class="card" style="margin:0;text-decoration:none;color:inherit" href="#ex3"><b>03</b> Sistemas de gestión empresarial</a>
+    <a class="card" style="margin:0;text-decoration:none;color:inherit" href="#ex4"><b>04</b> Mercados verticales y horizontales</a>
+    <a class="card" style="margin:0;text-decoration:none;color:inherit" href="#ex5"><b>05</b> Soluciones de negocio o servicio</a>
+    <a class="card" style="margin:0;text-decoration:none;color:inherit" href="#ex6"><b>06</b> Soluciones verticales CRM</a>
+    <a class="card" style="margin:0;text-decoration:none;color:inherit" href="#ex7"><b>07</b> Servicios de Cloud</a>
+  </div>
+
+<!-- ACT 01 -->
+<section id="ex1">
+  <h2 class="ex"><span class="n">Actividad 01</span> Objetivos de empresa</h2>
+  <div class="enun"><span class="tag">Enunciado</span><p>Describe brevemente los procesos de negocio de una empresa (inventada o real) e identifica para la empresa descrita, un ejemplo de cada uno de los objetivos de empresa (Maximizar ventas, Minimizar costes, Eliminar tareas innecesarias, Agilizar los procesos cotidianos, Automatizar tareas y Optimizar recursos).</p><p><b>Se solicita tres ejemplos, de tres sectores diferentes.</b></p></div>
+
+  <h3>🚚 Empresa del sector de transportes</h3>
+  <h4>Proceso de negocio</h4>
+  <div class="flow">
+    <div class="s">1 · El cliente solicita cotización para enviar/traer mercancía</div><div class="a">→</div>
+    <div class="s">2 · Se calcula la tarifa según volumen y kilómetros</div><div class="a">→</div>
+    <div class="s">3 · Se confirma pedido</div><div class="a">→</div>
+    <div class="s">4 · Planificación y asignación en tráfico: vehículo, chófer, reserva de barco, cuadrando salida o retorno con otro cliente</div><div class="a">→</div>
+    <div class="s">5 · Se realiza el transporte</div><div class="a">→</div>
+    <div class="s">6 · Confirmación de entrega con albarán firmado</div><div class="a">→</div>
+    <div class="s">7 · Se emite factura al cliente, con su registro contable</div><div class="a">→</div>
+    <div class="s">8 · Se registra el cobro y se cierra la operación</div>
+  </div>
+  <h4>Objetivos de la empresa</h4>
+  <div class="tblwrap"><table class="kv"><tbody>
+    <tr><td>💶 Maximizar ventas</td><td>A los clientes de carga completa, ofrecerles espacio de almacenamiento temporal.</td></tr>
+    <tr><td>✂️ Minimizar costes</td><td>En el envío de salida a península de un cliente, se planifica un transporte cercano de entrada a la isla para otro cliente, amortizando un único trayecto en barco, combustible, peajes y dietas de conductor, de forma que el coste del transporte se reduce.</td></tr>
+    <tr><td>🗑️ Eliminar tareas innecesarias</td><td>Digitalizar con una PDA o móvil la entrada manual de datos de albaranes en papel.</td></tr>
+    <tr><td>⚡ Agilizar procesos cotidianos</td><td>El sistema genera de forma automática varios documentos necesarios para el transporte, como las cartas de porte, el ADR según los datos introducidos en el sistema.</td></tr>
+    <tr><td>🤖 Automatizar tareas</td><td>Una vez confirmada la entrega de la mercancía, se generaría la factura, enviándola por correo electrónico.</td></tr>
+    <tr><td>🎛️ Optimizar recursos</td><td>Según el servicio necesario a realizar (kilómetros) un software analizaría la disponibilidad de camiones, remolques y conductores según los controles de tacógrafo, datos de consumo de cada camión, próximas revisiones.</td></tr>
+  </tbody></table></div>
+
+  <h3>🍽️ Empresa del sector de hostelería</h3>
+  <h4>Proceso de negocio</h4>
+  <div class="flow">
+    <div class="s">1 · El cliente toma asiento y realiza el pedido</div><div class="a">→</div>
+    <div class="s">2 · El camarero toma nota mediante la PDA: queda registrada y enviada automáticamente a cocina o barra</div><div class="a">→</div>
+    <div class="s">3 · Recibida la comanda, se preparan los platos</div><div class="a">→</div>
+    <div class="s">4 · Finalizados, se sirven al comensal</div><div class="a">→</div>
+    <div class="s">5 · Se descuenta automáticamente del stock las materias primas según el pedido</div><div class="a">→</div>
+    <div class="s">6 · Se comprueban las órdenes de compra generadas y se emiten</div><div class="a">→</div>
+    <div class="s">7 · Se genera la cuenta del pedido, con su ticket, para cobrar</div><div class="a">→</div>
+    <div class="s">8 · Se cobra y queda registrado el ingreso, cerrando la operación</div>
+  </div>
+  <h4>Objetivos de la empresa</h4>
+  <div class="tblwrap"><table class="kv"><tbody>
+    <tr><td>💶 Maximizar ventas</td><td>Ofrecer recomendaciones al camarero mediante la pantalla del TPV.</td></tr>
+    <tr><td>✂️ Minimizar costes</td><td>El sistema descontaría de forma automática del inventario los ingredientes según los platos de las comandas, y así se podría comparar el stock teórico del sistema en el recuento semanal.</td></tr>
+    <tr><td>🗑️ Eliminar tareas innecesarias</td><td>La introducción automática de los pedidos a domicilio que se reciben en la cocina, sin que se tengan que picar de forma manual.</td></tr>
+    <tr><td>⚡ Agilizar procesos cotidianos</td><td>El camarero toma nota en una PDA de la comanda, y llega directamente a cocina o barra, sin que el camarero tenga que ir a entregar el papel.</td></tr>
+    <tr><td>🤖 Automatizar tareas</td><td>Según el stock calculado, que se agrupe por proveedor creando una orden de compra provisional.</td></tr>
+    <tr><td>🎛️ Optimizar recursos</td><td>El sistema analizaría el volumen de reservas confirmadas y planificando un cuadrante de turnos de camareros y cocineros según las fechas y franjas horarias.</td></tr>
+  </tbody></table></div>
+  <div class="callout note"><span class="tag">Ojo</span>El enunciado pide tres empresas de tres sectores; en el PDF de clase solo aparecen resueltas dos (transportes y hostelería). El tercer sector que aparece en la UT es el de desarrollo de software (en los KPI de la Actividad 03) y el de servicios profesionales (Actividad 07).</div>
+</section>
+
+<!-- ACT 02 -->
+<section id="ex2">
+  <h2 class="ex"><span class="n">Actividad 02</span> Sistemas de información no gerencial</h2>
+  <div class="enun"><span class="tag">Enunciado a)</span><p>Una vez explicados los procesos de negocio y los sistemas de información gerencial. Se solicita describir tres <u>sistemas de información no gerencial</u>, explicando sus procesos, los datos que almacenan y estudia el flujo de información que produce.</p></div>
+  <div class="callout more"><span class="tag">Idea clave</span>Un sistema <b>NO GERENCIAL</b> no tiene por objetivo la toma de decisiones, ni analizar grandes resultados. Se basa en <b>ejecutar y registrar tareas rutinarias</b> del día a día.</div>
+
+  <div class="sys" style="border-left-color:var(--c1)"><h4>TPS – Procesamiento de transacciones</h4>
+    <p>Sistema básico a nivel operativo que registra actividades rutinarias y diarias.</p>
+    <div class="meta">
+      <div><b>Proceso</b>Registro de las ventas en un punto de venta, facturación y cobro de clientes, entrada y salida de stock.</div>
+      <div><b>Datos almacenados</b>Las transacciones realizadas en tiempo real.</div>
+      <div><b>Flujo de información</b>Ofrece datos de los empleados, el stock en tiempo real, albaranes, tickets, facturas.</div>
+    </div></div>
+  <div class="sys" style="border-left-color:var(--c3)"><h4>OAS – Automatización de oficinas</h4>
+    <p>Aplicaciones para facilitar y automatizar trabajo diario de administración.</p>
+    <div class="meta">
+      <div><b>Proceso</b>Redacta y digitaliza documentos (cartas de porte, albaranes), gestiona comunicaciones, agendas y citas, así como archivo y clasificación de documentos digitales.</div>
+      <div><b>Datos almacenados</b>Archivos de texto, plantillas, registro de llamadas y correos electrónicos, contactos.</div>
+      <div><b>Flujo de información</b>Documentos físicos escaneados, conversión de formatos de texto a pdf, envío automático de correos, documentos oficiales listos para revisión y firma, envío.</div>
+    </div></div>
+  <div class="sys" style="border-left-color:var(--c4)"><h4>KWS – Sistema de trabajo del conocimiento</h4>
+    <p>Diseñado para ayudar a crear y organizar nuevo conocimiento en la empresa para técnicos o especialistas.</p>
+    <div class="meta">
+      <div><b>Proceso</b>Diseños técnicos, creación de manuales de procedimientos, simulación de procesos.</div>
+      <div><b>Datos almacenados</b>Planos, diagramas, especificaciones técnicas, guías.</div>
+      <div><b>Flujo de información</b>Normativas legales, fichas técnicas de producto, planos, manuales operativos.</div>
+    </div></div>
+
+  <div class="enun"><span class="tag">Enunciado b)</span><p>¿Qué es un cliente interno o externo en los sistemas gerenciales o no gerenciales?</p></div>
+  <div class="grid">
+    <div class="card" style="margin:0;border-top:4px solid var(--c2)"><b>🏢 CLIENTE INTERNO</b><br>Usuario, departamento dentro de la empresa que recibe la información, o servicio de otro departamento para realizar su trabajo.</div>
+    <div class="card" style="margin:0;border-top:4px solid var(--c3)"><b>🌍 CLIENTE EXTERNO</b><br>Persona o entidad fuera de la empresa que adquiere productos o servicios finales.</div>
+  </div>
+  <div class="tblwrap" style="margin-top:12px"><table class="kv"><thead><tr><th>Sector</th><th>Cliente interno</th><th>Cliente externo</th></tr></thead><tbody>
+    <tr><td>🚚 Transporte</td><td>El jefe de tráfico recibe de administración los pedidos confirmados.</td><td>Empresa que contrata el transporte.</td></tr>
+    <tr><td>🍽️ Hostelería</td><td>La cocina recibe la orden del pedido realizada por el camarero.</td><td>El comensal del restaurante que realiza el pedido.</td></tr>
+  </tbody></table></div>
+
+  <div class="enun"><span class="tag">Enunciado c)</span><p>De cada uno de los sistemas no gerenciales que defines, pon un ejemplo de cliente interno o cliente externo.</p></div>
+  <div class="grid">
+    <div class="card" style="margin:0"><b>TPS</b> · cliente <b>externo</b>: el cliente que compra un billete de barco.</div>
+    <div class="card" style="margin:0"><b>OAS</b> · cliente <b>interno</b>: departamento de recursos humanos, que recibe el control horario.</div>
+    <div class="card" style="margin:0"><b>KWS</b> · cliente <b>interno</b>: mecánicos/mantenimiento que reciben las fichas técnicas actualizadas, manuales de procedimiento.</div>
+  </div>
+
+  <div class="enun"><span class="tag">Enunciado d)</span><p>¿Puedes poner tres ejemplos de sistema de información gerencial?</p></div>
+  <p>Los <b>sistemas de información gerencial</b> están diseñados para apoyar a dirección, mandos intermedios y gerentes.</p>
+  <div class="grid">
+    <div class="card" style="margin:0;border-top:4px solid var(--c3)"><b>MIS</b> · Sistema de información para la gestión. Transforman datos operativos en informes estructurados sobre el rendimiento de la empresa.</div>
+    <div class="card" style="margin:0;border-top:4px solid var(--c5)"><b>DSS</b> · Sistema de soporte a la decisión. Analiza y ayuda a gerentes a tomar decisiones ante problemas no rutinarios, mediante datos, simulaciones o análisis de escenarios.</div>
+  </div>
+  <p class="fig">En el PDF solo se desarrollan dos (MIS y DSS); el tercero que se ve en el resto de actividades es el EIS (alta dirección).</p>
+
+  <div class="enun"><span class="tag">Enunciado e)</span><p>¿Qué lo diferencia de un sistema de información no gerencial? (Razona la respuesta)</p></div>
+  <div class="tblwrap"><table class="kv"><thead><tr><th></th><th>Gerencial</th><th>No gerencial</th></tr></thead><tbody>
+    <tr><td>Para qué sirve</td><td>Para la toma de decisiones dentro de la empresa, con estrategia y una planificación, analizando, evaluando el rendimiento del negocio.</td><td>Para ejecutar y registrar las operaciones diarias de los trabajadores.</td></tr>
+  </tbody></table></div>
+</section>
+
+<!-- ACT 03 -->
+<section id="ex3">
+  <h2 class="ex"><span class="n">Actividad 03</span> Sistemas de gestión empresarial</h2>
+  <div class="enun"><span class="tag">Enunciado</span><p>Describe en mayor detalle cada uno de los sistemas de gestión empresarial y define tres ejemplos de software para: TPS, BPM, MIS…</p></div>
+
+  <div class="sys" style="border-left-color:var(--c1)"><h4>TPS – Transaction Processing System · Sistema de Procesamiento de Transacciones</h4>
+    <p>Es el sistema de información situado en la <b>base operativa</b> de la jerarquía empresarial. Su función principal es registrar, procesar y almacenar las transacciones rutinarias diarias de la compañía (ventas en caja, emisión de facturas, movimientos de stock, cobros). Está diseñado para manejar un gran volumen de datos de forma rápida, segura y consistente, garantizando que cada operación quede registrada sin duplicidades ni errores.</p>
+    <div class="meta"><div><b>Nivel jerárquico</b>Base operativa (cajeros, auxiliares administrativos, recepcionistas).</div>
+    <div><b>Ejemplo</b>Cuando un cliente paga una compra, el TPV crea la venta, descuenta existencias y registra el cobro.</div></div>
+    <b>Software:</b><ul>
+      <li><b>Square Point of Sale (POS):</b> sistema de terminal punto de venta enfocado en registrar cobros y ventas inmediatas.</li>
+      <li><b>Oracle MICROS:</b> software especializado en el procesamiento transaccional de pedidos y pagos para hostelería y comercio.</li>
+      <li><b>IBM CICS (Customer Information Control System):</b> monitor de procesamiento de transacciones masivas de alto rendimiento utilizado en banca y gran logística.</li></ul></div>
+
+  <div class="sys" style="border-left-color:var(--c2)"><h4>BPM – Business Process Management · Gestión por procesos de negocio</h4>
+    <p>Herramienta enfocada en el diseño, modelado, ejecución, automatización y monitorización de flujos de trabajo (<em>workflows</em>) complejos que atraviesan diferentes áreas o aplicaciones de la empresa. Elimina cuellos de botella, asegura el cumplimiento de normativas/procedimientos y dota a la empresa de flexibilidad para adaptar sus procesos rápidamente.</p>
+    <div class="meta"><div><b>Nivel jerárquico</b>Transversal / Táctico (analistas de procesos, responsables de calidad y departamento técnico/IT).</div>
+    <div><b>Ejemplo</b>Una factura superior a 1.000 € pasa automáticamente por aprobación del responsable antes de autorizar el pago.</div></div>
+    <b>Software:</b><ul>
+      <li><b>Camunda:</b> orquesta procesos y reglas mediante flujos BPMN.</li>
+      <li><b>Bizagi:</b> permite modelar procesos y automatizar circuitos de trabajo.</li>
+      <li><b>Bonita:</b> combina procesos, formularios e integración con sistemas existentes.</li></ul></div>
+
+  <div class="sys" style="border-left-color:var(--c3)"><h4>MIS – Management Information System · Sistema de información de gestión</h4>
+    <p>Sistema de nivel táctico que toma los datos transaccionales masivos recopilados por los TPS y los transforma en información útil, estructurada y periódica (informes mensuales, balances operativos, resúmenes de existencias). Su propósito es permitir a los mandos intermedios evaluar si el rendimiento real de la empresa se ajusta a lo planificado y detectar desviaciones en el día a día.</p>
+    <div class="meta"><div><b>Nivel jerárquico</b>Medio o táctico (jefes de departamento, directores de área, controladores operacionales).</div>
+    <div><b>Ejemplo</b>La encargada consulta un informe mensual de ingresos por producto y los compara con el presupuesto.</div></div>
+    <b>Software:</b><ul>
+      <li><b>Microsoft Power BI:</b> crea informes y paneles a partir de fuentes empresariales.</li>
+      <li><b>SAP BusinessObjects BI:</b> ofrece reporting corporativo y análisis de datos.</li>
+      <li><b>Oracle Analytics:</b> combina datos, análisis y visualizaciones para responsables.</li></ul></div>
+
+  <div class="sys" style="border-left-color:var(--c4)"><h4>ERP – Enterprise Resource Planning · Planificación de Recursos Empresariales</h4>
+    <p>Es el <b>corazón del ecosistema centralizado</b> de software de una empresa. Es una plataforma modular e integrada que conecta todos los departamentos (compras, ventas, finanzas, almacén, fabricación, recursos humanos) sobre una única base de datos compartida.</p>
+    <p>Garantizar que la información fluya sin duplicidades entre áreas, automatizar procesos operativos y ofrecer una visión global y unificada del estado operativo y financiero de la organización.</p>
+    <div class="meta"><div><b>Usuarios principales</b>Personal operativo, administrativos, jefes de departamento y dirección. Toda la organización (desde la base operativa hasta la dirección).</div>
+    <div><b>Ejemplo</b>Un pedido confirmado puede generar reserva de stock, albarán y factura sin volver a teclear la misma información.</div></div>
+    <ul>
+      <li><b>SAP S/4HANA:</b> ERP corporativo integrado sobre base de datos centralizada para grandes organizaciones.</li>
+      <li><b>Odoo:</b> ERP modular (código abierto y comercial) para la integración global de procesos en pymes y medianas empresas.</li>
+      <li><b>Microsoft Dynamics 365:</b> plataforma ERP y CRM integrada para la gestión transversal de áreas empresariales.</li></ul></div>
+
+  <div class="sys" style="border-left-color:var(--c5)"><h4>DSS – Decision Support System · Sistemas de Apoyo a la toma de decisiones</h4>
+    <p>Herramienta analítica e interactiva diseñada para ayudar a los gerentes a resolver problemas complejos semiestructurados o no rutinarios. Utiliza modelos matemáticos, análisis asociativo de datos y simulaciones de escenarios (<em>"What-If"</em> o <em>"¿Qué pasaría si…?"</em>) para evaluar los riesgos y resultados de diferentes alternativas antes de tomar una decisión importante (ej. cambiar tarifas, comprar nueva flota o abrir una sede).</p>
+    <div class="meta"><div><b>Nivel jerárquico</b>Táctico-Estratégico (gerentes, planificadores, analistas de negocio).</div>
+    <div><b>Ejemplo</b>Una empresa simula cuánto ganaría si amplía plantilla, cambia un precio o abre una nueva sede.</div></div>
+    <ul>
+      <li><b>IBM Planning Analytics:</b> planificación financiera y simulación de escenarios.</li>
+      <li><b>SAS Viya:</b> analítica avanzada y modelos predictivos para decidir.</li>
+      <li><b>Oracle Crystal Ball:</b> simulación Monte Carlo y análisis de riesgo sobre modelos.</li></ul></div>
+
+  <div class="sys" style="border-left-color:var(--c6)"><h4>EIS – Executive Information System · Sistemas de información Ejecutiva</h4>
+    <p>Sistema de alto nivel creado específicamente para la alta dirección. Transforma grandes volúmenes de datos procedentes de los ERP y MIS en <b>paneles visuales concisos y cuadros de mando interactivos</b>. Destaca por ofrecer una visión global e inmediata de la salud de la empresa a través de métricas clave (KPIs), permitiendo además la navegación en profundidad (<em>drill-down</em>) para descender desde una cifra general hasta el detalle del origen del dato si fuese necesario.</p>
+    <p>Ofrecen a la dirección una visión global, habitualmente gráfica y resumida, con indicadores relevantes y posibilidad de entrar al detalle. Suelen integrar información de varias áreas y, cuando procede, fuentes externas.</p>
+    <div class="meta"><div><b>Nivel jerárquico</b>Alta Dirección (CEO, Consejo de Administración, Gerente General).</div>
+    <div><b>Ejemplo</b>La dirección consulta ingresos, margen, incidencias y ventas de todas las sucursales en un panel ejecutivo.</div></div>
+    <ul>
+      <li><b>SAP Analytics Cloud:</b> paneles ejecutivos y análisis de indicadores corporativos.</li>
+      <li><b>Tableau:</b> cuadros de mando para dirección con visualización interactiva.</li>
+      <li><b>Microsoft Power BI:</b> paneles ejecutivos agregados por área, sede o periodo.</li></ul></div>
+
+  <div class="sys" style="border-left-color:var(--c7)"><h4>BSC – Balanced Scorecard · Cuadro de mando integral</h4>
+    <p>Herramienta de gestión y alineación estratégica basada en la metodología de <b>Kaplan y Norton</b>. Permite traducir la visión y la estrategia global de la empresa en un conjunto equilibrado de objetivos e indicadores clave de rendimiento (<b>KPIs</b>), organizados bajo cuatro perspectivas fundamentales: <b>Financiera, Cliente, Procesos Internos, y Aprendizaje/Crecimiento</b>. Garantiza que el control de la empresa no dependa únicamente de cifras financieras pasadas, sino del seguimiento activo de su estrategia presente y futura.</p>
+    <p>Traduce la estrategia de la organización en objetivos medibles y en KPI. Normalmente combina cuatro perspectivas: financiera, clientes, procesos internos, y aprendizaje y crecimiento. Sirve para seguir el grado de cumplimiento de la estrategia.</p>
+    <div class="meta"><div><b>Nivel jerárquico</b>Dirección Estratégica y Comités de Dirección.</div>
+    <div><b>Ejemplo</b>Una empresa revisa simultáneamente margen, satisfacción del cliente, entregas puntuales y formación de plantilla.</div></div>
+    <ul>
+      <li><b>ClearPoint Strategy:</b> permite seguir planes estratégicos, objetivos e indicadores.</li>
+      <li><b>Corporater:</b> gestión del rendimiento y seguimiento de objetivos estratégicos.</li>
+      <li><b>Spider Strategies QuickScore:</b> seguimiento de objetivos, indicadores y mapas estratégicos.</li></ul></div>
+
+  <h3>📊 KPIs para un cuadro de mando integral</h3>
+  <div class="enun"><span class="tag">Enunciado</span><p>En el caso de Cuadro de mando integral (BSC). Se solicita establecer 3 KPI's de tres empresas o procesos de una empresa (real o inventada), que permitan controlar alguna parte de la actividad. Define el proceso de negocio afectado y el KPI definido.</p></div>
+  <div class="callout tip"><span class="tag">Qué es un KPI</span>Un KPI es un indicador numérico que permite comprobar cómo evoluciona un objetivo. Debe tener <b>fórmula, unidad, periodo de medición y meta</b>.</div>
+
+  <div class="kpi"><h5>Caso 1 · Empresa de transportes y logística</h5><div class="tblwrap" style="border:0;border-radius:0"><table class="kv"><tbody>
+    <tr><td>Proceso afectado</td><td>Ejecución y Entrega del Transporte (Logística de Salida). <i>Perspectiva del BSC:</i> Cliente / Procesos Internos</td></tr>
+    <tr><td>KPI</td><td><b>OTIF</b> (<i>On-Time In-Full</i> / Entregas A Tiempo y Completas)</td></tr>
+    <tr><td>Fórmula</td><td><div class="formula">OTIF (%) = ( Nº de envíos entregados a tiempo sin incidencias ÷ Nº total de envíos realizados ) × 100</div></td></tr>
+    <tr><td>Objetivo</td><td>Alcanzar un valor ≥ 96 %</td></tr>
+    <tr><td>Propósito</td><td>Medir la calidad del servicio de transporte percibido por el cliente, controlando que la mercancía no sufra retrasos en barco/carretera ni faltantes en la descarga.</td></tr>
+  </tbody></table></div></div>
+
+  <div class="kpi" style="border-top-color:var(--c3)"><h5>Caso 2 · Empresa de hostelería y restauración</h5><div class="tblwrap" style="border:0;border-radius:0"><table class="kv"><tbody>
+    <tr><td>Proceso afectado</td><td>Gestión de Stock, Compras y Cocina (Aprovisionamiento y Producción). <i>Perspectiva del BSC:</i> Financiera / Procesos Internos</td></tr>
+    <tr><td>KPI</td><td>Desviación del <i>Food Cost</i> (Coste Teórico vs. Coste Real de Materia Prima)</td></tr>
+    <tr><td>Fórmula</td><td><div class="formula">Desviación (%) = ( (Coste real materia prima consumida − Coste teórico escandallo) ÷ Coste teórico según escandallo ) × 100</div></td></tr>
+    <tr><td>Objetivo</td><td>Mantener la desviación por debajo del 2 %</td></tr>
+    <tr><td>Propósito</td><td>Controlar mermas, desperdicios de alimentos en cocina, errores de racionamiento o desvíos de inventario comparando el consumo real frente al escandallo teórico configurado en el SGE.</td></tr>
+  </tbody></table></div></div>
+
+  <div class="kpi" style="border-top-color:var(--c4)"><h5>Caso 3 · Empresa de desarrollo de software <span class="fig">(en el PDF también figura como «Caso 2»)</span></h5><div class="tblwrap" style="border:0;border-radius:0"><table class="kv"><tbody>
+    <tr><td>Proceso afectado</td><td>Servicio de Soporte Técnico y Mantenimiento de Software (Postventa). <i>Perspectiva del BSC:</i> Cliente</td></tr>
+    <tr><td>KPI</td><td>Tiempo Medio de Resolución de Incidencias Críticas (<b>MTTR</b> – <i>Mean Time To Resolve</i>)</td></tr>
+    <tr><td>Fórmula</td><td><div class="formula">Horas = Suma de horas empleadas en resolver tickets críticos ÷ Nº de tickets críticos cerrados en el mes</div></td></tr>
+    <tr><td>Objetivo</td><td>Resolver incidencias de nivel crítico en menos de 4 horas</td></tr>
+    <tr><td>Propósito</td><td>Garantizar el cumplimiento de los acuerdos de nivel de servicio (SLA) contratados por los clientes y medir la capacidad de respuesta operativa del departamento técnico.</td></tr>
+  </tbody></table></div></div>
+</section>
+
+<!-- ACT 04 -->
+<section id="ex4">
+  <h2 class="ex"><span class="n">Actividad 04</span> Mercados verticales y horizontales</h2>
+  <div class="enun"><span class="tag">Enunciado a)</span><p>Definición de cada uno de los dos mercados, vertical y horizontal.</p></div>
+  <div class="grid">
+    <div class="card" style="margin:0;border-top:4px solid var(--c1)"><b>↔ MERCADO HORIZONTAL</b><p>Aquel en el que los productos o servicios que se comercializan son <b>genéricos y transversales</b>, de modo que pueden ser utilizados por empresas de cualquier sector o industria, independientemente de su actividad económica.</p><p><b>Materia de SGE / ERP:</b> un ERP horizontal (como <i>SAP S/4HANA</i>, <i>Odoo</i> estándar o <i>Microsoft Dynamics 365</i>) sirve tanto para un hospital como para una empresa de transportes, una fábrica o un colegio.</p></div>
+    <div class="card" style="margin:0;border-top:4px solid var(--c4)"><b>↕ MERCADO VERTICAL</b><p>Aquel que está <b>enfocado y especializado en un sector, industria o nicho</b> de negocio muy concreto, ofreciendo productos o soluciones diseñadas a la medida de sus problemáticas específicas.</p><p><b>Materia de SGE / CRM:</b> un software vertical incluye herramientas nativas específicas, como un CRM para inmobiliarias (gestión de inmuebles y visitas), un software de gestión médica (historias clínicas y cita previa) o un sistema de gestión logístico (asignación de tacógrafos, remolques y rutas marítimas).</p></div>
+  </div>
+  <div class="tblwrap" style="margin-top:14px"><table><thead><tr><th>Criterio</th><th>Mercado horizontal</th><th>Mercado vertical</th></tr></thead><tbody>
+    <tr><td>Enfoque</td><td>Transversal y multisectorial</td><td>Especializado en un sector concreto</td></tr>
+    <tr><td>Público objetivo</td><td>Todo tipo de empresas</td><td>Empresas de una industria específica</td></tr>
+    <tr><td>Necesidades que cubre</td><td>Funciones comunes (Finanzas, Compras, RRHH)</td><td>Requisitos operativos propios del sector</td></tr>
+    <tr><td>Ejemplo de software SGE</td><td>ERP estándar (Odoo, SAP)</td><td>Software sectorial (ICG para hostelería, Veeva para farmacéuticas)</td></tr>
+  </tbody></table></div>
+
+  <div class="enun"><span class="tag">Enunciado b)</span><p>Busca tres aplicaciones de software de cada uno de ellos, dando una pequeña descripción, del ROI (tangible o intangible) que ofrece a la empresa, en dicho mercado vertical u horizontal. ¿Cuál sería su estimación de costes? ¿Periodo de implantación? ¿Es una solución para cualquier empresa o tiene algunos requisitos?</p></div>
+  <div class="callout more"><span class="tag">ROI – Retorno de inversión</span>Relación entre beneficios atribuibles a una inversión y sus costes. Es una métrica o fórmula financiera que sirve para medir cuánto dinero ganas (o pierdes) con una inversión en relación con el dinero que has tenido que poner para llevarla a cabo.
+    <div class="formula" style="margin-top:8px">ROI (%) = ( (Beneficio obtenido − Inversión realizada) ÷ Inversión realizada ) × 100</div></div>
+
+  <h3>↔ Mercado horizontal – ERP / SGE multiactividad</h3>
+  <div class="sw"><h5>Odoo <span>Edición Enterprise</span></h5><p>ERP modular e integrado de código abierto/comercial que abarca finanzas, compras, ventas, inventario, RRHH y facturación para cualquier tipo de negocio.</p>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>ROI</td><td><b>Tangible:</b> reducción de hasta un 25% en costes administrativos al eliminar el picado manual de datos y duplicidades.<br><b>Intangible:</b> visión unificada del dato en tiempo real y mayor agilidad operativa entre departamentos.</td></tr>
+      <tr><td>Estimación de costes</td><td><i>Licenciamiento:</i> desde 19,90 € / usuario / mes (plan estándar en la nube).<br><i>Implantación:</i> entre 3.000 € y 15.000 € para pymes (dependiendo de la parametrización).</td></tr>
+      <tr><td>Implantación</td><td>De 1 a 3 meses.</td></tr>
+      <tr><td>¿Apta para cualquier empresa?</td><td>Apta para casi cualquier pyme o mediana empresa. Requiere contar con un partner de implantación si se necesitan desarrollos a medida.</td></tr></tbody></table></div></div>
+  <div class="sw"><h5>SAP S/4HANA</h5><p>El ERP corporativo líder del mercado para grandes empresas, basado en base de datos en memoria (In-Memory) para procesamiento analítico y transaccional masivo.</p>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>ROI</td><td><b>Tangible:</b> disminución de costes financieros operativos y reducción de stock inmovilizado en un 15-20%.<br><b>Intangible:</b> estandarización bajo las mejores prácticas globales del mercado y escalabilidad ilimitada.</td></tr>
+      <tr><td>Estimación de costes</td><td><i>Licencias e infraestructura:</i> a partir de 50.000 € – 100.000 € anuales en modelos SaaS/Cloud (puede superar los cientos de miles en gran corporación).<br><i>Implantación:</i> desde 80.000 € hasta más de 500.000 €.</td></tr>
+      <tr><td>Implantación</td><td>De 6 a 18 meses.</td></tr>
+      <tr><td>¿Apta para cualquier empresa?</td><td><b>No.</b> Orientada a medianas y grandes corporaciones. Requiere una infraestructura tecnológica robusta, personal interno cualificado y un alto presupuesto de consultoría.</td></tr></tbody></table></div></div>
+  <div class="sw"><h5>Microsoft Dynamics 365 Business Central</h5><p>Solución de gestión empresarial integral de Microsoft dirigida a pymes, plenamente integrada con el ecosistema Microsoft 365 y Azure.</p>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>ROI</td><td><b>Tangible:</b> reducción del ciclo de cobro y facturación en un 30%.<br><b>Intangible:</b> curva de aprendizaje muy baja por su interfaz familiar tipo Office/Excel y excelente colaboración interna.</td></tr>
+      <tr><td>Estimación de costes</td><td><i>Licenciamiento:</i> ~60 € / usuario / mes (licencia Essential) o ~85 € (licencia Premium).<br><i>Implantación:</i> entre 10.000 € y 40.000 €.</td></tr>
+      <tr><td>Implantación</td><td>De 2 a 5 meses.</td></tr>
+      <tr><td>¿Apta para cualquier empresa?</td><td>Muy versátil para pymes de diversos sectores. Funciona sobre la nube de Microsoft, por lo que requiere una buena conectividad a Internet.</td></tr></tbody></table></div></div>
+
+  <h3>↕ Mercado vertical – software sectorial especializado</h3>
+  <div class="sw"><h5>Veeva Vault / Veeva CRM <span>Sector farmacéutico y ciencias de la vida</span></h5><p>Solución CRM y de gestión documental construida exclusivamente para la industria farmacéutica, biotecnológica y de dispositivos médicos.</p>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>ROI</td><td><b>Tangible:</b> reducción de hasta un 40% en el tiempo de aprobación de ensayos clínicos y contenidos médicos promocionales.<br><b>Intangible:</b> garantía total de cumplimiento normativo estricto (<i>compliance</i>) ante reguladores como la FDA o la EMA.</td></tr>
+      <tr><td>Estimación de costes</td><td><i>Licenciamiento:</i> a partir de 150 € – 250 € / usuario / mes.<br><i>Implantación:</i> desde 30.000 € a más de 100.000 € según los módulos regulatorios requeridos.</td></tr>
+      <tr><td>Implantación</td><td>De 4 a 9 meses.</td></tr>
+      <tr><td>¿Apta para cualquier empresa?</td><td>Solo para el sector farmacéutico/salud. Exige adaptarse a flujos estandarizados de validación de procesos farmacológicos.</td></tr></tbody></table></div></div>
+  <div class="sw"><h5>ICG HIOPOS / FrontRest <span>Sector hostelería y restauración</span></h5><p>Software de gestión vertical diseñado para restaurantes, bares y cadenas de comida, que integra comandero electrónico, control de mesas, escandallos de cocina y pasarelas de cobro.</p>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>ROI</td><td><b>Tangible:</b> incremento del <i>ticket medio</i> en un 10-15% mediante venta sugerida y rotación más rápida de mesas.<br><b>Intangible:</b> eliminación de errores en el pase de comandas entre sala y cocina, reduciendo el estrés del personal.</td></tr>
+      <tr><td>Estimación de costes</td><td><i>Licenciamiento / Software:</i> desde 30 € a 80 € / mes por terminal TPV (o compra de licencia única por local ~1.200 €).<br><i>Implantación y Hardware:</i> entre 1.500 € y 5.000 € (incluye pantallas de cocina, comanderos y TPV).</td></tr>
+      <tr><td>Implantación</td><td>De 3 días a 2 semanas.</td></tr>
+      <tr><td>¿Apta para cualquier empresa?</td><td>Específico de hostelería. Requiere red Wi-Fi dedicada y estable en el local para los comanderos móviles.</td></tr></tbody></table></div></div>
+  <div class="sw"><h5>Inmovilla <span>Sector inmobiliario</span></h5><p>CRM vertical especializado para agencias inmobiliarias que gestiona la captación de inmuebles, el cruce automático de demandas de compradores, visitas y volcado masivo a portales inmobiliarios (Idealista, Fotocasa).</p>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>ROI</td><td><b>Tangible:</b> reducción del 80% del tiempo empleado en publicar manualmente un inmueble en múltiples portales.<br><b>Intangible:</b> mejora en el seguimiento comercial al cruzar al instante preferencias de clientes con la cartera de viviendas.</td></tr>
+      <tr><td>Estimación de costes</td><td><i>Suscripción:</i> desde 80 € a 200 € / mes por oficina (según el número de usuarios y portales vinculados).<br><i>Implantación:</i> de 300 € a 1.000 € (configuración inicial y migración de datos).</td></tr>
+      <tr><td>Implantación</td><td>De 1 a 3 semanas.</td></tr>
+      <tr><td>¿Apta para cualquier empresa?</td><td>Diseñado exclusivamente para el sector inmobiliario y gestores de patrimonio. No requiere infraestructura local compleja al ser una solución SaaS 100% web.</td></tr></tbody></table></div></div>
+
+  <h4>📋 Cuadro resumen de las 6 soluciones</h4>
+  <div class="tblwrap"><table><thead><tr><th>Software</th><th>Mercado</th><th>Implantación</th><th>Licencia aprox.</th><th>¿Para cualquiera?</th></tr></thead><tbody>
+    <tr><td>Odoo Enterprise</td><td>Horizontal</td><td>1–3 meses</td><td>desde 19,90 €/usuario/mes</td><td>Casi cualquier pyme/mediana</td></tr>
+    <tr><td>SAP S/4HANA</td><td>Horizontal</td><td>6–18 meses</td><td>desde 50.000–100.000 €/año</td><td>No: medianas y grandes</td></tr>
+    <tr><td>Dynamics 365 BC</td><td>Horizontal</td><td>2–5 meses</td><td>~60–85 €/usuario/mes</td><td>Pymes de diversos sectores</td></tr>
+    <tr><td>Veeva</td><td>Vertical (farma)</td><td>4–9 meses</td><td>150–250 €/usuario/mes</td><td>Solo farma/salud</td></tr>
+    <tr><td>ICG HIOPOS / FrontRest</td><td>Vertical (hostelería)</td><td>3 días–2 semanas</td><td>30–80 €/mes por terminal</td><td>Solo hostelería</td></tr>
+    <tr><td>Inmovilla</td><td>Vertical (inmobiliario)</td><td>1–3 semanas</td><td>80–200 €/mes por oficina</td><td>Solo inmobiliario</td></tr>
+  </tbody></table></div>
+  <p class="fig">Cuadro-resumen elaborado a partir de los datos de las fichas anteriores, solo como ayuda para comparar.</p>
+</section>
+
+<!-- ACT 05 -->
+<section id="ex5">
+  <h2 class="ex"><span class="n">Actividad 05</span> Soluciones de negocio o servicio</h2>
+  <div class="enun"><span class="tag">Enunciado</span><p>Averigua qué significan las siguientes siglas, en qué entorno se usa, qué mejoras reporta y pon tres ejemplos de cada una: <b>ERP, DSS, EIS, JIT, IaaS, SaaS, PaaS, CaaS</b>.</p></div>
+
+  <h3>🏭 Sistemas de negocio y métodos de producción</h3>
+  <div class="sw"><h5>ERP <span>Enterprise Resource Planning · Planificación de Recursos Empresariales</span></h5>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>Entorno</td><td>Ecosistema global de gestión de la empresa (conecta compras, ventas, finanzas, almacén, logística y RRHH sobre una base de datos centralizada).</td></tr>
+      <tr><td>Mejoras</td><td><ul style="margin:0;padding-left:18px"><li>Elimina los "aislas de información" y las duplicidades de datos entre departamentos.</li><li>Automatiza procesos operativos y contables de extremo a extremo.</li><li>Ofrece trazabilidad total y visión en tiempo real del estado de la compañía.</li></ul></td></tr>
+      <tr><td>Ejemplos</td><td>SAP S/4HANA, Odoo, Microsoft Dynamics 365 Business Central.</td></tr></tbody></table></div></div>
+  <div class="sw"><h5>DSS <span>Decision Support System · Sistema de Apoyo a la Toma de Decisiones</span></h5>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>Entorno</td><td>Nivel táctico y de gerencia intermedia (análisis de negocio, presupuestación y planificación operativa).</td></tr>
+      <tr><td>Mejoras</td><td><ul style="margin:0;padding-left:18px"><li>Permite realizar simulaciones de escenarios hipotéticos ("What-If" / ¿Qué pasaría si…?).</li><li>Evalúa riesgos y alternativas complejas antes de tomar decisiones estratégicas o financieras.</li><li>Modela datos masivos procedentes del ERP para extraer tendencias de mercado.</li></ul></td></tr>
+      <tr><td>Ejemplos</td><td>IBM Planning Analytics (TM1), Tableau Desktop, Qlik Sense.</td></tr></tbody></table></div></div>
+  <div class="sw"><h5>EIS <span>Executive Information System · Sistema de Información Ejecutiva</span></h5>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>Entorno</td><td>Alta dirección (CEO, Directores Generales, Consejo de Administración).</td></tr>
+      <tr><td>Mejoras</td><td><ul style="margin:0;padding-left:18px"><li>Ofrece visualización gráfica e inmediata de la salud global del negocio mediante cuadros de mando.</li><li>Sintetiza la información clave sin abrumar con datos atómicos operativos.</li><li>Permite la exploración en profundidad (<i>drill-down</i>) para analizar la causa raíz de cualquier desviación.</li></ul></td></tr>
+      <tr><td>Ejemplos</td><td>Power BI (en su capa de Dashboards Ejecutivos), SAP Analytics Cloud, MicroStrategy.</td></tr></tbody></table></div></div>
+  <div class="sw"><h5>JIT <span>Just In Time · Justo a Tiempo</span></h5>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>Entorno</td><td>Logística, producción, gestión de la cadena de suministro (<i>Supply Chain</i>) y control de inventario.</td></tr>
+      <tr><td>Mejoras</td><td><ul style="margin:0;padding-left:18px"><li>Minimiza el stock inmovilizado en almacén y reduce drásticamente los costes de almacenamiento.</li><li>Disminuye el riesgo de mermas, caducidad o deterioro del producto.</li><li>Optimiza el flujo de trabajo coordinando las entregas de proveedores exactamente cuando se necesitan en la línea de producción o entrega.</li></ul></td></tr>
+      <tr><td>Ejemplos</td><td>Sistema de producción de Toyota (TPS / <i>Toyota Production System</i>), gestión de aprovisionamiento en líneas de ensamblaje automovilístico, sistemas de reposición automatizada en distribución alimentaria.</td></tr></tbody></table></div></div>
+
+  <h3>☁️ Modelos de servicios en la nube</h3>
+  <div class="sw"><h5>IaaS <span>Infrastructure as a Service · Infraestructura como Servicio</span></h5>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>Entorno</td><td>Arquitectura Cloud y gestión de TI / Sistemas.</td></tr>
+      <tr><td>Mejoras</td><td><ul style="margin:0;padding-left:18px"><li>Permite alquilar recursos de hardware virtual (servidores, almacenamiento, redes) sin invertir en CPDs físicos propios.</li><li>Escalabilidad inmediata: permite aumentar o reducir capacidad informática con un clic.</li><li>Ahorro en costes de mantenimiento de hardware, refrigeración y electricidad.</li></ul></td></tr>
+      <tr><td>Ejemplos</td><td>Amazon EC2 (AWS), Google Compute Engine (GCP), Microsoft Azure Virtual Machines.</td></tr></tbody></table></div></div>
+  <div class="sw"><h5>SaaS <span>Software as a Service · Software como Servicio</span></h5>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>Entorno</td><td>Aplicaciones de usuario final alojadas en la nube a las que se accede mediante navegador web o app.</td></tr>
+      <tr><td>Mejoras</td><td><ul style="margin:0;padding-left:18px"><li>Elimina la necesidad de instalar o mantener software en los equipos locales de los empleados.</li><li>Pago por uso/suscripción, reduciendo el gasto inicial de licenciamiento (CapEx a OpEx).</li><li>Actualizaciones automáticas y accesibilidad total desde cualquier lugar y dispositivo.</li></ul></td></tr>
+      <tr><td>Ejemplos</td><td>Microsoft 365 (Word/Excel web), Salesforce, Odoo Cloud.</td></tr></tbody></table></div></div>
+  <div class="sw"><h5>PaaS <span>Platform as a Service · Plataforma como Servicio</span></h5>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>Entorno</td><td>Desarrollo, despliegue y gestión de aplicaciones (enfocado a programadores).</td></tr>
+      <tr><td>Mejoras</td><td><ul style="margin:0;padding-left:18px"><li>Proporciona un entorno preconfigurado (sistema operativo, base de datos, entornos de ejecución como Node.js, Java, Python) para que el desarrollador solo se preocupe de escribir código.</li><li>Automatiza la gestión de la infraestructura subyacente, parches de seguridad y balanceo de carga.</li><li>Agiliza los tiempos de despliegue y pruebas de nuevas aplicaciones.</li></ul></td></tr>
+      <tr><td>Ejemplos</td><td>Heroku, Google App Engine, AWS Elastic Beanstalk.</td></tr></tbody></table></div></div>
+  <div class="sw"><h5>CaaS <span>Containers as a Service · Contenedores como Servicio</span></h5>
+    <div class="tblwrap"><table class="kv"><tbody>
+      <tr><td>Entorno</td><td>Despliegue de software moderno mediante arquitecturas de microservicios y desarrollo DevOps.</td></tr>
+      <tr><td>Mejoras</td><td><ul style="margin:0;padding-left:18px"><li>Empaqueta el software con todas sus dependencias en "contenedores", garantizando que la app funcione exactamente igual en desarrollo que en producción.</li><li>Permite la orquestación y escalado automático de servicios en función del tráfico web o carga de proceso.</li><li>Optimiza el uso de recursos de hardware en comparación con las máquinas virtuales tradicionales.</li></ul></td></tr>
+      <tr><td>Ejemplos</td><td>Amazon Elastic Kubernetes Service (EKS), Google Kubernetes Engine (GKE), Azure Kubernetes Service (AKS).</td></tr></tbody></table></div></div>
+
+  <h4>🧩 ¿Quién gestiona qué? (cuadro del PDF)</h4>
+  <div class="tblwrap"><table><thead><tr><th>Modelo</th><th>Qué aporta el proveedor</th><th>Qué gestiona principalmente el cliente</th></tr></thead><tbody>
+    <tr><td>IaaS</td><td>Máquinas, red y almacenamiento.</td><td>Sistema operativo, aplicaciones, parches y datos.</td></tr>
+    <tr><td>PaaS</td><td>Plataforma de ejecución y despliegue.</td><td>Código, configuración de aplicación y datos.</td></tr>
+    <tr><td>SaaS</td><td>Aplicación lista para usar y operada por el proveedor.</td><td>Usuarios, permisos, datos y uso correcto.</td></tr>
+    <tr><td>CaaS</td><td>Plataforma para ejecutar/orquestar contenedores.</td><td>Imágenes, despliegues, configuración y seguridad de la aplicación.</td></tr>
+  </tbody></table></div>
+</section>
+
+<!-- ACT 06 -->
+<section id="ex6">
+  <h2 class="ex"><span class="n">Actividad 06</span> Soluciones verticales CRM</h2>
+  <div class="enun"><span class="tag">Enunciado (1)</span><p>Elabora una lista del software CRM actualmente en el mercado. La lista debe contener soluciones para empresas grandes y pymes.</p></div>
+  <div class="tblwrap"><table class="kv"><thead><tr><th>Nombre del CRM</th><th>Enfoque principal</th><th>Características destacadas</th></tr></thead><tbody>
+    <tr><td colspan="3" style="background:var(--code);text-align:center;color:var(--ink)">GRANDES EMPRESAS</td></tr>
+    <tr><td>Salesforce Sales Cloud</td><td>Corporativo / Gran escala</td><td>Personalización ilimitada, IA (Einstein) y ecosistema AppExchange.</td></tr>
+    <tr><td>Microsoft Dynamics 365 Sales</td><td>Corporativo / Ecosistema MS</td><td>Integración nativa con Teams, Outlook, Excel y Copilot.</td></tr>
+    <tr><td>Oracle CX</td><td>Corporativo / Gran escala</td><td>Gestión omnicanal avanzada y gran capacidad transaccional.</td></tr>
+    <tr><td>SAP Sales Cloud</td><td>Corporativo / Integrado en ERP</td><td>Conexión directa en tiempo real con inventario, finanzas y SCM.</td></tr>
+    <tr><td>SugarCRM</td><td>Corporativo / Flexible</td><td>Despliegue en la nube u on-premise y alta parametrización.</td></tr>
+    <tr><td colspan="3" style="background:var(--code);text-align:center;color:var(--ink)">PYMES</td></tr>
+    <tr><td>HubSpot CRM</td><td>Pymes / Inbound Marketing</td><td>Versión gratuita muy completa e interfaz muy intuitiva.</td></tr>
+    <tr><td>Zoho CRM</td><td>Pymes / Relación calidad-precio</td><td>Automatización completa e integración con la suite Zoho.</td></tr>
+    <tr><td>Pipedrive</td><td>Pymes / Venta directa</td><td>Gestión puramente visual del embudo comercial (estilo Kanban).</td></tr>
+    <tr><td>Freshsales</td><td>Pymes / Captación digital</td><td>Telefonía integrada, chat web y puntuación de contactos (<i>lead scoring</i>).</td></tr>
+    <tr><td>Odoo CRM</td><td>Pymes / Integración ERP</td><td>Conversión directa de oportunidades a presupuestos, albaranes y facturas.</td></tr>
+  </tbody></table></div>
+
+  <div class="enun" style="margin-top:20px"><span class="tag">Enunciado (2)</span><p>Una vez tengas identificado el software, selecciona uno de empresa grande y otro de pyme. De dicha selección, profundiza en las soluciones, para conocer cuál sería el proceso de implementación o instalación (evaluar el posible coste para identificar el ROI mínimo). Qué tipo de soluciones ofrecen respecto arquitectura. Y cuál el abanico de servicios que ofrece como CRM. ¿Qué valor aportará al negocio? ¿Qué mejoras crees que ofrecerá? ¿tiene posibilidad de interconexión con otros sistemas? ¿Es específico de un sector determinado? ¿Cuál sería el coste de uso? ¿Qué medios de movilidad ofrece? Dispone de información de tipos BI, DSS, EIS o alguno de los vistos anteriormente.</p></div>
+
+  <div class="pc" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+  <div style="background:var(--brand-l);border-color:var(--brand)">
+    <h3 style="margin-top:0">🏢 Gran empresa: Salesforce Sales Cloud</h3>
+    <p><b>a. Implementación y ROI</b><br><b>Proceso:</b> requiere una fase previa de consultoría estratégica y toma de requerimientos, parametrización de la plataforma, integración vía API con el ERP y sistemas heredados (<i>legacy</i>), migración de datos, pruebas de aceptación (UAT) y formación por perfiles. Se ejecuta habitualmente mediante metodologías ágiles (Scrum) a través de un <i>partner</i> certificado.<br><b>Periodo:</b> entre 4 y 9 meses (según complejidad).<br><b>Coste estimado:</b> <i>Licenciamiento</i> ~165 € a 330 € / usuario / mes (planes Enterprise / Unlimited). <i>Consultoría e implantación</i> desde 40.000 € hasta más de 120.000 €.<br><b>ROI y valor:</b> estandarización global de procesos comerciales, trazabilidad total del cliente y previsión de ventas basada en IA. El ROI mínimo se alcanza al aumentar la tasa de cierre de operaciones entre un 15% y un 25% y reducir el ciclo de venta en un 20%.</p>
+    <p><b>b. Arquitectura</b><br>Multitenant 100% Cloud (SaaS). Ofrece la infraestructura <i>Salesforce Hyperforce</i>, permitiendo desplegar la plataforma sobre nubes públicas globales (AWS, Google Cloud, Azure) garantizando el cumplimiento de normativas de residencia de datos.</p>
+    <p><b>c. Servicios CRM</b><br>Gestión del embudo comercial (<i>pipeline</i>), automatización de la fuerza de ventas (SFA), gestión de cuentas y contactos, cpq (<i>Configure, Price, Quote</i>) para ofertas complejas, y gestión de oportunidades.</p>
+    <p><b>d. Interconexión</b><br>Integración total a través de MuleSoft y APIs REST/SOAP. Se conecta de forma nativa o mediante middleware con ERPs de gran escala (SAP S/4HANA, Oracle), sistemas de facturación, almacenes de datos (<i>Data Warehouses</i>) y herramientas de marketing automatizado.</p>
+    <p><b>e. Sectorización y movilidad</b><br><b>Sector:</b> es un software horizontal, pero Salesforce ofrece verticales específicas preconfiguradas llamadas <i>Industry Clouds</i> (Financial Services Cloud, Health Cloud, Manufacturing Cloud).<br><b>Movilidad:</b> App nativa (<i>Salesforce Mobile</i>) para iOS y Android con acceso offline, geolocalización de clientes y sincronización en tiempo real.</p>
+    <p><b>f. BI / DSS / EIS</b><br><i>Einstein AI</i> y <i>CRM Analytics (Tableau)</i>: incorpora análisis predictivo (DSS) para puntuar oportunidades (<i>lead scoring</i>), asistentes conversacionales de IA y cuadros de mando interactivos para la alta dirección (EIS) con navegación en profundidad (<i>drill-down</i>).</p>
+  </div>
+  <div style="background:var(--tip);border-color:var(--tip-b)">
+    <h3 style="margin-top:0">🏪 Pyme: Zoho CRM</h3>
+    <p><b>Implementación y ROI</b><br><b>Proceso:</b> mucho más directo y ágil. Consta del alta en la plataforma, configuración inicial de campos personalizados y etapas del embudo, importación de contactos mediante archivos CSV/Excel, vinculación del correo electrónico y formación básica a los usuarios.<br><b>Periodo:</b> entre 1 y 3 semanas.<br><b>Coste estimado:</b> <i>Licenciamiento</i> ~23 € a 40 € / usuario / mes (planes Professional / Enterprise). <i>Implantación/Parametrización</i> entre 1.500 € y 6.000 € (o autodidacta si la pyme configura la herramienta internamente).<br><b>ROI y valor:</b> recuperación rápida de la inversión (habitualmente entre 3 y 6 meses) gracias al bajo coste inicial. Aporta organización centralizada, evita la pérdida de oportunidades por falta de seguimiento y elimina tareas administrativas repetitivas mediante reglas de flujo de trabajo (<i>workflows</i>).</p>
+    <p><b>Arquitectura</b><br>Cloud SaaS (Software como Servicio) multinquilino, alojado en los centros de datos propios de Zoho (con servidores situados en la Unión Europea para garantizar el cumplimiento del RGPD).</p>
+    <p><b>Servicios CRM</b><br>Gestión de contactos y leads, automatización de correos e interacciones, presupuestación básica, canalización de ventas visual y gestión de tareas asociadas.</p>
+    <p><b>Interconexión</b><br>Conexión nativa e inmediata con las más de 45 aplicaciones del ecosistema Zoho (Zoho Books para contabilidad, Zoho Desk para soporte, Zoho Projects). Para sistemas externos (como Odoo, WooCommerce o ERPs locales), se integra mediante Zoho Flow, Zapier o su API REST.</p>
+    <p><b>Sectorización y movilidad</b><br><b>Sector:</b> es un software horizontal y versátil, adaptable a servicios profesionales, comercio, inmobiliarias o pequeñas industrias.<br><b>Movilidad:</b> App móvil nativa (<i>Zoho CRM App</i>) con interfaz intuitiva, registro de llamadas, emisión de notas de voz convertidas a texto y facturación rápida en movilidad.</p>
+    <p><b>BI / DSS / EIS</b><br><i>Zia AI</i> y <i>Zoho Analytics</i>: incluye un asistente de IA (Zia) que analiza patrones de venta e indica el mejor momento para contactar con un cliente (DSS), además de la integración con <i>Zoho Analytics</i> para generar informes consolidados de gestión (MIS) y paneles visuales para la gerencia (EIS).</p>
+  </div></div>
+
+  <h4>📋 Cuadro comparativo de resumen</h4>
+  <div class="tblwrap"><table><thead><tr><th>Criterio</th><th>Salesforce Sales Cloud (gran empresa)</th><th>Zoho CRM (pyme)</th></tr></thead><tbody>
+    <tr><td>Tiempo de implantación</td><td>4 a 9 meses</td><td>1 a 3 semanas</td></tr>
+    <tr><td>Coste de licencia/usuario</td><td>165 € – 330 € / mes</td><td>23 € – 40 € / mes</td></tr>
+    <tr><td>Coste de implantación</td><td>40.000 € – 120.000 €+</td><td>1.500 € – 6.000 €</td></tr>
+    <tr><td>Arquitectura</td><td>Cloud SaaS (<i>Hyperforce</i>)</td><td>Cloud SaaS (centros de datos Zoho)</td></tr>
+    <tr><td>Integración ERP/sistemas</td><td>Avance corporativo (MuleSoft, SAP, Oracle)</td><td>Ecosistema Zoho, Zapier, APIs REST</td></tr>
+    <tr><td>Capacidad BI / DSS / EIS</td><td>Analytics avanzado + IA predictiva (Einstein)</td><td>Informes con Zia AI y Zoho Analytics</td></tr>
+    <tr><td>Perfil de negocio</td><td>Gran corporación / Procesos complejos</td><td>Pyme / Despliegue ágil y coste contenido</td></tr>
+  </tbody></table></div>
+</section>
+
+<!-- ACT 07 -->
+<section id="ex7">
+  <h2 class="ex"><span class="n">Actividad 07</span> Servicios de Cloud</h2>
+  <div class="enun"><span class="tag">Enunciado</span><p>Identifica qué son los servicios Cloud o en la nube, qué ventajas y desventajas proporciona. Esta nueva solución, dispone de otros servicios de complemento. Define qué servicios ofrece y qué ventajas y desventajas ofrece. Esta solución para qué tipo de empresa o sector lo recomendarías. Invéntate 3 empresas de tres sectores diferentes y qué servicios Cloud serían útiles para cada una de ellas. Describe brevemente las necesidades de la empresa y el porqué de tu asesoría para contratar los servicios de Cloud que propones.</p>
+    <p>Recordar que estas soluciones seleccionadas debes presentarla al comité de dirección (el órgano que tomará la decisión de aceptación o no de tu propuesta). Cómo expondrías tu propuesta, recuerda explicar el servicio, ventajas, desventajas, coste de la solución para implementarla, el ROI, etc. Explica brevemente cómo será trabajar en el nuevo escenario que propones.</p></div>
+
+  <h3>1 · ¿Qué son los servicios Cloud o en la nube?</h3>
+  <div class="callout more"><span class="tag">Definición</span>Los servicios <i>Cloud</i> (computación en la nube) consisten en la <b>entrega bajo demanda de recursos informáticos</b> (servidores, almacenamiento, bases de datos, redes, software y analítica) a través de Internet (<i>la nube</i>), mediante un <b>modelo de pago por uso</b> (<i>Pay-As-You-Go</i>) en lugar de requerir la compra y mantenimiento de infraestructuras físicas propias (<i>On-Premise</i>).</div>
+  <div class="pc">
+    <div class="pro"><h5>✅ Ventajas generales</h5><ul>
+      <li><b>Reducción de costes iniciales (CapEx a OpEx):</b> transforma las grandes inversiones de capital en hardware (<i>CapEx</i>) en gastos operativos recurrentes y predecibles (<i>OpEx</i>).</li>
+      <li><b>Escalabilidad y flexibilidad:</b> capacidad de aumentar o reducir recursos de computación de almacenamiento de forma inmediata en función de la demanda del negocio.</li>
+      <li><b>Mantenimiento y actualizaciones automáticas:</b> el proveedor de la nube gestiona la seguridad física, las actualizaciones del sistema operativo y los parches de seguridad.</li>
+      <li><b>Continuidad de negocio y seguridad:</b> planes de recuperación ante desastres (<i>Disaster Recovery</i>) y copias de seguridad automatizadas distribuidas geográficamente.</li>
+      <li><b>Movilidad y trabajo colaborativo:</b> acceso seguro a la información corporativa desde cualquier lugar y dispositivo con conexión a Internet.</li></ul></div>
+    <div class="con"><h5>⚠️ Desventajas generales</h5><ul>
+      <li><b>Dependencia de la conexión a Internet:</b> la disponibilidad de los servicios está supeditada a disponer de una conectividad de red estable y de alta velocidad.</li>
+      <li><b>Riesgo de <i>Vendor Lock-in</i>:</b> dificultad o coste elevado para migrar datos y aplicaciones entre diferentes proveedores Cloud. Se crea una dependencia con el vendedor.</li>
+      <li><b>Cumplimiento normativo y privacidad:</b> necesidad de garantizar que la ubicación física de los centros de datos cumpla estrictamente con marcos legales como el RGPD europeo.</li>
+      <li><b>Costes inesperados por falta de gobernanza:</b> si no se monitoriza correctamente el uso de recursos tratándolo con FinOps, el modelo de pago por consumo puede generar desviaciones presupuestarias.</li></ul></div>
+  </div>
+  <div class="callout note"><span class="tag">CapEx vs OpEx · FinOps</span>
+    <b>CapEx:</b> grandes inversiones de capital en hardware. <b>OpEx:</b> gastos operativos recurrentes y predecibles.<br>
+    En el modelo tradicional <i>On-Premise</i>, la empresa compraba un servidor físico, pagaba la factura de golpe (<i>CapEx</i>) y el coste quedaba fijado. En la nube (<i>Cloud</i>), el modelo pasa a ser de pago por uso (<i>OpEx</i>), lo que significa que la factura es variable y depende directamente de los recursos que estén encendidos o consumiendo datos a cada minuto.<br>
+    <b>FinOps (Operaciones Financieras en la nube):</b> es una cultura y disciplina de gestión que une a los equipos de <b>Tecnología (DevOps/IT)</b>, <b>Finanzas</b> y <b>Negocio</b> para que todos asuman la responsabilidad del coste de la nube.</div>
+
+  <h3>2 · Servicios de complemento en la nube</h3>
+  <p>Además de los tres modelos básicos (<b>IaaS</b>, <b>PaaS</b> y <b>SaaS</b>), el entorno <i>Cloud</i> dispone de servicios de valor añadido e infraestructuras avanzadas:</p>
+  <div class="tblwrap"><table><thead><tr><th>Servicio complementario</th><th>Descripción</th><th>Ventajas</th><th>Desventajas</th></tr></thead><tbody>
+    <tr><td>CaaS <br><small>(Containers as a Service)</small></td><td>Proporciona entornos gestionados para desplegar y orquestar contenedores (ej. Kubernetes, Docker).</td><td>Portabilidad total del código, despliegues ultra rápidos y uso eficiente del hardware.</td><td>Curva de aprendizaje técnica elevada para el equipo de desarrollo.</td></tr>
+    <tr><td>BaaS <br><small>(Backup as a Service)</small></td><td>Gestión y automatización de copias de seguridad de datos en servidores remotos.</td><td>Protección ante <i>Ransomware</i>, automatización total y cumplimiento normativo.</td><td>Tiempos de restauración elevados si el volumen de datos es masivo.</td></tr>
+    <tr><td>DRaaS <br><small>(Disaster Recovery as a Service)</small></td><td>Replicación en la nube del entorno crítico para conmutación por error inmediata ante desastres.</td><td>Garantía de continuidad de negocio con un RTO y RPO mínimos.</td><td>Coste de suscripción continuo por mantener infraestructura en reserva.</td></tr>
+    <tr><td>SECaaS <br><small>(Security as a Service)</small></td><td>Integración de herramientas de ciberseguridad en la nube (firewalls, anti-DDoS, SIEM).</td><td>Protección contra amenazas en tiempo real actualizada constantemente sin personal dedicado.</td><td>Falsa sensación de seguridad si no se forman los empleados.</td></tr>
+  </tbody></table></div>
+
+  <h3>3 · Asesoría y casos sectoriales (3 empresas / sectores)</h3>
+  <div class="grid">
+    <div class="card" style="margin:0;border-top:4px solid var(--c1)"><h4 style="margin-top:0">🚚 Caso A · Transporte y logística<br><small><i>TransBaleares Express S.L.</i></small></h4>
+      <p><b>Necesidades:</b> coordinación de flota entre Península e Islas Baleares, necesidad de acceder a la documentación de transporte (albaranes, cartas de porte CMR) en movilidad por parte de los choferes, y picos de trabajo estacionales.</p>
+      <p><b>Servicios Cloud:</b> <b>SaaS</b> (ERP/CRM en la nube para gestión comercial y de facturación), <b>BaaS</b> (copias de seguridad de datos transaccionales) y <b>Apps móviles nativas sobre PaaS</b>.</p>
+      <p><b>Justificación:</b> permite eliminar el servidor físico de la oficina central, garantiza que los conductores envíen la confirmación de entrega (<i>POD</i>) desde cualquier ubicación en tiempo real y permite escalar los servidores durante los meses de alta demanda turística sin comprar hardware que quedaría en desuso el resto del año.</p></div>
+    <div class="card" style="margin:0;border-top:4px solid var(--c3)"><h4 style="margin-top:0">🍽️ Caso B · Hostelería y restauración<br><small><i>Grupo Gastronómico Mare Nostrum</i></small></h4>
+      <p><b>Necesidades:</b> cadena de restaurantes con múltiples locales que requiere centralizar las ventas de los TPVs, sincronizar comanderos móviles en sala y conectar los pedidos de plataformas externas (<i>delivery</i>) sin fallos de red.</p>
+      <p><b>Servicios Cloud:</b> <b>SaaS</b> (software de gestión TPV y <i>Food Cost</i> multi-local) y <b>SECaaS</b> (seguridad de pasarelas de pago y protección de datos de clientes).</p>
+      <p><b>Justificación:</b> unifica las cajas de todos los locales en un cuadro de mando accesible por la gerencia en tiempo real desde cualquier lugar. Al no requerir servidores locales en cada restaurante, se reduce el coste de mantenimiento técnico en cada establecimiento.</p></div>
+    <div class="card" style="margin:0;border-top:4px solid var(--c4)"><h4 style="margin-top:0">⚖️ Caso C · Servicios profesionales / asesoría<br><small><i>Consultoría Gil &amp; Asociados</i></small></h4>
+      <p><b>Necesidades:</b> manejo de gran volumen de documentación confidencial de clientes, trabajo híbrido/teletrabajo de los empleados y necesidad de firmar contratos digitalmente con validez legal.</p>
+      <p><b>Servicios Cloud:</b> <b>SaaS</b> (Microsoft 365 / Google Workspace para almacenamiento documental en la nube y trabajo colaborativo) y <b>DRaaS</b> (recuperación ante desastres).</p>
+      <p><b>Justificación:</b> garantiza que los asesores puedan trabajar de forma segura desde sus domicilios o instalaciones del cliente con acceso cifrado a los expedientes. En caso de avería o ataque informático en la oficina, la actividad no se interrumpe al estar todo respaldado en la nube.</p></div>
+  </div>
+
+  <h3>📢 Parte II · Presentación de la propuesta al comité de dirección</h3>
+  <div class="callout more"><span class="tag">Punto del orden del día</span><i>Aprobación del Plan de Transformación Digital y Migración a la Nube de la Infraestructura Informática Corporativa.</i></div>
+
+  <h4>1. Resumen ejecutivo de la propuesta</h4>
+  <p>Estimados miembros del Comité de Dirección:</p>
+  <p>Presento hoy la estrategia para la <b>modernización de nuestra infraestructura tecnológica mediante la migración a un modelo de Servicios <i>Cloud</i></b>. Nuestro modelo informático actual (<i>On-Premise</i>), basado en servidores físicos locales, presenta síntomas claros de obsolescencia: riesgos de interrupción del servicio, elevados costes de mantenimiento informático y limitaciones para el trabajo en movilidad.</p>
+  <p>Propongo la adopción de un entorno <b>Híbrido (SaaS + IaaS)</b> que nos permitirá pagar exclusivamente por los recursos informáticos que consumimos, garantizando la seguridad de nuestros datos y la continuidad operativa del negocio.</p>
+
+  <h4>2. Estructura del servicio propuesto (tres capas)</h4>
+  <div class="stepsbox">
+    <div class="st"><b class="i">1</b><div><b>SaaS (Software como Servicio)</b><p>Migración de nuestro sistema de gestión (ERP/CRM) y herramientas de ofimática a la nube. Acceso instantáneo desde cualquier navegador o dispositivo móvil.</p></div></div>
+    <div class="st"><b class="i">2</b><div><b>IaaS (Infraestructura como Servicio)</b><p>Almacenamiento de bases de datos y servidores de archivos custodiados en centros de datos de alta seguridad (AWS / Azure) situados en la Unión Europea.</p></div></div>
+    <div class="st"><b class="i">3</b><div><b>Servicios complementarios (BaaS y SECaaS)</b><p>Implantación de copias de seguridad automatizadas diarias fuera de nuestras instalaciones y protección gestionada contra ciberataques y <i>ransomware</i>.</p></div></div>
+  </div>
+
+  <h4>3. Matriz de ventajas y mitigación de desventajas</h4>
+  <div class="pc">
+    <div class="pro"><h5>Ventajas para el negocio</h5><ul>
+      <li><b>Flexibilidad operativa:</b> posibilidad de abrir nuevas sedes o añadir usuarios en cuestión de minutos.</li>
+      <li><b>Disponibilidad del 99,9%:</b> garantizada por contrato de nivel de servicio (SLA) del proveedor <i>Cloud</i>.</li>
+      <li><b>Seguridad y cumplimiento:</b> protección de datos adaptada al RGPD con cifrado de extremo a extremo.</li></ul></div>
+    <div class="con"><h5>Desventajas identificadas y su mitigación</h5><ul>
+      <li><i>Riesgo de corte de Internet:</i> se contratará una <b>línea de fibra óptica secundaria de respaldo (<i>failover</i> 4G/5G)</b> en la sede central para asegurar la conectividad ininterrumpida.</li>
+      <li><i>Resistencia al cambio:</i> se incluye un <b>plan de formación de 20 horas</b> para la plantilla en el presupuesto de implantación.</li></ul></div>
+  </div>
+
+  <h4>4. Análisis financiero: costes, estimación y ROI</h4>
+  <div class="tblwrap"><table class="kv"><thead><tr><th>A. Presupuesto estimado (primer año)</th><th>Importe</th></tr></thead><tbody>
+    <tr><td colspan="2" style="background:var(--code);color:var(--ink)">Gastos de implantación (única vez)</td></tr>
+    <tr><td>Consultoría, migración de datos y parametrización</td><td><b>6.500 €</b></td></tr>
+    <tr><td>Formación al personal y gestión del cambio</td><td><b>1.500 €</b></td></tr>
+    <tr><td colspan="2" style="background:var(--code);color:var(--ink)">Suscripción de servicios Cloud (gasto recurrente anual)</td></tr>
+    <tr><td>Licencias SaaS (ERP + CRM + Ofimática) para 25 usuarios</td><td><b>7.500 €/año</b></td></tr>
+    <tr><td>Infraestructura IaaS + BaaS (servidores y copias de seguridad)</td><td><b>3.600 €/año</b></td></tr>
+    <tr><td><b>Inversión total año 1</b></td><td><b>19.100 €</b> (años sucesivos: <b>11.100 €/año</b> en OpEx)</td></tr>
+  </tbody></table></div>
+  <p class="fig">Comprobación: 6.500 + 1.500 + 7.500 + 3.600 = 19.100 € ✔ · Años siguientes: 7.500 + 3.600 = 11.100 € ✔</p>
+
+  <h4>B. Retorno de la inversión (ROI)</h4>
+  <p>Al migrar a la nube, <b>eliminamos de forma directa</b> los siguientes costes recurrentes <i>On-Premise</i>:</p>
+  <div class="grid">
+    <div class="card" style="margin:0">🖥️ Renovación de servidores físicos locales (prevista para este año): <b>−12.000 €</b></div>
+    <div class="card" style="margin:0">🔧 Mantenimiento de hardware, licencias locales y soporte técnico reactivo: <b>−4.500 €/año</b></div>
+    <div class="card" style="margin:0">⚡ Consumo eléctrico y climatización del cuarto de servidores: <b>−1.800 €/año</b></div>
+  </div>
+  <div class="formula" style="margin-top:12px">Ahorro directo anual estimado = 18.300 € (año 1)<br>
+    ROI (%) = ( (Ahorro y beneficios 18.300 € − Inversión 19.100 €) ÷ Inversión 19.100 € ) × 100 ≈ −4,2 %</div>
+  <p class="fig">El PDF corta el resultado en «≈ −4,»; el valor exacto es −800 / 19.100 × 100 = −4,19 %. Es decir, en el primer año aún no se recupera del todo la inversión.</p>
+  <div class="callout tip"><span class="tag">Break-even</span><b>Retorno completo (break-even):</b> se alcanza exactamente al <b>mes 14 de operación</b>. A partir del segundo año, la empresa obtiene un <b>ahorro neto acumulado superior a 7.200 € anuales</b> en gasto de TI, además de un incremento estimado del <b>10% en la productividad administrativa</b> por la eliminación de procesos manuales.</div>
+
+  <h4>5. Cómo será trabajar en el nuevo escenario operativo</h4>
+  <p>El día a día de la empresa cambiará radicalmente hacia un modelo más ágil, seguro y moderno:</p>
+  <div class="stepsbox">
+    <div class="st"><b class="i">1</b><div><b>Acceso unificado y movilidad</b><p>Los empleados podrán iniciar sesión en sus herramientas de trabajo desde la oficina, desde sus domicilios o desde las instalaciones de un cliente con sus credenciales corporativas, manteniendo siempre la información sincronizada.</p></div></div>
+    <div class="st"><b class="i">2</b><div><b>Eliminación de incidencias locales</b><p>Ya no sufriremos paradas de trabajo por averías en el servidor local de la oficina ni lentitud al acceder a los archivos a través de redes VPN complejas.</p></div></div>
+    <div class="st"><b class="i">3</b><div><b>Colaboración en tiempo real</b><p>Múltiples departamentos podrán trabajar simultáneamente sobre el mismo documento o registro del ERP sin generar duplicidades ni copias "conflicto" en carpetas locales.</p></div></div>
+    <div class="st"><b class="i">4</b><div><b>Tranquilidad absoluta en seguridad</b><p>Toda la información estará respaldada automáticamente cada hora. Ante cualquier fallo informático en un ordenador local, el empleado solo tendrá que conectarse desde otro equipo para continuar trabajando exactamente donde lo dejó.</p></div></div>
+  </div>
+
+  <div class="result" style="text-align:left"><b>✍️ Solicitud de aprobación</b><br>Por todo ello, solicito al Comité de Dirección la aprobación de la partida presupuestaria de <b>19.100 €</b> para iniciar el proyecto de migración <i>Cloud</i>, con un plazo de ejecución previsto de <b>6 semanas</b> y fecha de inicio el próximo mes.</div>
+</section>
+
+</div>
+
+</div>
+</main>
+</div>
+
+<script>
+function toggleTheme(){
+  const r=document.documentElement;
+  const dark=r.dataset.theme==='dark'||(r.dataset.theme!=='light'&&matchMedia('(prefers-color-scheme: dark)').matches);
+  r.dataset.theme=dark?'light':'dark';
+}
+document.getElementById('gsearch').addEventListener('input',e=>{
+  const v=e.target.value.toLowerCase();
+  document.querySelectorAll('#gl .it').forEach(i=>i.style.display=i.textContent.toLowerCase().includes(v)?'':'none');
+});
+document.getElementById('asearch').addEventListener('input',e=>{
+  const v=e.target.value.toLowerCase();
+  document.querySelectorAll('#atable tbody tr').forEach(r=>r.classList.toggle('hide',!r.textContent.toLowerCase().includes(v)));
+});
+const Q=[
+ {q:"Los beneficios en una empresa se mejoran:",o:["Aumentando ventas.","Ajustando los costes.","Automatizando tareas.","Todas las opciones son correctas."],a:3},
+ {q:"Los procesos de negocio son:",o:["Actividades de mejora del negocio.","Conjunto de tareas que proporcionan un producto o servicio.","Conjunto de tareas que proporcionan un producto o servicio externo.","Conjunto de transacciones comerciales."],a:1},
+ {q:"MRP es el acrónimo inglés de:",o:["Material Requirements Planning.","Manufacture Resource Planning.","Management Resource Planning.","Multi Relationship Process."],a:0},
+ {q:"Los indicadores KPI los utiliza:",o:["El sistema de procesamiento de transacciones (TPS).","Los CRM para clasificar clientes.","El cuadro de mando integral.","Ninguna de las respuestas es correcta."],a:2},
+ {q:"Un CRM es una herramienta:",o:["De seguimiento y análisis.","De comunicación.","De seguimiento, comunicación y análisis.","Ninguna de las respuestas es correcta."],a:2},
+ {q:"Un SIG (sistema de información gerencial) gestiona:",o:["Datos y procesos.","Datos, procesos y el flujo de trabajo o workflow.","Clientes y propietarios.","Procesos."],a:1},
+ {q:"Señala las marcas y/o fabricantes de software ERP no comercial:",o:["Microsoft.","SAGE.","Dolibarr.","OpenBravo."],a:2},
+ {q:"La gestión del ciclo de vida del producto la hace un módulo denominado:",o:["MIS.","MRP.","PLM.","MRP II."],a:2},
+ {q:"Los sistemas de gestión de procesos de negocio (BPM) son:",o:["Sistemas de información gerencial.","Sistemas ERP.","Es un concepto de business intelligence.","También se llaman sistemas de procesamiento de transacciones."],a:0},
+ {q:"Una clasificación de los MIS es la que los encuadra en:",o:["DSS (Decision Support System) y ERP (Enterprise Resource Planning).","CRM y ERP.","DSS (Decision Support System) y Experts Systems.","CMS (Content Management System) y blog."],a:2}
+];
+let score=0;
+function render(){
+  score=0;
+  const box=document.getElementById('quizbox');box.innerHTML='';
+  Q.forEach((it,i)=>{
+    const d=document.createElement('div');d.className='q';
+    d.innerHTML='<h5>'+(i+1)+'. '+it.q+'</h5>'+it.o.map((t,j)=>'<label><input type="radio" name="q'+i+'" value="'+j+'"><span><b>'+'abcd'[j]+')</b> '+t+'</span></label>').join('');
+    d.querySelectorAll('input').forEach(inp=>inp.addEventListener('change',()=>{
+      if(d.classList.contains('done'))return;
+      d.classList.add('done');
+      const labels=d.querySelectorAll('label');
+      const pick=+inp.value;
+      labels[it.a].classList.add('ok');
+      if(pick===it.a){score++;}else{labels[pick].classList.add('ko');}
+      d.querySelectorAll('input').forEach(x=>x.disabled=true);
+      document.getElementById('scoretxt').textContent='Aciertos: '+score+' / 10';
+    }));
+    box.appendChild(d);
+  });
+  document.getElementById('scoretxt').textContent='Aciertos: 0 / 10';
+}
+function resetQuiz(){render();}
+render();
+const links=[...document.querySelectorAll('nav.side a[href^="#"]')];
+const map=new Map(links.map(a=>[a.getAttribute('href').slice(1),a]));
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{if(e.isIntersecting){links.forEach(l=>l.classList.remove('active'));const a=map.get(e.target.id);if(a)a.classList.add('active');}});
+},{rootMargin:'-20% 0px -70% 0px'});
+map.forEach((a,id)=>{const el=document.getElementById(id);if(el)io.observe(el);});
+links.forEach(a=>a.addEventListener('click',()=>document.getElementById('nav').classList.remove('open')));
+</script>
+</body>
+</html>

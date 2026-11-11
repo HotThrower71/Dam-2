@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogo>
+  <pelicula id="9">
+    <nombre>La lista de Schindler</nombre>
+    <director>Steven Spielberg</director>
+    <anio>1993</anio>
+    <genero>Drama</genero>
+  </pelicula>
+  <pelicula id="10">
+    <nombre>El club de la lucha</nombre>
+    <director>David Fincher</director>
+    <anio>1999</anio>
+    <genero>Drama</genero>
+  </pelicula>
+  <pelicula id="11">
+    <nombre>El viaje de Chihiro</nombre>
+    <director>Hayao Miyazaki</director>
+    <anio>2001</anio>
+    <genero>Animación</genero>
+  </pelicula>
+  <pelicula id="12">
+    <nombre>Gladiator</nombre>
+    <director>Ridley Scott</director>
+    <anio>2000</anio>
+    <genero>Acción</genero>
+  </pelicula>
+  <pelicula id="13">
+    <nombre>Spirited Away</nombre>
+    <director>Hayao Miyazaki</director>
+    <anio>2001</anio>
+    <genero>Animación</genero>
+  </pelicula>
+  <pelicula id="14">
+    <nombre>Cadena perpetua</nombre>
+    <director>Frank Darabont</director>
+    <anio>1994</anio>
+    <genero>Drama</genero>
+  </pelicula>
+  <pelicula id="15">
+    <nombre>El resplandor</nombre>
+    <director>Stanley Kubrick</director>
+    <anio>1980</anio>
+    <genero>Terror</genero>
+  </pelicula>
+  <pelicula id="16">
+    <nombre>La vida es bella</nombre>
+    <director>Roberto Benigni</director>
+    <anio>1997</anio>
+    <genero>Drama</genero>
+  </pelicula>
+  <pelicula id="17">
+    <nombre>Blade Runner 2049</nombre>
+    <director>Denis Villeneuve</director>
+    <anio>2017</anio>
+    <genero>Ciencia ficción</genero>
+  </pelicula>
+  <pelicula id="18">
+    <nombre>El silencio de los corderos</nombre>
+    <director>Jonathan Demme</director>
+    <anio>1991</anio>
+    <genero>Crimen</genero>
+  </pelicula>
+  <pelicula id="19">
+    <nombre>Coco</nombre>
+    <director>Lee Unkrich</director>
+    <anio>2017</anio>
+    <genero>Animación</genero>
+  </pelicula>
+  <pelicula id="20">
+    <nombre>Superman</nombre>
+    <director>Odonnel</director>
+    <anio>1990</anio>
+    <genero>Superheroe</genero>
+  </pelicula>
+  <pelicula id="21">
+    <nombre>Pinocho de Guillermo del Toro</nombre>
+    <director>Guillermo del Toro</director>
+    <anio>2022</anio>
+    <genero>Animación</genero>
+  </pelicula>
+  <pelicula id="22">
+    <nombre>Whiplash</nombre>
+    <director>Damien Chazelle</director>
+    <anio>2014</anio>
+    <genero>Drama</genero>
+  </pelicula>
+  <pelicula id="23">
+    <nombre>WALL-E</nombre>
+    <director>Andrew Stanton</director>
+    <anio>2008</anio>
+    <genero>Animación</genero>
+  </pelicula>
+  <pelicula id="24">
+    <nombre>Salvar al soldado Ryan</nombre>
+    <director>Steven Spielberg</director>
+    <anio>1998</anio>
+    <genero>Drama</genero>
+  </pelicula>
+  <pelicula id="25">
+    <nombre>Psicosis</nombre>
+    <director>Alfred Hitchcock</director>
+    <anio>1960</anio>
+    <genero>Terror</genero>
+  </pelicula>
+  <pelicula id="26">
+    <nombre>Uno de los nuestros</nombre>
+    <director>Martin Scorsese</director>
+    <anio>1990</anio>
+    <genero>Crimen</genero>
+  </pelicula>
+  <pelicula id="27">
+    <nombre>Alien, el octavo pasajero</nombre>
+    <director>Ridley Scott</director>
+    <anio>1979</anio>
+    <genero>Ciencia ficción</genero>
+  </pelicula>
+  <pelicula id="28">
+    <nombre>El truco final (El prestigio)</nombre>
+    <director>Christopher Nolan</director>
+    <anio>2006</anio>
+    <genero>Misterio</genero>
+  </pelicula>
+  <pelicula id="29">
+    <nombre>Delrevés (Inside Out)</nombre>
+    <director>Pete Docter</director>
+    <anio>2015</anio>
+    <genero>Animación</genero>
+  </pelicula>
+  <pelicula id="30">
+    <nombre>La la land</nombre>
+    <director>Damien Chazelle</director>
+    <anio>2016</anio>
+    <genero>Romance</genero>
+  </pelicula>
+  <pelicula id="31">
+    <nombre>Infiltrados</nombre>
+    <director>Martin Scorsese</director>
+    <anio>2006</anio>
+    <genero>Crimen</genero>
+  </pelicula>
+  <pelicula id="33">
+    <nombre>El gran hotel Budapest</nombre>
+    <director>Wes Anderson</director>
+    <anio>2014</anio>
+    <genero>Comedia</genero>
+  </pelicula>
+  <pelicula id="34">
+    <nombre>Amélie</nombre>
+    <director>Jean-Pierre Jeunet</director>
+    <anio>2001</anio>
+    <genero>Comedia</genero>
+  </pelicula>
+  <pelicula id="35">
+    <nombre>Dune</nombre>
+    <director>Denis Villeneuve</director>
+    <anio>2021</anio>
+    <genero>Ciencia ficción</genero>
+  </pelicula>
+  <pelicula id="36">
+    <nombre>Spider-Man: Un nuevo universo</nombre>
+    <director>Bob Persichetti, Peter Ramsey, Rodney Rothman</director>
+    <anio>2018</anio>
+    <genero>Animación</genero>
+  </pelicula>
+  <pelicula id="37">
+    <nombre>Vengadores: Endgame</nombre>
+    <director>Anthony Russo, Joe Russo</director>
+    <anio>2019</anio>
+    <genero>Acción</genero>
+  </pelicula>
+  <pelicula id="38">
+    <nombre>The Batman</nombre>
+    <director>Matt Reeves</director>
+    <anio>2022</anio>
+    <genero>Crimen</genero>
+  </pelicula>
+  <pelicula id="40">
+    <nombre>Watchmen</nombre>
+    <director>Zack Snyder</director>
+    <anio>2009</anio>
+    <genero>Acción</genero>
+  </pelicula>
+  <pelicula id="2">
+    <nombre>Batman</nombre>
+    <director>Nolan</director>
+    <anio>2008</anio>
+    <genero>Superheroes</genero>
+  </pelicula>
+  <pelicula id="41">
+    <nombre>Man Of Steel</nombre>
+    <director>Zack Snyder</director>
+    <anio>2015</anio>
+    <genero>Accion</genero>
+  </pelicula>
+  <pelicula id="42">
+    <nombre>Logan</nombre>
+    <director>James</director>
+    <anio>2019</anio>
+    <genero>Fantasia</genero>
+  </pelicula>
+</catalogo>
