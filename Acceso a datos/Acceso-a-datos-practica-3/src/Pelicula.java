@@ -1,8 +1,6 @@
-/**
- * POJO de una película. Sin anotaciones de Jackson.
- * Jackson deduce el nombre de cada clave JSON a partir de los getters/setters,
- * por eso el año se llama getAño()/setAño(): así la clave es "año" como pide el enunciado.
- */
+// Clase con los datos de una película.
+// Jackson usa los getters y setters para crear las claves del JSON. Por eso el año
+// se llama getAño y setAño, para que la clave salga como "año" sin usar anotaciones.
 public class Pelicula {
     private int id;
     private String titulo;
@@ -10,10 +8,12 @@ public class Pelicula {
     private int año;
     private String genero;
 
-    // Jackson crea el objeto vacío y luego lo rellena con los setters
+    // Constructor vacío. Jackson lo necesita para crear el objeto al leer el JSON
+    // y luego rellenarlo con los setters.
     public Pelicula() {
     }
 
+    // Constructor con todos los datos. Lo usan LectorXml y la opción de añadir.
     public Pelicula(int id, String titulo, String director, int año, String genero) {
         this.id = id;
         this.titulo = titulo;
@@ -63,6 +63,8 @@ public class Pelicula {
     }
 
     @Override
+
+    // Formato con el que se muestra la película por pantalla.
     public String toString() {
         return "[" + id + "] " + titulo + " (" + año + ") - Dir: " + director + " - Género: " + genero;
     }

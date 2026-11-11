@@ -8,22 +8,23 @@ import org.jdom2.Element;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
-/**
- * Lee el peliculas.xml de la práctica anterior con JDOM2.
- * Solo se usa en la migración inicial (opción 1 del menú).
- */
+// Lee el peliculas.xml de la práctica 2 con JDOM2. Solo se usa en la opción 1.
 public class LectorXml {
     private String rutaArchivo;
 
+    // Guarda la ruta del XML.
     public LectorXml(String rutaArchivo) {
         this.rutaArchivo = rutaArchivo;
     }
 
+    // Comprueba si el fichero XML existe.
     public boolean existe() {
         return new File(rutaArchivo).exists();
     }
 
-    // Devuelve todas las películas del XML. Lanza excepción si no se puede leer o está mal formado
+    // Abre el XML con SAXBuilder y recorre los <pelicula> de la raíz con getChildren.
+    // El id se lee del atributo y el resto con getChildText. Los números se pasan a int con parseInt.
+    // Lanza la excepción si el fichero no se puede leer o está mal formado.
     public List<Pelicula> leerPeliculas() throws IOException, JDOMException {
         Document documento = new SAXBuilder().build(new File(rutaArchivo));
         List<Pelicula> lista = new ArrayList<>();

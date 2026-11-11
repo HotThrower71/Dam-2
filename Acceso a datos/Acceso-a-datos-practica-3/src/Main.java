@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import org.jdom2.JDOMException;
 
+// Menú del catálogo: la opción 1 pasa el XML a JSON y el resto son el CRUD sobre el JSON.
 public class Main {
     private static final String RUTA_XML = "peliculas.xml";
     private static final String RUTA_JSON = "peliculas.json";
@@ -12,6 +13,8 @@ public class Main {
     private static final LectorXml lector = new LectorXml(RUTA_XML);
     private static final GestorJson gestor = new GestorJson(RUTA_JSON);
 
+    // Muestra el menú hasta que se elige 0 y llama al método de cada opción.
+    // Si no se escribe un número se captura NumberFormatException y se vuelve a mostrar el menú.
     public static void main(String[] args) {
         int opcion = -1;
 
@@ -56,6 +59,7 @@ public class Main {
         scanner.close();
     }
 
+    // Imprime las opciones del menú.
     private static void mostrarMenu() {
         System.out.println("\n========== CATÁLOGO DE PELÍCULAS ==========");
         System.out.println("1. Convertir XML a JSON");
@@ -69,10 +73,10 @@ public class Main {
         System.out.print("Selecciona una opción: ");
     }
 
-    // ---------- Opción 1: migración XML -> JSON ----------
+    // Opción 1: lee las películas del XML con LectorXml, las mete en un Catalogo
+    // y lo guarda en JSON con GestorJson. Si no existe el XML, el programa se cierra.
     private static void convertirXmlAJson() {
         if (!lector.existe()) {
-            // Requisito: si no existe el XML, informar y detener el programa
             System.out.println("ERROR: no existe el fichero " + RUTA_XML + ". El programa se cierra.");
             System.exit(1);
         }
@@ -91,8 +95,8 @@ public class Main {
         }
     }
 
-    // ---------- Carga del JSON (compartida por las opciones 2-6) ----------
-    // Devuelve null si no se puede cargar (ya ha informado al usuario)
+    // Carga el JSON para las opciones 2 a 6.
+    // Si el fichero no existe o no se puede leer, muestra el error y devuelve null.
     private static Catalogo cargarCatalogo() {
         if (!gestor.existe()) {
             System.out.println("No existe " + RUTA_JSON + ". Ejecuta primero la opción 1 (Convertir XML a JSON).");
@@ -111,7 +115,7 @@ public class Main {
         }
     }
 
-    // Guarda y avisa del resultado. Devuelve true si ha ido bien
+    // Guarda el catálogo en el JSON. Devuelve false y muestra el error si no se ha podido.
     private static boolean guardarCatalogo(Catalogo catalogo) {
         try {
             gestor.guardar(catalogo);
@@ -122,7 +126,7 @@ public class Main {
         }
     }
 
-    // ---------- Opción 2 ----------
+    // Opción 2: muestra todas las películas del JSON.
     private static void mostrarTodas() {
         Catalogo catalogo = cargarCatalogo();
         if (catalogo == null) {
@@ -137,7 +141,7 @@ public class Main {
         }
     }
 
-    // ---------- Opción 3 ----------
+    // Opción 3: pide un id y muestra la película con buscarPorId.
     private static void buscarPorId() {
         Catalogo catalogo = cargarCatalogo();
         if (catalogo == null) {
@@ -155,13 +159,13 @@ public class Main {
         }
     }
 
-    // ---------- Opción 4 ----------
+    // Opción 4: pide los datos, calcula el id con siguienteId, añade la película y guarda el JSON.
+    // Si un dato está mal solo se vuelve a pedir ese.
     private static void anadirPelicula() {
         Catalogo catalogo = cargarCatalogo();
         if (catalogo == null) {
             return;
         }
-        // Si el usuario deja un campo mal, se repite SOLO ese paso (ver pedirTexto/pedirAño)
         String titulo = pedirTexto("Título: ");
         String director = pedirTexto("Director: ");
         int año = pedirAño("Año: ");
@@ -176,7 +180,9 @@ public class Main {
         }
     }
 
-    // ---------- Opción 5 ----------
+    // Opción 5: busca la película por id y pide los datos nuevos.
+    // Si se pulsa ENTER sin escribir nada se queda el valor que tenía.
+    // Se piden todos los datos antes de cambiar nada y luego se aplican con los setters.
     private static void modificarPelicula() {
         Catalogo catalogo = cargarCatalogo();
         if (catalogo == null) {
@@ -194,7 +200,6 @@ public class Main {
         System.out.println("Datos actuales: " + p);
         System.out.println("(Pulsa ENTER sin escribir nada para mantener el valor actual)");
 
-        // Se piden todos los datos antes de tocar el objeto: si algo falla, no queda a medias
         String titulo = pedirTextoOpcional("Nuevo título [" + p.getTitulo() + "]: ", p.getTitulo());
         String director = pedirTextoOpcional("Nuevo director [" + p.getDirector() + "]: ", p.getDirector());
         int año = pedirAñoOpcional("Nuevo año [" + p.getAño() + "]: ", p.getAño());
@@ -210,7 +215,8 @@ public class Main {
         }
     }
 
-    // ---------- Opción 6 ----------
+    // Opción 6: busca la película por id, pide confirmación y la quita de la lista con eliminarPorId.
+    // Después guarda el JSON.
     private static void eliminarPelicula() {
         Catalogo catalogo = cargarCatalogo();
         if (catalogo == null) {
@@ -237,9 +243,7 @@ public class Main {
         }
     }
 
-    // ---------- Entrada por consola ----------
-
-    // Pide un entero una sola vez. Si no es número, informa y devuelve null (vuelve al menú)
+    // Pide un número una vez. Si no es un número avisa y devuelve null para volver al menú.
     private static Integer pedirEntero(String mensaje) {
         System.out.print(mensaje);
         try {
@@ -250,7 +254,7 @@ public class Main {
         }
     }
 
-    // Repite la pregunta hasta que el texto no esté vacío
+    // Pide un texto y lo repite hasta que no esté vacío.
     private static String pedirTexto(String mensaje) {
         while (true) {
             System.out.print(mensaje);
@@ -262,7 +266,7 @@ public class Main {
         }
     }
 
-    // Repite la pregunta hasta que sea un año entero válido
+    // Pide el año y lo repite hasta que sea un número.
     private static int pedirAño(String mensaje) {
         while (true) {
             System.out.print(mensaje);
@@ -274,13 +278,14 @@ public class Main {
         }
     }
 
-    // ENTER vacío = mantener el valor actual
+    // Pide un texto. Si se deja vacío devuelve el valor actual.
     private static String pedirTextoOpcional(String mensaje, String actual) {
         System.out.print(mensaje);
         String texto = scanner.nextLine().trim();
         return texto.isEmpty() ? actual : texto;
     }
 
+    // Pide el año. Si se deja vacío devuelve el actual y si no es un número lo vuelve a pedir.
     private static int pedirAñoOpcional(String mensaje, int actual) {
         while (true) {
             System.out.print(mensaje);

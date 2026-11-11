@@ -20,8 +20,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+// Catálogo de películas: lee las películas de un txt, las muestra y las pasa a XML con DOM.
 public class Main {
 
+    // Lee el fichero de texto línea a línea con BufferedReader.
+    // Cada línea se separa por | con split y con los trozos se crea una Pelicula.
+    // Se salta la cabecera y las líneas vacías.
     public static List<Pelicula> leerPeliculas(String nombreFichero) {
         List<Pelicula> peliculas = new ArrayList<>();
 
@@ -55,6 +59,8 @@ public class Main {
         return peliculas;
     }
 
+    // Crea el XML con DOM. DocumentBuilder crea el documento vacío, createElement y appendChild
+    // van montando los nodos, y el Transformer lo escribe en el fichero con sangría.
     public static void exportarXML(List<Pelicula> peliculas, String nombreFichero) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -102,6 +108,8 @@ public class Main {
         }
     }
 
+    // Lee el XML con DOM (DocumentBuilder.parse) y vuelve a crear la lista de películas.
+    // El id se saca del atributo y el resto de datos con getElementsByTagName.
     public static List<Pelicula> importarXML(String nombreFichero) {
         List<Pelicula> peliculas = new ArrayList<>();
 
@@ -140,6 +148,7 @@ public class Main {
         return peliculas;
     }
 
+    // Opción 1: muestra solo el título de cada película.
     private static void mostrarSoloTitulos(List<Pelicula> peliculas) {
         System.out.println("\n--- LISTA DE PELÍCULAS (SÓLO TÍTULOS) ---");
         for (Pelicula p : peliculas) {
@@ -147,6 +156,8 @@ public class Main {
         }
     }
 
+    // Opción 2: saca los géneros sin repetir, los enseña numerados y muestra
+    // las películas del género que elija el usuario.
     private static void buscarPorGenero(List<Pelicula> peliculas, Scanner scanner) {
         List<String> generos = new ArrayList<>();
         for (Pelicula p : peliculas) {
@@ -183,6 +194,8 @@ public class Main {
         }
     }
 
+    // Opción 3: muestra las películas cuyo título contiene el texto escrito,
+    // sin tener en cuenta mayúsculas y minúsculas.
     private static void buscarPorTitulo(List<Pelicula> peliculas, Scanner scanner) {
         System.out.print("\nIntroduce parte del título a buscar: ");
         String termino = scanner.nextLine().trim().toLowerCase();
@@ -201,6 +214,8 @@ public class Main {
         }
     }
 
+    // Carga las películas del txt y muestra el menú hasta que se elige 0.
+    // Lo que escribe el usuario se lee con Scanner.
     public static void main(String[] args) {
         String rutaTxt = "src/datos/peliculas.txt";
         String rutaXml = "peliculas.xml";

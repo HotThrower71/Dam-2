@@ -1,6 +1,9 @@
 import java.util.Scanner;
 
+// Menú del CRUD de películas sobre el fichero peliculas.xml.
 public class Main {
+    // Muestra el menú hasta que se elige 0. Cada opción llama a un método de DomPeliculas.
+    // Los números se leen con nextLine y parseInt, y si no son números se captura NumberFormatException.
     public static void main(String[] args) {
         String rutaXml = "peliculas.xml";
         DomPeliculas dom = new DomPeliculas(rutaXml);
@@ -46,7 +49,6 @@ public class Main {
                     break;
                 case 3:
                     try {
-                        // El ID no se pide: es el más alto que existe + 1
                         int id = dom.siguienteId();
 
                         System.out.print("Título: ");
