@@ -1,0 +1,72 @@
+Pràctica 2 · MyPlaces
+UT2 / RA2 · Programació multimèdia i dispositius mòbils
+Inici: 27 d’octubre de 2026 | Lliurament: 10 de novembre de 2026 | Durada: 2 setmanes
+
+1. Encàrrec
+Desenvolupa individualment MyPlaces, una aplicació mòbil amb React Native, Expo i JavaScript que
+permeti consultar, afegir i desar llocs d’interès. L’objectiu és demostrar que saps integrar pantalles,
+dades, xarxa i capacitats del dispositiu. No cal una interfície espectacular: prioritzam el funcionament i
+la claredat del codi.
+
+2. Funcionalitats obligatòries
+A · Navegació i components
+Pantalla principal amb una llista de llocs i pantalla de detall. Navegació funcional, identificador de cada
+lloc i almenys un component reutilitzable.
+B · Formulari i validació
+Pantalla per afegir un lloc amb nom i descripció. Impedeix desar un nom buit, informa de l’error i
+permet tornar a la llista.
+C · Persistència local
+Desa els llocs amb AsyncStorage. En reiniciar l’app, es recuperen. Permet eliminar un lloc i gestiona
+una llista inicialment buida.
+D · Consulta HTTP/HTTPS
+Pantalla «Descobreix» que consulta una API pública mitjançant fetch i mostra resultats. Inclou els
+estats de càrrega, error i llista buida. Indica al README quina API has emprat.
+E · Ubicació i permisos
+Botó «Utilitza la meva ubicació» que demana permís i mostra les coordenades. Si l’usuari denega el
+permís, mostra un missatge i manté la resta de l’app usable.
+F · Connectivitat
+Mostra l’estat de connexió i, si és possible, el tipus de xarxa amb NetInfo. Quan no hi ha connexió,
+evita o gestiona adequadament les consultes remotes.
+G · Proves i documentació
+Prova l’app en un emulador o dispositiu real. Registra cinc casos: creació, reinici, absència de dades,
+error de xarxa i permís denegat. Escriu un README reproduïble.
+
+3. Ampliació voluntària
+Si has completat els requisits obligatoris, pots afegir una pantalla amb lectures de l’acceleròmetre
+(expo-sensors), desar coordenades amb cada lloc, evitar duplicats als favorits o millorar
+l’accessibilitat. Aquestes millores no substitueixen els apartats obligatoris.
+
+4. Condicions tècniques
+
+ React Native + Expo, amb JavaScript (.js/.jsx); no és necessari TypeScript.
+ Pots utilitzar Expo Router o el sistema de navegació treballat a classe, sempre que funcioni.
+ Empra dades de prova i una API pública que no requereixi credencials privades.
+ L’app ha de funcionar com a mínim en un entorn de prova disponible (emulador o dispositiu);
+documenta les limitacions del teu entorn.
+ La prova amb sensor físic i la generació d’un APK no són obligatòries si el maquinari o l’entorn no
+ho permeten.
+
+5. Lliurament · 10/11/2026
+ Projecte complet comprimit en .zip, sense la carpeta node_modules ni secrets.
+ README.md amb instal·lació, execució, estructura, API, permisos i limitacions.
+ Captures de les pantalles principals i una prova de persistència.
+ Taula breu de cinc proves amb resultat esperat, resultat obtingut i observacions.
+
+6. Avaluació
+Aquesta pràctica recull evidències del RA2. La qualificació del RA2 es calcularà segons els
+instruments i ponderacions de la programació didàctica; aquesta rúbrica concreta orienta la correcció
+de la pràctica i no substitueix el conjunt d’evidències del RA.
+Aspecte Pes
+Navegació, components i formulari 20 %
+Persistència i eliminació 20 %
+API, estats i errors 20 %
+Ubicació, permisos i connectivitat 20 %
+Proves, execució i README 20 %
+
+7. Autoria i ús de la IA
+El codi lliurat ha de ser propi i comprès. Es permet consultar apunts, documentació i recursos per
+resoldre dubtes; no es permet presentar codi generat per una IA com a treball propi en les parts
+avaluables, d’acord amb les normes comunicades a classe. El professor podrà demanar una
+explicació breu del codi i una modificació senzilla en directe per verificar-ne l’autoria. Qualsevol
+incidència es valorarà segons la programació i les normes del centre.
+Consell: prioritza una versió senzilla que funcioni abans d’afegir millores.

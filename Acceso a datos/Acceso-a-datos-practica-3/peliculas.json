@@ -180,12 +180,6 @@
     "año" : 2009,
     "genero" : "Acción"
   }, {
-    "id" : 2,
-    "titulo" : "Batman",
-    "director" : "Nolan",
-    "año" : 2008,
-    "genero" : "Superheroes"
-  }, {
     "id" : 41,
     "titulo" : "Man Of Steel",
     "director" : "Zack Snyder",
@@ -197,5 +191,11 @@
     "director" : "James",
     "año" : 2019,
     "genero" : "Fantasia"
+  }, {
+    "id" : 43,
+    "titulo" : "Superman",
+    "director" : "Reeves",
+    "año" : 2001,
+    "genero" : "Super"
   } ]
 }
