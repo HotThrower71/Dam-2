@@ -1,23 +1,23 @@
 export const places = [
     {
         id: "gotham",
-        nombre: "Gotham",
+        titulo: "Gotham",
         color: "#111111",
-        coordenadas: "Desconocido",
+        subtitulo: "La ciudad de Batman",
         descripcion: "Ciudad oscura y lluviosa, siempre en vilo.",
     },
     {
         id: "metropolis",
-        nombre: "Metropolis",
+        titulo: "Metropolis",
         color: "#1e63d6",
-        coordenadas: "Desconocido",
+        subtitulo: "La ciudad de Superman",
         descripcion: "La ciudad del mañana, llena de rascacielos.",
     },
     {
         id: "coast",
-        nombre: "Coast City",
+        titulo: "Coast City",
         color: "#3aa564",
-        coordenadas: "Desconocido",
+        subtitulo: "La ciudad de Linterna Verde",
         descripcion: "Ciudad costera de cielos despejados.",
     },
 ];

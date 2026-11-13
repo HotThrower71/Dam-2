@@ -1,16 +1,16 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-export default function BotonPlaces({ nombre, coordenadas, color, onPress }) {
+export default function BotonPlaces({ titulo, subtitulo, color, onPress }) {
     return (
         <Pressable
             onPress={onPress}
             style={({ pressed }) => [estilos.boton, { backgroundColor: color }, pressed && estilos.pulsado]}
         >
             <View>
-                <Text style={estilos.nombre}>{nombre}</Text>
+                <Text style={estilos.titulo}>{titulo}</Text>
             </View>
             <View>
-                <Text style={estilos.coordenadas}>{coordenadas}</Text>
+                <Text style={estilos.subtitulo}>{subtitulo}</Text>
             </View>
         </Pressable>
     );
@@ -35,12 +35,12 @@ const estilos = StyleSheet.create({
         opacity: 0.8,
         transform: [{ scale: 0.98 }],
     },
-    nombre: {
+    titulo: {
         fontSize: 22,
         fontWeight: "bold",
         color: "#ffffff",
     },
-    coordenadas: {
+    subtitulo: {
         fontSize: 14,
         color: "rgba(255, 255, 255, 0.8)",
     },

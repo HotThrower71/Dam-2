@@ -112,7 +112,7 @@ main pre code .ln.cur{background:rgba(224,122,47,.22);border-left-color:#e07a2f}
   <p>Principios básicos y componentes explicados para quien está perdido. Complementa los <a href="apuntes-expo.html">apuntes de Expo · MyPlaces</a>: allí está el proyecto paso a paso; aquí, <b>cómo piensa React Native</b> y qué hace cada pieza.</p>
 </header>
 <nav><div>
-<a href="#mapa">0 · Mapa mental + layout</a><a href="#js">1 · JavaScript</a><a href="#layout">2 · Ficheros e imports</a><a href="#comp">3 · Componentes</a><a href="#jsx">4 · JSX</a><a href="#core">5 · Componentes básicos</a><a href="#estilos">6 · Estilos y Flexbox</a><a href="#estado">7 · Estado</a><a href="#efectos">8 · Efectos</a><a href="#listas">9 · Listas</a><a href="#nav">10 · Navegación</a><a href="#anat">11 · Anatomía</a><a href="#plat">12 · Plataformas</a><a href="#errores">Errores</a><a href="#glosario">Glosario</a>
+<a href="#mapa">0 · Mapa mental + layout</a><a href="#js">1 · JavaScript</a><a href="#layout">2 · Ficheros e imports</a><a href="#comp">3 · Componentes</a><a href="#jsx">4 · JSX</a><a href="#core">5 · Componentes básicos</a><a href="#estilos">6 · Estilos y Flexbox</a><a href="#estado">7 · Estado</a><a href="#forms">8 · Formularios</a><a href="#efectos">9 · Efectos</a><a href="#listas">10 · Listas</a><a href="#nav">11 · Navegación</a><a href="#anat">12 · Anatomía</a><a href="#plat">13 · Plataformas</a><a href="#errores">Errores</a><a href="#glosario">Glosario</a>
 </div></nav>
 <main>
 
@@ -308,6 +308,28 @@ export async function guardarLugares(l) { /* … */ }
 // En otro fichero:
 import BannerRed from '../components/BannerRed';                     // por defecto: sin llaves
 import { leerLugares, guardarLugares } from '../storage/lugares';    // con nombre: con llaves</code></pre>
+<h3>¿Dónde se define cada cosa y dónde se usa? (el caso de MyPlaces)</h3>
+<p>Una confusión muy común: una función como <code>readPlaces</code> <b>no está en la pantalla que la usa</b>. Se <b>define</b> en un fichero, se <b>exporta</b>, y se <b>importa</b> donde hace falta. Estos son los ficheros reales de tu proyecto:</p>
+<pre><code>src/
+├─ app/
+│  ├─ _layout.jsx            ← usa: Stack
+│  ├─ index.jsx              ← usa: places, BotonPlaces, TituloPlace
+│  └─ place/[id].jsx         ← usa: places
+├─ components/
+│  ├─ BotonPlaces.jsx        ← DEFINE: BotonPlaces
+│  └─ TituloPlace.jsx        ← DEFINE: TituloPlace
+├─ data/
+│  └─ places.js              ← DEFINE: places (la lista de lugares)
+└─ storage/
+   └─ placesStorage.js       ← DEFINE: readPlaces, savePlaces (leer/guardar en el móvil)</code></pre>
+<table><tr><th>Cosa</th><th>Se define en</th><th>Se importa así</th></tr>
+<tr><td><code>places</code> (lista)</td><td><code>src/data/places.js</code></td><td><code>import { places } from "../data/places";</code></td></tr>
+<tr><td><code>readPlaces</code>, <code>savePlaces</code></td><td><code>src/storage/placesStorage.js</code></td><td><code>import { readPlaces, savePlaces } from "../storage/placesStorage";</code></td></tr>
+<tr><td><code>BotonPlaces</code></td><td><code>src/components/BotonPlaces.jsx</code></td><td><code>import BotonPlaces from "../components/BotonPlaces";</code></td></tr>
+<tr><td><code>TituloPlace</code></td><td><code>src/components/TituloPlace.jsx</code></td><td><code>import TituloPlace from "../components/TituloPlace";</code></td></tr>
+</table>
+<div class="note"><b>Cómo decidir en qué carpeta va algo:</b> un dato fijo → <code>data</code>; una función que lee/guarda → <code>storage</code>; una pieza visual → <code>components</code>; una pantalla → <code>app</code>. <b>Dos ficheros pueden llamarse igual</b> si están en carpetas distintas, pero es confuso: por eso <code>placesStorage.js</code> y no otro <code>places.js</code>.</div>
+<div class="warn"><b>Para que el import funcione:</b> (1) el fichero tiene que <b>existir</b> (si no lo has creado, no hay nada que importar), (2) debe tener el <code>export</code> correspondiente y (3) el nombre del <code>import</code> debe coincidir <b>exactamente</b> con el del <code>export</code> (<code>readPlaces</code> ≠ <code>leerLugares</code>). Los ejemplos de los apuntes usan nombres como <code>leerLugares</code>; en tu proyecto son los tuyos.</div>
 <h3>Importar un componente en el layout</h3>
 <p>Los pasos son siempre los mismos: <b>1)</b> el componente tiene su <code>export</code>, <b>2)</b> lo importas arriba con la ruta correcta, <b>3)</b> lo usas como etiqueta.</p>
 <pre data-id="lay1"><code>// src/app/_layout.jsx
@@ -523,8 +545,147 @@ const estilos = StyleSheet.create({
 </div>
 </section>
 
+<section id="forms">
+<h2>8 · Formularios <span class="tag">TextInput, validación y teclado</span></h2>
+<p class="lead">Un formulario es: <b>campos controlados por estado</b> + <b>validación</b> + <b>un botón que envía</b>. En móvil hay que cuidar además el <b>teclado</b>.</p>
+<div class="flow"><span>El usuario escribe</span><i>→</i><span><code>onChangeText</code></span><i>→</i><span>se actualiza el estado</span><i>→</i><span>pulsa Guardar</span><i>→</i><span><code>validar()</code></span><i>→</i><span>✅ guardar / ❌ mostrar errores</span></div>
+<div class="grid">
+<div class="card"><h4>1 · Campos controlados</h4>Cada <code>TextInput</code> muestra <code>value</code> (del estado) y avisa con <code>onChangeText</code>. El estado manda; así siempre sabes lo que hay escrito.</div>
+<div class="card"><h4>2 · Estado en objeto</h4>Con varios campos, un solo <code>useState({ nombre: "", email: "" })</code> y un <code>cambiar(campo, valor)</code> evitan repetir código.</div>
+<div class="card"><h4>3 · Validar al enviar</h4>Al pulsar Guardar se comprueban las reglas, se guardan los mensajes de error y, si hay alguno, <b>no se envía</b>.</div>
+<div class="card"><h4>4 · Cuidar el móvil</h4>Teclado que no tape los campos, teclado adecuado (numérico, email), tamaños cómodos para el dedo.</div>
+</div>
+<h3>Prueba un formulario</h3>
+<p>Rellénalo bien y mal, y cambia entre validar <b>al enviar</b> o <b>mientras escribes</b>. Observa el objeto de estado y el registro.</p>
+<div class="sim" data-sim="formulario"></div>
+<h3>Un formulario completo, paso a paso</h3>
+<pre data-id="form1"><code>import { router } from "expo-router";
+import { useState } from "react";
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput } from "react-native";
+
+export default function NuevoLugar() {
+    const [form, setForm] = useState({ nombre: "", descripcion: "" });
+    const [errores, setErrores] = useState({});
+
+    function cambiar(campo, valor) {
+        setForm({ ...form, [campo]: valor });
+        setErrores({ ...errores, [campo]: "" });
+    }
+
+    function validar() {
+        const nuevos = {};
+        if (form.nombre.trim() === "") nuevos.nombre = "El nombre es obligatorio";
+        if (form.descripcion.trim().length &lt; 10) nuevos.descripcion = "Mínimo 10 caracteres";
+        setErrores(nuevos);
+        return Object.keys(nuevos).length === 0;
+    }
+
+    function guardar() {
+        if (!validar()) return;
+        // aquí guardarías (AsyncStorage, una API…)
+        router.back();
+    }
+
+    return (
+        &lt;KeyboardAvoidingView style={estilos.pantalla} behavior={Platform.OS === "ios" ? "padding" : "height"}&gt;
+            &lt;ScrollView contentContainerStyle={estilos.contenido} keyboardShouldPersistTaps="handled"&gt;
+                &lt;TextInput
+                    style={estilos.input}
+                    placeholder="Nombre"
+                    value={form.nombre}
+                    onChangeText={t =&gt; cambiar("nombre", t)}
+                /&gt;
+                {errores.nombre ? &lt;Text style={estilos.error}&gt;{errores.nombre}&lt;/Text&gt; : null}
+
+                &lt;TextInput
+                    style={[estilos.input, estilos.multilinea]}
+                    placeholder="Descripción"
+                    multiline
+                    value={form.descripcion}
+                    onChangeText={t =&gt; cambiar("descripcion", t)}
+                /&gt;
+                {errores.descripcion ? &lt;Text style={estilos.error}&gt;{errores.descripcion}&lt;/Text&gt; : null}
+
+                &lt;Pressable style={estilos.boton} onPress={guardar}&gt;
+                    &lt;Text style={estilos.textoBoton}&gt;Guardar&lt;/Text&gt;
+                &lt;/Pressable&gt;
+            &lt;/ScrollView&gt;
+        &lt;/KeyboardAvoidingView&gt;
+    );
+}
+
+const estilos = StyleSheet.create({
+    pantalla: { flex: 1, backgroundColor: "#f7f4ed" },
+    contenido: { padding: 16, gap: 8 },
+    input: {
+        backgroundColor: "#ffffff",
+        borderWidth: 1,
+        borderColor: "#cccccc",
+        borderRadius: 12,
+        padding: 14,
+        fontSize: 16,
+    },
+    multilinea: { minHeight: 100, textAlignVertical: "top" },
+    error: { color: "#c0392b", fontSize: 14 },
+    boton: { backgroundColor: "#234c3b", borderRadius: 16, paddingVertical: 16, alignItems: "center", marginTop: 8 },
+    textoBoton: { color: "#ffffff", fontSize: 18, fontWeight: "bold" },
+});</code></pre>
+<h3>Un campo reutilizable</h3>
+<p>Cuando tienes varios campos con etiqueta y error, conviene sacarlos a un componente (<code>src/components/Campo.jsx</code>).</p>
+<pre data-id="campo1"><code>function Campo({ etiqueta, error, ...props }) {
+    return (
+        &lt;View style={estilos.campo}&gt;
+            &lt;Text style={estilos.etiqueta}&gt;{etiqueta}&lt;/Text&gt;
+            &lt;TextInput style={[estilos.input, error &amp;&amp; estilos.inputError]} {...props} /&gt;
+            {error ? &lt;Text style={estilos.error}&gt;{error}&lt;/Text&gt; : null}
+        &lt;/View&gt;
+    );
+}
+
+// uso:
+&lt;Campo etiqueta="Nombre" value={form.nombre} onChangeText={t =&gt; cambiar("nombre", t)} error={errores.nombre} /&gt;</code></pre>
+<h3>Props de <code>TextInput</code> que más usarás</h3>
+<table><tr><th>Prop</th><th>Para qué</th><th>Ejemplo</th></tr>
+<tr><td><code>value</code> / <code>onChangeText</code></td><td>Campo controlado</td><td><code>value={nombre} onChangeText={setNombre}</code></td></tr>
+<tr><td><code>placeholder</code></td><td>Texto de ayuda en gris</td><td><code>placeholder="Nombre"</code></td></tr>
+<tr><td><code>keyboardType</code></td><td>Tipo de teclado</td><td><code>"numeric"</code>, <code>"email-address"</code>, <code>"phone-pad"</code></td></tr>
+<tr><td><code>secureTextEntry</code></td><td>Oculta lo escrito (contraseñas)</td><td><code>secureTextEntry</code></td></tr>
+<tr><td><code>autoCapitalize</code></td><td>Mayúsculas automáticas</td><td><code>"none"</code> para emails y usuarios</td></tr>
+<tr><td><code>autoCorrect</code></td><td>Autocorrector</td><td><code>{false}</code> en emails y nombres raros</td></tr>
+<tr><td><code>multiline</code></td><td>Varias líneas</td><td>descripciones; con <code>textAlignVertical: "top"</code> en Android</td></tr>
+<tr><td><code>maxLength</code></td><td>Límite de caracteres</td><td><code>maxLength={40}</code></td></tr>
+<tr><td><code>returnKeyType</code> / <code>onSubmitEditing</code></td><td>Tecla “siguiente/enviar” del teclado y qué hace</td><td><code>returnKeyType="done"</code></td></tr>
+<tr><td><code>editable</code></td><td>Bloquear el campo</td><td><code>editable={false}</code></td></tr>
+</table>
+<h3>El teclado en el móvil</h3>
+<table><tr><th>Problema</th><th>Solución</th></tr>
+<tr><td>El teclado tapa el campo o el botón</td><td><code>KeyboardAvoidingView</code> (<code>behavior="padding"</code> en iOS) y/o <code>ScrollView</code></td></tr>
+<tr><td>El primer toque en el botón solo cierra el teclado</td><td><code>keyboardShouldPersistTaps="handled"</code> en el <code>ScrollView</code></td></tr>
+<tr><td>Quiero cerrar el teclado por código</td><td><code>Keyboard.dismiss()</code> (importado de <code>react-native</code>)</td></tr>
+<tr><td>Teclado equivocado para el dato</td><td><code>keyboardType</code> según el campo</td></tr>
+<tr><td>Quiero avisar al usuario con un mensaje</td><td><code>Alert.alert("Título", "Mensaje")</code></td></tr>
+</table>
+<h3>Reglas de validación habituales</h3>
+<table><tr><th>Regla</th><th>Código</th></tr>
+<tr><td>Obligatorio</td><td><code>valor.trim() === ""</code></td></tr>
+<tr><td>Longitud mínima</td><td><code>valor.trim().length &lt; 10</code></td></tr>
+<tr><td>Email básico</td><td><code>!valor.includes("@")</code> (o una expresión regular)</td></tr>
+<tr><td>Solo números</td><td><code>isNaN(Number(valor))</code></td></tr>
+<tr><td>Rango</td><td><code>Number(valor) &lt; 18</code></td></tr>
+<tr><td>Sin duplicados</td><td><code>lista.some(l =&gt; l.nombre === valor)</code></td></tr>
+</table>
+<div class="warn"><b>Errores típicos con formularios:</b>
+<b>(1)</b> <code>setForm({ [campo]: valor })</code> sin <code>...form</code>: borra los demás campos;
+<b>(2)</b> no usar <code>.trim()</code> y aceptar nombres de espacios;
+<b>(3)</b> un <code>TextInput</code> con <code>value</code> pero sin <code>onChangeText</code> (no deja escribir);
+<b>(4)</b> olvidar <code>return</code> tras ver errores y guardar igualmente;
+<b>(5)</b> campos numéricos: el texto siempre llega como <b>texto</b>, conviértelo con <code>Number()</code>;
+<b>(6)</b> el teclado tapa el botón: falta <code>KeyboardAvoidingView</code> o <code>ScrollView</code>.</div>
+<div class="note"><b>Para MyPlaces:</b> un formulario “Añadir lugar” con nombre y descripción, que no deje guardar un nombre vacío y vuelva a la lista. Para que los lugares nuevos se <b>guarden de verdad</b> hace falta persistencia con AsyncStorage (apartado C de los <a href="apuntes-expo.html#C">apuntes de Expo</a>).</div>
+</section>
+
 <section id="efectos">
-<h2>8 · Efectos: cosas que pasan al aparecer, cambiar o desaparecer</h2>
+<h2>9 · Efectos: cosas que pasan al aparecer, cambiar o desaparecer</h2>
 <p class="lead"><code>useEffect</code> es para hablar con el “mundo exterior”: red, temporizadores, suscripciones, sensores.</p>
 <pre data-id="effect1"><code>function Reloj() {
   const [seg, setSeg] = useState(0);
@@ -541,7 +702,7 @@ const estilos = StyleSheet.create({
 </section>
 
 <section id="listas">
-<h2>9 · Listas, keys y renderizado condicional</h2>
+<h2>10 · Listas, keys y renderizado condicional</h2>
 <p class="lead">Casi toda app es “una lista de cosas”. Aquí ves cómo se filtra, se pinta y se gestiona que esté vacía.</p>
 <pre data-id="list1"><code>const [items, setItems] = useState(['Pan', 'Leche']);
 const [busqueda, setBusqueda] = useState('');
@@ -559,7 +720,7 @@ const visibles = items.filter(i =&gt; i.toLowerCase().includes(busqueda.toLowerC
 </section>
 
 <section id="nav">
-<h2>10 · Navegación con Expo Router</h2>
+<h2>11 · Navegación con Expo Router</h2>
 <p class="lead">Las pantallas forman una <b>pila</b>: <code>push</code> apila una encima, <code>back</code> quita la de arriba.</p>
 <div class="note">La simulación de la pila está en la <a href="#mapa">sección 0</a>. Aquí tienes la chuleta de las funciones del router.</div>
 <table><tr><th>Quiero…</th><th>Escribo</th></tr><tr><td>Ir a una pantalla (JSX)</td><td><code>&lt;Link href="/nuevo"&gt;…&lt;/Link&gt;</code></td></tr><tr><td>Ir desde código</td><td><code>router.push('/nuevo')</code></td></tr><tr><td>Volver</td><td><code>router.back()</code></td></tr><tr><td>Reemplazar la actual</td><td><code>router.replace('/')</code></td></tr><tr><td>Pasar un dato</td><td><code>router.push({ pathname: '/detall/[id]', params: { id: 5 } })</code></td></tr><tr><td>Leer el dato</td><td><code>const { id } = useLocalSearchParams()</code></td></tr><tr><td>Título de la barra</td><td><code>&lt;Stack.Screen name="nuevo" options={{ title: 'Nuevo' }} /&gt;</code> en <code>_layout.jsx</code></td></tr></table>
@@ -700,7 +861,7 @@ export default function Layout() {
 </section>
 
 <section id="anat">
-<h2>11 · Anatomía de una pantalla típica</h2>
+<h2>12 · Anatomía de una pantalla típica</h2>
 <p class="lead">Casi todas tus pantallas siguen este orden. Memorízalo y sabrás dónde va cada cosa.</p>
 <pre data-id="anat"><code>// 1. IMPORTS
 import { useEffect, useState } from 'react';
@@ -734,7 +895,7 @@ const estilos = StyleSheet.create({ contenedor: { flex: 1, padding: 16 } });</co
 </section>
 
 <section id="plat">
-<h2>12 · Android, iOS y web</h2>
+<h2>13 · Android, iOS y web</h2>
 <p class="lead">El 95 % del código es igual en las tres. Esto es lo que suele cambiar.</p>
 <pre data-id="plat"><code>import { Platform } from 'react-native';
 
@@ -762,9 +923,9 @@ const estilo = Platform.select({
 <li>Cómo se conectan los ficheros con <code>export</code> e <code>import</code> (sección 2).</li>
 <li>Hacer a mano 3 componentes con props (sección 3) y conocer los componentes básicos (sección 5).</li>
 <li>Jugar con flexbox hasta colocar cualquier cosa (sección 6).</li>
-<li>Estado + eventos: contador y formulario (sección 7).</li>
-<li>Lista + detalle con navegación (secciones 9 y 10).</li>
-<li>Efectos y datos remotos (sección 8 y apuntes de la práctica).</li>
+<li>Estado + eventos: contador (sección 7) y formularios (sección 8).</li>
+<li>Lista + detalle con navegación (secciones 10 y 11).</li>
+<li>Efectos y datos remotos (sección 9 y apuntes de la práctica).</li>
 </ol>
 <div class="tip">Cuando algo falle: 1) lee el mensaje rojo entero, 2) busca el primer fichero tuyo que nombra, 3) mira la línea, 4) usa <code>console.log</code> para ver el valor real de las variables.</div>
 </section>
@@ -933,13 +1094,13 @@ const estilo = Platform.select({
         else{if(screen===b.dataset.n)return;screen=b.dataset.n;if(where==='pantalla'){montajes++;a.log('navegar a «'+screen+'»','→ el banner se <b>vuelve a montar</b> (creado '+montajes+' veces): pierde su estado.')}else a.log('navegar a «'+screen+'»','→ el layout no se toca: el banner sigue igual. Solo cambia lo que hay dentro de &lt;Stack /&gt;.')}
         r()}}})};
 
-  S.paths=function(el){var F=['src/app/_layout.jsx','src/app/index.jsx','src/app/nuevo.jsx','src/app/detall/[id].jsx','src/components/BannerRed.jsx','src/components/TarjetaLugar.jsx','src/storage/lugares.js','src/data/llocs.js'];
+  S.paths=function(el){var F=['src/app/_layout.jsx','src/app/index.jsx','src/app/nuevo.jsx','src/app/place/[id].jsx','src/components/BotonPlaces.jsx','src/components/TituloPlace.jsx','src/storage/placesStorage.js','src/data/places.js'];
     mount(el,{title:'Calculadora de rutas de import',hint:'Elige el fichero donde escribes el import y el que quieres traer.',legend:[],
     build:function(a){
       var opt=F.map(function(f){return '<option>'+f+'</option>'}).join('');
       a.ctl.innerHTML='<label>Estoy en: <select id="f1">'+opt+'</select></label><label>Quiero importar: <select id="f2">'+opt.replace('<option>src/app/_layout.jsx','<option selected>src/app/_layout.jsx')+'</select></label>';
       a.ctl.style.flexDirection='column';
-      var f1=a.ctl.querySelector('#f1'),f2=a.ctl.querySelector('#f2');f2.value='src/components/BannerRed.jsx';
+      var f1=a.ctl.querySelector('#f1'),f2=a.ctl.querySelector('#f2');f2.value='src/components/BotonPlaces.jsx';
       var tr=a.el.querySelector('.trace');tr.innerHTML='<pre style="margin:0"><code></code></pre><div class="expl" style="margin-top:8px;padding:8px 10px;background:color-mix(in srgb,var(--accent2) 10%,transparent);border-left:4px solid var(--accent2);border-radius:0 8px 8px 0"></div>';
       var code=tr.querySelector('code'),ex=tr.querySelector('.expl');
       function rel(from,to){var a1=from.split('/');a1.pop();var b1=to.replace(/\.(jsx|js)$/,'').split('/');var i=0;while(i<a1.length&&i<b1.length-1&&a1[i]===b1[i])i++;var up=a1.length-i;var pre=up===0?'./':new Array(up+1).join('../');return pre+b1.slice(i).join('/')}
@@ -1059,6 +1220,37 @@ const estilo = Platform.select({
         if(l)a.log('&lt;Stack.Screen options={{ title: lugar.nombre }} /&gt;','→ la barra superior pasa a decir «'+l.n+'».');det(id)}
       a.ctl.onclick=function(e){var b=e.target.closest('button');if(b)ir(b.dataset.id)};
       a.on('click',function(x,d){if(x==='go')ir(d.id);else{a.log('router.back()','→ vuelves a la lista.');list()}})}})};
+
+  S.formulario=function(el){mount(el,{title:'Formulario con validación',hint:'Rellénalo bien y mal. Cambia el modo de validación y mira el objeto de estado, los errores y qué ejecuta el código.',
+    legend:['Cada <code>TextInput</code> es un campo controlado por el estado','Mensaje de error de ese campo (<code>errores.campo</code>)','Botón: ejecuta <code>guardar</code> → <code>validar()</code>'],
+    build:function(a){var f={nombre:'',email:'',edad:'',acepto:false},err={},live=false,enviado=null;
+      a.ctl.innerHTML='<button data-m="enviar" class="on">Validar al enviar</button><button data-m="vivo">Validar mientras escribes</button><button data-m="reset">Vaciar</button>';
+      var d=document.createElement('div');d.className='disk';a.screen.parentNode.parentNode.appendChild(d);
+      function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+      function val(x){var e={};if(x.nombre.trim()==='')e.nombre='El nombre es obligatorio';
+        if(!x.email.includes('@')||x.email.trim().length<5)e.email='Email no válido';
+        if(x.edad===''||isNaN(Number(x.edad)))e.edad='Escribe un número';else if(Number(x.edad)<18)e.edad='Debes ser mayor de 18';
+        if(!x.acepto)e.acepto='Debes aceptar las condiciones';return e}
+      function paintErr(k){var n=a.screen.querySelector('#e_'+k);if(n)n.innerHTML=err[k]?a.b(2)+esc(err[k]):''}
+      function paintAll(){['nombre','email','edad','acepto'].forEach(paintErr);ok()}
+      function ok(){a.screen.querySelector('#ok').innerHTML=enviado?'<div style="background:#d8f0e0;color:#1d5e36;border-radius:10px;padding:8px;margin-top:6px">✅ Enviado<br><small>'+esc(JSON.stringify(enviado))+'</small></div>':'';d.textContent='form = '+JSON.stringify(f)+'\nerrores = '+JSON.stringify(err)}
+      function build(){a.screen.innerHTML='<div class="p-bar">Nuevo registro</div>'+
+        '<div data-n="1">'+a.b(1)+'<input class="p-input" id="f_nombre" placeholder="Nombre" value="'+esc(f.nombre)+'"></div><div class="p-err" id="e_nombre"></div>'+
+        '<input class="p-input" id="f_email" placeholder="Email" inputmode="email" value="'+esc(f.email)+'"><div class="p-err" id="e_email"></div>'+
+        '<input class="p-input" id="f_edad" placeholder="Edad (teclado numérico)" inputmode="numeric" value="'+esc(f.edad)+'"><div class="p-err" id="e_edad"></div>'+
+        '<label style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="f_acepto"'+(f.acepto?' checked':'')+'> Acepto las condiciones</label><div class="p-err" id="e_acepto"></div>'+
+        '<button class="p-btn" data-n="3" data-act="send">'+a.b(3)+'Guardar</button><div id="ok"></div>';
+        ['nombre','email','edad'].forEach(function(k){var i=a.screen.querySelector('#f_'+k);i.oninput=function(){f[k]=i.value;err[k]='';if(live){err=val(f);Object.keys(err).forEach(function(q){if(!f[q]&&q!=='acepto'&&q!==k)err[q]=''})}
+          a.log('cambiar("'+k+'", "'+esc(i.value)+'")','→ <code>setForm({ ...form, '+k+': … })</code> y se <b>borra el error</b> de ese campo.'+(live?' Como validas en vivo, se vuelve a comprobar.':''));paintAll()}});
+        a.screen.querySelector('#f_acepto').onchange=function(e){f.acepto=e.target.checked;err.acepto='';a.log('cambiar("acepto", '+f.acepto+')','→ un <code>Switch</code>/casilla guarda un booleano en el estado.');paintAll()};
+        paintAll()}
+      build();
+      a.ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;var m=b.dataset.m;
+        if(m==='reset'){f={nombre:'',email:'',edad:'',acepto:false};err={};enviado=null;build();a.log('setForm(inicial); setErrores({})','→ todo vacío.');return}
+        live=m==='vivo';[].forEach.call(a.ctl.querySelectorAll('[data-m]'),function(x){x.classList.toggle('on',x===b)});a.log('modo = '+(live?'mientras escribes':'al enviar'),live?'→ <code>validar()</code> se llama también en <code>cambiar</code>: errores al instante.':'→ solo se valida al pulsar Guardar: menos intrusivo.')};
+      a.on('click',function(x){if(x==='send'){err=val(f);var n=Object.keys(err).length;
+        if(n){enviado=null;a.log('validar()','→ <b>'+n+' error(es)</b> guardados en <code>errores</code>. En <code>guardar</code>: <code>if (!validar()) return;</code> → <b>no se envía</b>.')}
+        else{enviado=JSON.parse(JSON.stringify(f));a.log('validar()','→ sin errores: devuelve <b>true</b>; <code>guardar</code> continúa (guardar datos y <code>router.back()</code>).')}paintAll()}})}})};
   document.querySelectorAll('.sim[data-sim]').forEach(function(el){S[el.dataset.sim](el)});
 })();
 </script>
@@ -1072,8 +1264,33 @@ const estilo = Platform.select({
   var T=function(){return {o:[].slice.call(arguments)}};
   var NONE='<div class="none">Todavía no se dibuja nada</div>';
   var CIU=function(){return [['Gotham','#111111'],['Metropolis','#1e63d6'],['Coast City','#d62828']].map(function(c){return '<div style="background:'+c[1]+';color:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px"><b>'+c[0]+'</b><div style="font-size:.75rem;opacity:.8">Desconocido</div></div>'}).join('')};
+  var FRM=function(n,d,en,ed){return B('Nuevo lugar')+'<input class="p-input" placeholder="Nombre" value="'+n+'">'+(en?'<div class="p-err">'+en+'</div>':'')+'<input class="p-input" placeholder="Descripción" value="'+d+'">'+(ed?'<div class="p-err">'+ed+'</div>':'')+BTN('Guardar')};
   var STK=function(a){return B((a.length>1?'‹ ':'')+a[a.length-1])+'<div style="font-size:.75rem;color:#555"><b>Pila</b> (arriba = visible):</div>'+a.slice().reverse().map(function(x,i){return '<div class="p-row" style="'+(i===0?'outline:2px solid #e07a2f':'')+'"><span>'+x+'</span></div>'}).join('')};
   var STEPS={
+form1:[[1,1,"<code>router</code> para volver a la lista al terminar.",null],
+[3,3,"<code>KeyboardAvoidingView</code> evita que el <b>teclado tape</b> los campos (importante en móvil). <code>ScrollView</code> deja deslizar si no caben. <code>TextInput</code> es el campo de texto.",null],
+[5,5,"La pantalla del formulario (un fichero de <code>src/app/</code>, por ejemplo <code>nuevo.jsx</code>).",null],
+[6,6,"<b>Un solo estado</b> con un objeto que guarda <b>todos</b> los campos. Más cómodo que un <code>useState</code> por campo cuando hay varios.",P(FRM("","","",""))],
+[7,7,"Otro estado para los <b>mensajes de error</b>, un objeto con un mensaje por campo. Empieza vacío: no hay errores.",null],
+[9,10,"<code>cambiar</code> se llama en cada tecla. <code>{ ...form, [campo]: valor }</code> hace una <b>copia</b> del objeto cambiando solo el campo indicado (los corchetes usan el <i>valor</i> de <code>campo</code> como nombre). Además se <b>borra el error</b> de ese campo: el usuario ya está corrigiendo.",P(FRM("Teatre","","",""))],
+[14,15,"<code>validar</code> comprueba cada campo y va guardando mensajes en un objeto <code>nuevos</code>. Al final lo guarda en el estado y <b>devuelve <code>true</code> si no hay ningún error</b> (<code>Object.keys(nuevos).length === 0</code>).",null],
+[16,16,"<code>.trim()</code> quita espacios: un nombre de solo espacios cuenta como vacío.",P(FRM("   ","","El nombre es obligatorio",""))],
+[17,17,"Segunda regla: mínimo 10 caracteres.",P(FRM("Teatre","Corto","","Mínimo 10 caracteres"))],
+[22,26,"<code>guardar</code>: primero valida y, <b>si hay errores, sale (<code>return</code>)</b> sin guardar. Si todo está bien, aquí guardarías los datos y volverías atrás con <code>router.back()</code>.",null],
+[29,29,"Envuelve la pantalla. <code>behavior=\"padding\"</code> (iOS) empuja el contenido hacia arriba al salir el teclado; en Android suele bastar <code>\"height\"</code>.",null],
+[30,30,"<code>keyboardShouldPersistTaps=\"handled\"</code>: si el teclado está abierto y pulsas el botón, el toque <b>funciona a la primera</b> (sin esto, el primer toque solo cierra el teclado).",null],
+[33,36,"Campo <b>controlado</b>: <code>value</code> viene del estado y <code>onChangeText</code> lo actualiza en cada tecla. <code>t =&gt; cambiar(\"nombre\", t)</code> pasa el texto y el nombre del campo.",P(FRM("Teatre","","",""))],
+[37,37,"<b>Muestra el error solo si existe.</b> Se usa <code>? … : null</code> porque <code>&amp;&amp;</code> con un texto vacío podría pintar algo raro.",P(FRM("","","El nombre es obligatorio",""))],
+[40,40,"Estilos combinados: base del input más <code>multilinea</code> (más alto). Con <code>multiline</code> el campo admite varias líneas.",null],
+[48,48,"El botón ejecuta <code>guardar</code>. Es un <code>Pressable</code> con su propio estilo (más cómodo que <code>Button</code> para dar diseño).",null],
+[59,66,"Estilo del campo pensado para móvil: <code>padding: 14</code> y <code>fontSize: 16</code> hacen cómodo escribir (en iOS, menos de 16 hace que la pantalla haga zoom).",null],
+[68,68,"Mensaje de error en rojo, más pequeño.",null],
+[69,69,"Botón grande y fácil de pulsar con el dedo.",null]],
+campo1:[[1,1,"Un <b>componente reutilizable</b>: etiqueta + campo + mensaje de error. <code>...props</code> recoge <b>todas las demás props</b> que le pases (<code>value</code>, <code>onChangeText</code>, <code>placeholder</code>…).",null],
+[4,4,"La etiqueta sale de la prop <code>etiqueta</code>.",null],
+[5,5,"<code>{...props}</code> reenvía al <code>TextInput</code> todo lo demás. Y si hay <code>error</code>, se añade el estilo <code>inputError</code> (borde rojo) con el array de estilos.",null],
+[6,6,"El mensaje solo aparece cuando hay error.",null],
+[12,12,"Usarlo es una línea por campo: el formulario queda corto y sin repetir estilos.",null]],
 rec1:[[1,1,"Los datos de los lugares van en <b>un solo fichero</b>. Así la lista y el detalle leen <b>lo mismo</b> y no repites información.",null],
 [2,2,"<code>export const</code> (con nombre): se importa con llaves, <code>import { lugares } from …</code>. Es un array de objetos, uno por lugar.",null],
 [3,3,"Cada lugar tiene un <b><code>id</code> único, en texto</b>. Es lo que viajará en la ruta (<code>/lugar/gotham</code>) y servirá para encontrarlo. Aquí también van <code>nombre</code>, <code>color</code>, <code>coordenadas</code> y la <code>descripcion</code> que verás en el detalle.",P(CIU())]],
