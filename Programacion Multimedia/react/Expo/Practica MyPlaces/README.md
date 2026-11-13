@@ -6,9 +6,9 @@ Los lugares se guardan en el propio dispositivo y se recuperan al reiniciar la a
 Práctica 2 · UT2 / RA2 · Programación multimedia y dispositivos móviles.
 
 > [!NOTE]
-> **Estado: práctica en desarrollo.** Hechos: navegación, formulario con validación, persistencia local con
-> posibilidad de eliminar, consulta a una API pública, ubicación con permisos y estado de la conexión
-> y gestión de la lista vacía (apartados A a F). Pendiente: completar los resultados de las pruebas (G).
+> **Estado: práctica completa.** Hechos: navegación, formulario con validación, persistencia local con
+> posibilidad de eliminar, consulta a una API pública, ubicación con permisos, estado de la conexión
+> y gestión de la lista vacía (apartados A a F), y las cinco pruebas con sus evidencias (G).
 
 ## Inicio rápido
 
@@ -47,7 +47,7 @@ Después, desde la terminal de Expo:
 | D | Pantalla «Descubre»: busca lugares por nombre con `fetch` y muestra los estados de carga, error y sin resultados | Hecho |
 | E | Pantalla «Mi ubicación»: botón que pide permiso y muestra la ubicación y las coordenadas. Si se deniega, avisa y el resto de la app sigue funcionando | Hecho |
 | F | Barra con el estado de la conexión y el tipo de red (NetInfo). Sin conexión, «Descubre» no lanza consultas y avisa | Hecho |
-| G | Pruebas y capturas | Pendiente |
+| G | Pruebas (cinco casos) y capturas | Hecho |
 
 No tiene servidor ni cuenta de usuario: los datos viven solo en el dispositivo donde se crean.
 
@@ -167,15 +167,15 @@ Limitaciones conocidas:
 
 ## Pruebas
 
-Cinco casos del apartado G. La columna de resultados se completará al probarlos en el móvil o en el emulador.
+Cinco casos del apartado G, probados en un **móvil Android con Expo Go** el 13/11/2026. Las evidencias están en [`Pruebas/`](Pruebas/).
 
 | # | Caso | Cómo se provoca | Resultado esperado | Resultado obtenido | Observaciones |
 |---|---|---|---|---|---|
-| 1 | Creación | Añadir un lugar válido desde «Añadir lugar» | Aparece en el menú | Pendiente | |
-| 2 | Reinicio | Cerrar la app del todo y volver a abrirla | El lugar creado sigue ahí | Pendiente | |
-| 3 | Sin datos | Eliminar todos los lugares (uno a uno, desde su pantalla de detalle) | El menú muestra «Aún no hay lugares. ¡Añade el primero!», sigue siendo usable y el botón «Añadir lugar» funciona | Pendiente | Falta probarlo en el móvil |
-| 4 | Error de red | Activar el modo avión y abrir «Descubre» | La barra dice «Sin conexión a internet», «Buscar» queda desactivado y se avisa; no se lanza ninguna petición | Pendiente | Falta probarlo en el móvil |
-| 5 | Permiso denegado | Pulsar «Utilizar mi ubicación» en «Mi ubicación» y denegar | Mensaje, y el resto de la app sigue usable | Pendiente | Falta probarlo en el móvil |
+| 1 | Creación | Añadir un lugar válido desde «Añadir lugar» | Aparece en el menú | Correcto: «Central City» (con subtítulo, descripción y color rojo) aparece en el menú | Capturas 2 a 4 del PDF |
+| 2 | Reinicio | Cerrar la app del todo y volver a abrirla | El lugar creado sigue ahí | Correcto: tras cerrar la app y abrirla de nuevo, «Central City» sigue en el menú | Vídeo y GIF de la carpeta `Pruebas/` |
+| 3 | Sin datos | Eliminar todos los lugares (uno a uno, desde su pantalla de detalle) | El menú muestra «Aún no hay lugares. ¡Añade el primero!», sigue siendo usable y el botón «Añadir lugar» funciona | Correcto: el menú muestra «Aún no hay lugares. ¡Añade el primero!» y los botones «Añadir lugar», «Descubre» y «Mi ubicación» siguen ahí | La captura es del menú sin lugares; se llegó a este estado borrando todos |
+| 4 | Error de red | Activar el modo avión y abrir «Descubre» | La barra dice «Sin conexión a internet», «Buscar» queda desactivado y se avisa; no se lanza ninguna petición | Correcto en parte: con el modo avión, la barra roja dice «Sin conexión a internet» | La captura es del menú. No se capturó «Descubre» sin conexión, así que el botón «Buscar» desactivado no está documentado con imagen |
+| 5 | Permiso denegado | Pulsar «Utilizar mi ubicación» en «Mi ubicación» y denegar | Mensaje, y el resto de la app sigue usable | Correcto: tras denegar, aparece «Permiso de ubicación denegado…» y el botón «Abrir ajustes» | También se probó con el permiso concedido: muestra la ubicación y las coordenadas (ocultas en la captura) |
 
 ## Capturas
 
