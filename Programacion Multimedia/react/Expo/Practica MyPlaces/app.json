@@ -1,0 +1,9 @@
+{
+  "expo": {
+    "name": "MyPlaces",
+    "slug": "myplaces",
+    "scheme": "myplaces",
+    "web": { "bundler": "metro", "output": "single" },
+    "plugins": ["expo-router", "expo-status-bar"]
+  }
+}

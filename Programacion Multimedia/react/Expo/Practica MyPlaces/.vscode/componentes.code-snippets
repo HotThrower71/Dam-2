@@ -1,0 +1,18 @@
+{
+  "Tarjeta (con props)": {
+    "prefix": "Tarjeta",
+    "body": [
+      "<Tarjeta nombre={$1} año={$2} />"
+    ],
+    "description": "<Tarjeta /> con sus props"
+  },
+  "Tarjeta (con hijos)": {
+    "prefix": "TarjetaC",
+    "body": [
+      "<Tarjeta>",
+      "\t$0",
+      "</Tarjeta>"
+    ],
+    "description": "<Tarjeta> ... </Tarjeta>"
+  }
+}

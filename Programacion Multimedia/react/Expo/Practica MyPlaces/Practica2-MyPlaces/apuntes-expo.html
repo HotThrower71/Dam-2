@@ -1,0 +1,1232 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Apuntes Expo · MyPlaces</title>
+<style>
+:root{--bg:#f7f4ed;--card:#fff;--ink:#23302a;--muted:#5d6b62;--accent:#234c3b;--accent2:#e07a2f;--code:#14211b;--codeink:#e6f0ea;--line:#ddd7c8;--ok:#2e7d4f;--warn:#b3541a}
+@media (prefers-color-scheme:dark){:root{--bg:#10170f;--card:#18221a;--ink:#e6efe8;--muted:#9bb0a2;--accent:#6fcf9c;--accent2:#f0a060;--code:#0a100b;--codeink:#d8eadf;--line:#2a382d;--ok:#6fcf9c;--warn:#f0a060}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+header{padding:48px 20px 32px;max-width:960px;margin:auto}
+header h1{font-size:clamp(2rem,6vw,3rem);margin:0 0 8px;color:var(--accent)}
+header p{color:var(--muted);max-width:60ch;margin:0}
+nav{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+nav div{max-width:960px;margin:auto;padding:10px 20px;display:flex;gap:8px;overflow-x:auto}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);padding:4px 12px;border-radius:99px;font-size:.9rem}
+nav a:hover{border-color:var(--accent)}
+main{max-width:960px;margin:auto;padding:0 20px 80px}
+section{margin-top:48px}
+h2{font-size:1.7rem;color:var(--accent);margin:0 0 4px;display:flex;align-items:center;gap:10px}
+h2 .tag{font-size:.75rem;background:var(--accent);color:var(--bg);padding:2px 10px;border-radius:99px}
+h3{margin:28px 0 6px}
+.lead{color:var(--muted);margin-top:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.grid .card{margin:0}
+.card h4{margin:0 0 6px}
+code{background:color-mix(in srgb,var(--accent) 12%,transparent);padding:1px 6px;border-radius:5px;font-size:.9em}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:12px;overflow-x:auto;font-size:.85rem;line-height:1.5;margin:10px 0}
+pre code{background:none;padding:0}
+/* Colores tipo VS Code "Dark+" */
+pre{background:#1e1e1e;color:#d4d4d4;border:1px solid #333}
+.t-kw{color:#569cd6}.t-ctl{color:#c586c0}.t-str{color:#ce9178}.t-com{color:#6a9955;font-style:italic}
+.t-fn{color:#dcdcaa}.t-cls{color:#4ec9b0}.t-num{color:#b5cea8}.t-var{color:#9cdcfe}.t-tag{color:#569cd6}.t-cmp{color:#4ec9b0}
+.note,.warn,.tip{border-left:4px solid;padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;background:var(--card)}
+.note{border-color:var(--accent)}.warn{border-color:var(--warn)}.tip{border-color:var(--accent2)}
+.cmd{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;font-size:.92rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+.flow span{background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:10px}
+.flow i{color:var(--accent2);font-style:normal;font-weight:700}
+.phone{width:210px;border:6px solid var(--ink);border-radius:28px;padding:14px 10px;background:var(--card);font-size:.8rem;margin:auto}
+.phone .row{background:color-mix(in srgb,var(--accent) 12%,transparent);border-radius:8px;padding:8px;margin:6px 0}
+.phone .btn{background:var(--accent);color:var(--bg);border-radius:8px;text-align:center;padding:6px;margin-top:8px}
+.two{display:grid;gap:20px;grid-template-columns:1fr 240px;align-items:center}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+.check li{list-style:none;margin-left:-20px}
+.check li::before{content:"☐ ";color:var(--accent2)}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:10px 0}
+summary{cursor:pointer;font-weight:600}
+
+/* ---- Simulaciones interactivas ---- */
+.sim{background:var(--card);border:2px solid var(--accent2);border-radius:16px;margin:22px 0;overflow:hidden}
+.sim-head{background:var(--accent2);color:#fff;font-weight:700;padding:8px 16px;font-size:.92rem}
+.sim-body{display:grid;grid-template-columns:260px 1fr;gap:20px;padding:16px;align-items:start}
+@media(max-width:720px){.sim-body{grid-template-columns:1fr}}
+.sim .phone{width:240px;margin:0 auto;padding:10px 8px;background:#fff;color:#1b1b1b;border-color:#222}
+.sim .screen{min-height:340px;position:relative;font-size:.82rem;display:flex;flex-direction:column;gap:6px}
+.sim .hint{margin:0 0 10px;color:var(--muted);font-size:.9rem}
+.sim .legend{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;font-size:.85rem}
+.sim .legend div{padding:4px 8px;border-radius:8px;border:1px solid var(--line);cursor:default}
+.sim .legend div:hover{border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 12%,transparent)}
+.sim .trace{font-size:.85rem}
+.sim .trace ol{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:5px;min-height:60px}
+.sim .trace li{border-left:3px solid var(--accent);padding:3px 8px;background:color-mix(in srgb,var(--accent) 8%,transparent);border-radius:0 8px 8px 0;animation:in .25s}
+.sim .trace li:first-child{border-color:var(--accent2);font-weight:600}
+@keyframes in{from{opacity:0;transform:translateX(-6px)}to{opacity:1}}
+.sim .bd{display:inline-flex;width:16px;height:16px;border-radius:50%;background:var(--accent2);color:#fff;font:700 10px/16px system-ui;justify-content:center;font-style:normal;margin-right:4px;vertical-align:middle;flex:none}
+.sim .hl{outline:2px solid var(--accent2);outline-offset:1px}
+.p-bar{background:#234c3b;color:#fff;padding:7px 8px;border-radius:8px;font-weight:600;display:flex;gap:6px;align-items:center}
+.p-bar u{text-decoration:none;cursor:pointer;opacity:.9}
+.p-row{background:#eef3ef;border-radius:8px;padding:7px 8px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.p-btn{background:#234c3b;color:#fff;border:0;border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer;text-align:center}
+.p-btn.sec{background:#cfd8d2;color:#222}.p-btn.red{background:#b3541a}.p-btn.sm{padding:3px 8px;font-size:.75rem}
+.p-input{border:1px solid #999;border-radius:6px;padding:6px;font:inherit;width:100%;background:#fff;color:#111}
+.p-err{color:#c0392b;font-weight:600}
+.p-empty{color:#777;text-align:center;padding:24px 8px}
+.p-big{font-size:2.4rem;text-align:center;font-weight:700;margin:20px 0}
+.p-spin{width:30px;height:30px;border:4px solid #ccc;border-top-color:#234c3b;border-radius:50%;animation:sp 1s linear infinite;margin:40px auto}
+@keyframes sp{to{transform:rotate(360deg)}}
+.p-modal{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;border-radius:8px;z-index:3}
+.p-modal div{background:#fff;border-radius:12px;padding:14px;width:88%;display:flex;flex-direction:column;gap:8px;text-align:center}
+.p-net{padding:5px 8px;border-radius:8px;font-weight:600}
+.p-net.on{background:#d8f0e0;color:#1d5e36}.p-net.off{background:#f6d5d5;color:#8a2323}
+.sim select,.sim .ctl button{font:inherit;padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.sim .ctl{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.sim .ctl button.on{background:var(--accent);color:var(--bg)}
+.disk{font:12px/1.4 ui-monospace,monospace;background:#1e1e1e;color:#ce9178;border-radius:8px;padding:8px;margin-top:8px;word-break:break-all}
+
+/* ---- Paso a paso ---- */
+main pre code .ln{display:block;padding:0 6px;margin:0 -6px;border-left:3px solid transparent}
+main pre code .ln.cur{background:rgba(224,122,47,.22);border-left-color:#e07a2f}
+.stp .sim-head{background:var(--accent)}
+.stp{border-color:var(--accent)}
+.stp .expl{background:color-mix(in srgb,var(--accent2) 10%,transparent);border-left:4px solid var(--accent2);border-radius:0 10px 10px 0;padding:10px 12px;min-height:90px;font-size:.93rem}
+.stp .nav{display:flex;gap:6px;align-items:center;margin:0 0 10px;flex-wrap:wrap}
+.stp .nav button{font:inherit;padding:4px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.stp .nav button:disabled{opacity:.4;cursor:default}
+.stp .nav span{color:var(--muted);font-size:.85rem}
+.term{background:#0c0c0c;color:#d0d0d0;font:12px/1.5 ui-monospace,monospace;border-radius:10px;padding:10px;min-height:300px;white-space:pre-wrap;word-break:break-word;width:100%}
+.term b{color:#6fcf9c}.term i{color:#888;font-style:normal}
+.stp .phone .screen{min-height:300px}
+.stp .none{color:#888;text-align:center;padding:40px 8px}
+</style>
+</head>
+<body>
+<header>
+  <h1>📍 MyPlaces — Apuntes de Expo</h1>
+  <p>Guía para quien nunca ha usado Expo ni React Native, empezando desde una carpeta vacía. ¿Estás perdido con lo básico? Mira primero <a href="react-native-basico.html">React Native desde cero</a>. Cada apartado de la Práctica 2 (A–G) lleva: <b>qué es</b>, <b>qué herramienta usar</b>, <b>cómo se instala</b> y <b>un ejemplo mínimo</b>.</p>
+</header>
+<nav><div>
+  <a href="#base">0 · Lo básico</a><a href="#setup">1 · Preparar</a><a href="#orden">Plan</a><a href="#A">A · Navegación</a><a href="#B">B · Formulario</a><a href="#C">C · Persistencia</a><a href="#D">D · API</a><a href="#E">E · Ubicación</a><a href="#F">F · Red</a><a href="#G">G · Pruebas</a><a href="#extra">Extra</a><a href="#chuleta">Chuleta</a>
+</div></nav>
+<main>
+
+<section id="base">
+<h2>0 · Lo básico antes de empezar</h2>
+<p class="lead">Cuatro conceptos y ya entiendes el 80 % del código.</p>
+<div class="grid">
+  <div class="card"><h4>⚛️ React</h4>Librería para construir interfaces con <b>componentes</b>: funciones que devuelven lo que se ve en pantalla.</div>
+  <div class="card"><h4>📱 React Native</h4>React, pero en vez de <code>&lt;div&gt;</code> usa <code>&lt;View&gt;</code> y <code>&lt;Text&gt;</code>, que se convierten en elementos nativos de Android/iOS.</div>
+  <div class="card"><h4>🚀 Expo</h4>Un “kit de herramientas” sobre React Native: arranca el proyecto, da módulos listos (ubicación, sensores…) y te deja probar en el móvil con la app <b>Expo Go</b>.</div>
+  <div class="card"><h4>🧭 Expo Router</h4>Navegación basada en archivos: cada archivo de <code>src/app/</code> es una pantalla. Se instala en el paso 2.</div>
+</div>
+
+<h3>Componentes de React Native que usarás siempre</h3>
+<table>
+<tr><th>Componente</th><th>Equivale a (web)</th><th>Para qué</th></tr>
+<tr><td><code>View</code></td><td>div</td><td>Contenedor / caja</td></tr>
+<tr><td><code>Text</code></td><td>p, span</td><td>Todo texto va dentro de <code>Text</code> (obligatorio)</td></tr>
+<tr><td><code>TextInput</code></td><td>input</td><td>Campo de texto</td></tr>
+<tr><td><code>Pressable</code></td><td>button</td><td>Cualquier cosa pulsable</td></tr>
+<tr><td><code>FlatList</code></td><td>ul + map</td><td>Lista larga y eficiente</td></tr>
+<tr><td><code>ScrollView</code></td><td>overflow:scroll</td><td>Contenido que hace scroll</td></tr>
+<tr><td><code>ActivityIndicator</code></td><td>spinner</td><td>Rueda de “cargando”</td></tr>
+<tr><td><code>StyleSheet</code></td><td>CSS</td><td>Estilos en objetos JS (<code>flex</code>, <code>padding</code>…)</td></tr>
+</table>
+
+
+<h3>JSX en 1 minuto</h3>
+<p>Lo que ves dentro del <code>return</code> (<code>&lt;View&gt;…&lt;/View&gt;</code>) se llama <b>JSX</b>: es JavaScript con etiquetas. Reglas que debes saber:</p>
+<table><tr><th>Regla</th><th>Ejemplo</th><th>Qué significa</th></tr><tr><td>Llaves = JavaScript</td><td><code>&lt;Text&gt;{nombre}&lt;/Text&gt;</code></td><td>Dentro de <code>{ }</code> puedes poner variables, operaciones o llamadas a funciones.</td></tr><tr><td>Un solo elemento raíz</td><td><code>&lt;View&gt;…&lt;/View&gt;</code></td><td>Un componente devuelve UNA caja. Si necesitas varias, envuélvelas en <code>&lt;View&gt;</code> o en <code>&lt;&gt;…&lt;/&gt;</code> (fragmento, no pinta nada).</td></tr><tr><td>Props = atributos</td><td><code>&lt;TarjetaLugar lugar={item} /&gt;</code></td><td>Así pasas datos a un componente. Dentro los recibes como parámetro: <code>function TarjetaLugar({ lugar })</code>.</td></tr><tr><td>Mostrar si se cumple</td><td><code>{error !== '' &amp;&amp; &lt;Text&gt;{error}&lt;/Text&gt;}</code></td><td>Si la condición es falsa, no se pinta nada. Es un “if” dentro del JSX.</td></tr><tr><td>Uno u otro</td><td><code>{cargando ? &lt;Spinner/&gt; : &lt;Lista/&gt;}</code></td><td>Operador ternario: <code>condición ? siSi : siNo</code>.</td></tr><tr><td>Eventos</td><td><code>onPress={guardar}</code></td><td>Pasas la <b>función</b> (sin paréntesis). Con paréntesis la ejecutarías al pintar la pantalla.</td></tr></table>
+<div class="warn"><b>Error típico:</b> <code>onPress={guardar()}</code> ejecuta la función al instante. Lo correcto es <code>onPress={guardar}</code> o <code>onPress={() =&gt; guardar(5)}</code> si necesitas pasar argumentos.</div>
+
+<h3>Estilos con <code>StyleSheet</code></h3>
+<p>No hay CSS. Los estilos son <b>objetos de JavaScript</b> con nombres en camelCase (<code>backgroundColor</code>, no <code>background-color</code>). Se aplican con la prop <code>style</code>.</p>
+<pre><code>import { StyleSheet, Text, View } from 'react-native';
+
+export default function Ejemplo() {
+  return (
+    &lt;View style={estilos.caja}&gt;
+      &lt;Text style={estilos.titulo}&gt;Hola&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+
+// StyleSheet.create define los estilos una sola vez y los valida
+const estilos = StyleSheet.create({
+  caja:   { flex: 1, padding: 16, backgroundColor: '#fff' },
+  titulo: { fontSize: 24, fontWeight: 'bold', color: '#234c3b' },
+});</code></pre>
+<table><tr><th>Propiedad</th><th>Qué hace</th></tr><tr><td><code>flex: 1</code></td><td>La caja ocupa todo el espacio disponible de su padre.</td></tr><tr><td><code>flexDirection</code></td><td><code>'column'</code> (por defecto, de arriba abajo) o <code>'row'</code> (en fila).</td></tr><tr><td><code>justifyContent</code></td><td>Alinea los hijos en el eje principal: <code>center</code>, <code>space-between</code>…</td></tr><tr><td><code>alignItems</code></td><td>Alinea los hijos en el eje contrario: <code>center</code>, <code>flex-start</code>…</td></tr><tr><td><code>padding</code> / <code>margin</code></td><td>Espacio interior / exterior (números, sin “px”).</td></tr><tr><td><code>gap</code></td><td>Separación entre hijos.</td></tr><tr><td><code>borderWidth</code>, <code>borderColor</code>, <code>borderRadius</code></td><td>Borde y esquinas redondeadas.</td></tr><tr><td><code>fontSize</code>, <code>fontWeight</code>, <code>color</code></td><td>Solo valen en <code>Text</code>.</td></tr></table>
+<div class="note">Por defecto todo se apila en <b>columna</b> (al revés que en la web). Y los estilos de texto no se heredan de <code>View</code> a <code>Text</code>.</div>
+
+<h3>Hooks (funciones que empiezan por <code>use</code>)</h3>
+<table>
+<tr><th>Hook</th><th>Idea</th></tr>
+<tr><td><code>useState</code></td><td>Memoria del componente. Si cambia, la pantalla se repinta. <code>const [n, setN] = useState('')</code></td></tr>
+<tr><td><code>useEffect</code></td><td>“Haz esto cuando la pantalla aparezca” (cargar datos, pedir permisos…)</td></tr>
+<tr><td><code>useLocalSearchParams</code></td><td>Lee parámetros de la ruta (por ejemplo el <code>id</code>)</td></tr>
+</table>
+
+<h3>Cómo funcionan los hooks, uno a uno</h3>
+<div class="grid">
+<div class="card"><h4><code>useState</code></h4>
+<p>Devuelve una pareja <code>[valor, funciónParaCambiarlo]</code>. El argumento es el valor inicial.</p>
+<pre><code>const [contador, setContador] = useState(0);
+setContador(contador + 1);   // la pantalla se repinta con el nuevo valor</code></pre><p>Nunca modifiques el valor directamente (<code>contador = 5</code>): usa siempre el <code>set…</code>. Con listas, crea una nueva: <code>setLista([...lista, nuevo])</code>.</p></div>
+<div class="card"><h4><code>useEffect</code></h4>
+<p>Ejecuta código <b>después</b> de pintar la pantalla. El segundo argumento (array de dependencias) decide cuándo.</p>
+<pre><code>useEffect(() =&gt; {
+  cargar();          // se ejecuta una vez al aparecer
+}, []);              // [] = solo la primera vez
+
+useEffect(() =&gt; {
+  const sub = NetInfo.addEventListener(...);
+  return () =&gt; sub();  // limpieza al salir de la pantalla
+}, []);</code></pre><p>Con <code>[x]</code> se vuelve a ejecutar cada vez que <code>x</code> cambia. Sin array, en cada repintado (casi nunca lo quieres).</p></div>
+<div class="card"><h4><code>useFocusEffect</code> + <code>useCallback</code></h4>
+<p>Como <code>useEffect</code>, pero se ejecuta <b>cada vez que la pantalla vuelve a estar visible</b> (p. ej. al volver del formulario). <code>useCallback</code> evita que la función se recree en cada pintado; es obligatorio envolver así lo que pasas a <code>useFocusEffect</code>.</p></div>
+<div class="card"><h4><code>useLocalSearchParams</code></h4>
+<p>Devuelve un objeto con los parámetros de la ruta actual. En <code>detall/[id].jsx</code>: <code>const { id } = useLocalSearchParams();</code>. Los valores llegan siempre como <b>texto</b>.</p></div>
+<div class="card"><h4><code>useRouter</code> / <code>router</code></h4>
+<p>Navegar desde código: <code>router.push('/nuevo')</code> abre una pantalla encima; <code>router.back()</code> vuelve; <code>router.replace(...)</code> sustituye la actual.</p></div>
+</div>
+<div class="sim" data-sim="counter"></div>
+<div class="note">Estado = datos que cambian y que se ven. Si lo guardas en una variable normal, la pantalla <b>no</b> se actualiza.</div>
+
+<h3>Los dos primeros ficheros: <code>_layout.jsx</code> e <code>index.jsx</code></h3>
+<p>Dentro de <code>src/app/</code> cada fichero es una pantalla, y los dos primeros que tendrás son estos. Analogía: <b>una tele</b>.</p>
+<div class="grid">
+<div class="card"><h4>📺 <code>_layout.jsx</code> = el marco</h4>El aparato con su borde. No cambia nunca. Su trabajo es <code>&lt;Stack /&gt;</code>: “aquí dentro se muestra la pantalla que toque, con su barra de arriba”. Se ejecuta una vez y se queda.</div>
+<div class="card"><h4>🎬 <code>index.jsx</code> = un canal</h4>Lo que sale al encender: la <b>primera pantalla</b> (ruta <code>/</code>). Luego añadirás más canales (<code>nuevo.jsx</code>, <code>descubre.jsx</code>) y cambiarás entre ellos con el mismo marco.</div>
+</div>
+<pre><code>┌───────────────────────────┐
+│ index                     │  ← barra: la pone &lt;Stack /&gt; (_layout.jsx)
+├───────────────────────────┤
+│   MyPlaces                │  ← contenido: viene de index.jsx
+│   Tour                    │
+└───────────────────────────┘</code></pre>
+<div class="warn"><b>El nombre del fichero ES la ruta:</b> <code>index.jsx</code> = <code>/</code>, <code>nuevo.jsx</code> = <code>/nuevo</code>. Si lo llamas <code>indice.jsx</code> no habrá pantalla de inicio (“Unmatched Route”).</div>
+<div class="note"><b>Regla corta:</b> lo que cambia de una pantalla a otra va en la <b>pantalla</b>; lo que las rodea a todas (barra, navegación) va en el <b>layout</b>. Y en cada fichero puede haber muchas funciones, pero <b>solo un <code>export default</code></b>: la pieza principal (en <code>src/app/</code>, la pantalla). Más detalle, con simulaciones, en <a href="react-native-basico.html#mapa">React Native desde cero</a>.</div>
+
+<h3>¿Qué es un <code>Stack</code>?</h3>
+<p><b>Stack</b> = “pila”. Como folios apilados en una mesa: <b>solo ves el de arriba</b>. <code>push</code> pone uno encima (abre una pantalla); <code>back</code> quita el de arriba (vuelve). <code>&lt;Stack /&gt;</code> es el componente que gestiona esa pila, dibuja la de arriba y añade la barra superior con la flecha ‹.</p>
+<pre><code>push('/nuevo')       push('/detall/3')       back()
+┌──────────┐         ┌──────────┐            ┌──────────┐
+│          │         │ detall/3 │ ← ves      │          │
+│ nuevo    │ ← ves   │ nuevo    │            │ nuevo    │ ← ves
+│ index    │         │ index    │            │ index    │
+└──────────┘         └──────────┘            └──────────┘</code></pre>
+<div class="note">Las pantallas de debajo <b>no se destruyen</b>: por eso, al volver a la lista, hay que releer los datos con <code>useFocusEffect</code> (apartado C). Para tu práctica (lista → detalle → formulario → volver) <code>Stack</code> es lo adecuado; <code>Slot</code> no tiene pila ni barra, y <code>Tabs</code> pone pestañas. Simulación interactiva en <a href="react-native-basico.html#mapa">React Native desde cero</a>.</div>
+</section>
+
+<section id="setup">
+<h2>1 · Preparar el proyecto</h2>
+<p class="lead">Partimos de una <b>carpeta vacía</b>. Todo el proyecto se crea con comandos, en este orden.</p>
+
+<h3>Requisitos previos</h3>
+<ul>
+<li><b>Node.js</b> (versión LTS) y <code>npm</code>: comprueba con <code>node -v</code> y <code>npm -v</code>.</li>
+<li>Móvil con la app <b>Expo Go</b> (misma wifi que el PC) o un emulador de Android/iOS.</li>
+</ul>
+<div class="note">Montamos el proyecto <b>a mano</b>, sin plantilla: así solo existe lo que tú pones y no hay que limpiar nada ni pelearse con TypeScript.</div>
+
+<h3>Paso 1 · Instalar Expo en la carpeta vacía</h3>
+<pre><code>mkdir MyPlaces
+cd MyPlaces
+
+npm install expo        # crea package.json y node_modules
+npx expo start          # 1ª vez: te ofrece instalar react y react-native → responde "Y"</code></pre>
+<div class="tip">Si <code>expo start</code> te pregunta por dependencias que faltan, acepta. Si prefieres hacerlo tú, el paso 2 las instala todas de una vez.</div>
+
+<h3>Paso 2 · Instalar React Native y Expo Router</h3>
+<pre><code>npx expo install react react-native expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar
+
+# Para ver la app en el NAVEGADOR (web) hacen falta además:
+npx expo install react-dom react-native-web @expo/metro-runtime</code></pre>
+<div class="warn"><b>Sin <code>react-dom</code>, <code>react-native-web</code> y <code>@expo/metro-runtime</code> la versión web no carga.</b> En móvil sí funcionaría, pero al pulsar <code>w</code> sale un error.</div>
+
+<h3>Paso 3 · Configurar el punto de entrada</h3>
+<p>En <code>package.json</code> añade <code>main</code> y los scripts:</p>
+<pre><code>{
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": { ... }
+}</code></pre>
+<p>Crea <code>app.json</code> en la raíz (el <code>scheme</code> lo necesita Expo Router):</p>
+<pre><code>{
+  "expo": {
+    "name": "MyPlaces",
+    "slug": "myplaces",
+    "scheme": "myplaces",
+    "web": { "bundler": "metro", "output": "single" },
+    "plugins": ["expo-router", "expo-status-bar"]
+  }
+}</code></pre>
+
+<h3>Paso 4 · Crear las dos primeras pantallas</h3>
+<pre><code>mkdir -p src/app
+touch src/app/_layout.jsx src/app/index.jsx</code></pre>
+<pre><code>// src/app/_layout.jsx
+import { Stack } from 'expo-router';
+
+export default function Layout() {
+  return &lt;Stack /&gt;;
+}
+
+// src/app/index.jsx
+import { Text, View } from 'react-native';
+
+export default function Inicio() {
+  return (
+    &lt;View&gt;
+      &lt;Text&gt;MyPlaces&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+
+
+<div class="card"><h4>¿Qué hace cada línea?</h4><ul>
+<li><code>_layout.jsx</code> es el <b>marco</b> de toda la app. Expo Router lo carga primero y dentro pinta la pantalla que toque.</li>
+<li><code>&lt;Stack /&gt;</code> (de <code>expo-router</code>) crea una navegación “pila”: cada pantalla nueva se apila encima y la barra superior tiene el botón atrás automático.</li>
+<li><code>export default function</code>: Expo Router busca el <b>export por defecto</b> de cada fichero; ese componente es la pantalla.</li>
+<li><code>index.jsx</code> es la ruta <code>/</code> (la pantalla de inicio). <code>nuevo.jsx</code> sería <code>/nuevo</code>; <code>detall/[id].jsx</code> sería <code>/detall/3</code>.</li>
+<li><code>&lt;View&gt;</code> y <code>&lt;Text&gt;</code> vienen de <code>react-native</code>. <b>Todo texto va dentro de <code>&lt;Text&gt;</code></b> o la app falla.</li>
+</ul></div>
+<h3>Paso 5 · Arrancar la app</h3>
+<pre><code>npx expo start
+#  → pulsa "w" para abrir la versión WEB en el navegador (http://localhost:8081)
+#  → pulsa "a" (Android), "i" (iOS), o escanea el QR con Expo Go
+#  → si algo se queda raro: npx expo start -c   (limpia la caché)</code></pre>
+
+<h3>Paso 6 · Instalar las librerías de la práctica</h3>
+<pre><code># SIEMPRE con expo install, no con npm install
+npx expo install @react-native-async-storage/async-storage   # C · persistencia
+npx expo install expo-location                                # E · ubicación
+npx expo install @react-native-community/netinfo              # F · conectividad
+# opcional (ampliación)
+npx expo install expo-sensors</code></pre>
+
+<h3>Paso 7 · Revisar antes de entregar</h3>
+<pre><code>npx expo-doctor        # detecta versiones incompatibles
+npx expo lint          # la 1ª vez ofrece instalar eslint → acepta</code></pre>
+<div class="tip"><b>¿Por qué <code>expo install</code>?</b> Elige la versión compatible con tu SDK. Con <code>npm install</code> puedes acabar con versiones que no funcionan juntas.</div>
+<div class="note">Expo cambia mucho entre versiones; si algún comando no coincide, mira <code>https://docs.expo.dev/</code> (sección de tu versión de SDK).</div>
+
+<h3>Resumen: todos los comandos de golpe</h3>
+<pre><code>mkdir MyPlaces &amp;&amp; cd MyPlaces
+npm install expo
+npx expo install react react-native expo-router react-native-safe-area-context react-native-screens expo-linking expo-constants expo-status-bar react-dom react-native-web @expo/metro-runtime
+# editar package.json ("main") + crear app.json + src/app/_layout.jsx + src/app/index.jsx
+npx expo install @react-native-async-storage/async-storage expo-location @react-native-community/netinfo
+npx expo start</code></pre>
+
+<h3>Estructura sugerida</h3>
+<p>Las carpetas <code>components</code>, <code>storage</code> y <code>data</code> las creas tú a mano dentro de <code>src/</code> (solo <code>app/</code> es obligatoria).</p>
+<pre><code>src/
+├─ app/                  ← SOLO pantallas (rutas)
+│  ├─ _layout.jsx        ← define la navegación (Stack)
+│  ├─ index.jsx          ← lista de lugares
+│  ├─ nuevo.jsx          ← formulario (B)
+│  ├─ descubre.jsx       ← API pública (D)
+│  └─ detall/[id].jsx    ← detalle de un lugar
+├─ components/           ← TarjetaLugar.jsx (reutilizable), BannerRed.jsx
+├─ storage/lugares.js    ← leer/guardar con AsyncStorage
+└─ data/llocs.js         ← datos de prueba</code></pre>
+<h3>Ficheros y carpetas con nombre especial</h3>
+<p>Expo Router da significado al <b>nombre del fichero</b> (el nombre de la función es libre):</p>
+<table><tr><th>Nombre</th><th>Qué hace</th></tr>
+<tr><td><code>index.jsx</code></td><td>Pantalla de la ruta base de su carpeta (<code>app/index.jsx</code> → <code>/</code>)</td></tr>
+<tr><td><code>_layout.jsx</code></td><td>Marco de las pantallas de esa carpeta (<code>Stack</code>…). No es una pantalla.</td></tr>
+<tr><td><code>[id].jsx</code></td><td>Ruta dinámica: <code>detall/[id].jsx</code> → <code>/detall/1</code>, <code>/detall/2</code>…</td></tr>
+<tr><td><code>[...resto].jsx</code></td><td>Comodín que recoge varios trozos de la ruta</td></tr>
+<tr><td><code>+not-found.jsx</code></td><td>Pantalla para rutas que no existen</td></tr>
+<tr><td><code>(grupo)/</code></td><td>Carpeta que agrupa sin añadir nada a la ruta</td></tr>
+</table>
+<div class="warn"><b>Todo lo que haya en <code>src/app/</code> es una pantalla.</b> Los componentes (<code>Tarjeta.jsx</code>) van en <code>src/components/</code>, fuera de <code>app</code>. Tabla completa y simulador en <a href="react-native-basico.html#mapa">React Native desde cero</a>.</div>
+</section>
+
+<section id="orden">
+<h2>Plan: orden recomendado de trabajo</h2>
+<ol>
+<li>Crear el proyecto desde la carpeta vacía e instalar librerías (apartado 1)</li>
+<li>Lista + detalle con datos de prueba (A)</li>
+<li>Formulario con validación (B)</li>
+<li>Guardar/leer/eliminar con AsyncStorage (C) — los datos de prueba pasan a ser la lista inicial vacía</li>
+<li>Pantalla «Descobreix» con 3 estados (D)</li>
+<li>NetInfo (F) y conectarlo a D</li>
+<li>Ubicación (E)</li>
+<li>Pruebas, capturas, README (G)</li>
+<li>Solo si sobra tiempo: ampliación</li>
+</ol>
+<div class="warn"><b>Autoría:</b> el enunciado exige que el código sea propio y que puedas explicarlo y modificarlo en directo. Usa estos apuntes para entender cada pieza y escribe tú el código; los ejemplos son solo orientativos.</div>
+<div class="tip"><b>Consejo del profe:</b> prioriza una versión sencilla que funcione antes de añadir mejoras.</div>
+</section>
+
+<section id="A">
+<h2>A · Navegación y componentes <span class="tag">20 % con B</span></h2>
+<p class="lead">Lista de lugares → pulsas uno → pantalla de detalle. Cada lugar tiene un <code>id</code>.</p>
+<div class="two">
+<div>
+<div class="flow"><span>Lista (<code>index.jsx</code>)</span><i>→</i><span>Detalle (<code>detall/[id].jsx</code>)</span></div>
+<ul>
+<li><b>Expo Router</b>: el archivo <code>detall/[id].jsx</code> es una ruta <i>dinámica</i>; <code>[id]</code> es el comodín.</li>
+<li><code>Link</code> navega; <code>router.push()</code> / <code>router.back()</code> navegan desde código.</li>
+<li><code>useLocalSearchParams()</code> te da el <code>id</code> en el detalle.</li>
+<li><b>Componente reutilizable</b>: una función que recibe <i>props</i> y la usas varias veces.</li>
+</ul>
+</div>
+<div class="phone"><b>Lugares</b><div class="row">Sagrada Familia<div class="btn">Ver lugar</div></div><div class="row">Barceloneta<div class="btn">Ver lugar</div></div></div>
+</div>
+<pre><code>// src/components/TarjetaLugar.jsx  (componente reutilizable)
+import { Link } from 'expo-router';
+import { Pressable, Text, View } from 'react-native';
+
+export default function TarjetaLugar({ lugar }) {      // "lugar" es una prop
+  return (
+    &lt;View&gt;
+      &lt;Text&gt;{lugar.nombre}&lt;/Text&gt;
+      &lt;Link href={{ pathname: '/detall/[id]', params: { id: lugar.id } }} asChild&gt;
+        &lt;Pressable&gt;&lt;Text&gt;Ver lugar&lt;/Text&gt;&lt;/Pressable&gt;
+      &lt;/Link&gt;
+    &lt;/View&gt;
+  );
+}
+
+// en index.jsx
+&lt;FlatList data={lugares} keyExtractor={l =&gt; l.id}
+          renderItem={({ item }) =&gt; &lt;TarjetaLugar lugar={item} /&gt;} /&gt;</code></pre>
+
+<h3>Qué hace cada pieza</h3>
+<table><tr><th>Pieza</th><th>Qué hace</th><th>Detalles importantes</th></tr><tr><td><code>FlatList</code></td><td>Pinta una lista larga y solo renderiza lo que se ve (rápida).</td><td><code>data</code>: el array. <code>renderItem</code>: función que recibe <code>{ item }</code> y devuelve el JSX de una fila. <code>keyExtractor</code>: devuelve un texto único por fila (el <code>id</code>); React lo usa para saber qué fila es cuál.</td></tr><tr><td><code>Link</code></td><td>Enlace a otra pantalla.</td><td><code>href</code> puede ser un texto (<code>"/nuevo"</code>) o un objeto con <code>pathname</code> y <code>params</code> para rutas dinámicas.</td></tr><tr><td><code>asChild</code></td><td>Le dice al <code>Link</code> “no pintes tu propio texto, usa el hijo que te doy”.</td><td>Así el <code>Pressable</code> es el que se ve y el que recibe el toque.</td></tr><tr><td><code>Pressable</code></td><td>Cualquier cosa que se pueda pulsar.</td><td><code>onPress</code> se ejecuta al tocar. Su estilo puede ser función: <code>style={({pressed}) =&gt; ...}</code>.</td></tr><tr><td>Props (<code>{ lugar }</code>)</td><td>Datos que el padre pasa al componente.</td><td>Escribir <code>({ lugar })</code> es “desestructurar”: saca <code>lugar</code> del objeto de props.</td></tr></table>
+<h3>Los datos de prueba</h3>
+<pre><code>// src/data/llocs.js
+export const llocs = [
+  { id: '1', nombre: 'Sagrada Família', descripcion: 'Basílica de Gaudí en Barcelona.' },
+  { id: '2', nombre: 'Barceloneta',     descripcion: 'Playa y paseo marítimo.' },
+  { id: '3', nombre: 'Parc Güell',      descripcion: 'Parque con mosaicos de Gaudí.' },
+];</code></pre><p><code>export const</code> permite importarlo desde otro fichero: <code>import { llocs } from '../data/llocs'</code>.</p>
+
+<h3>La pantalla de lista completa</h3>
+<pre><code>// src/app/index.jsx
+import { FlatList, Text, View } from 'react-native';
+import TarjetaLugar from '../components/TarjetaLugar';
+import { llocs } from '../data/llocs';
+
+export default function Lista() {
+  return (
+    &lt;View style={{ flex: 1, padding: 16 }}&gt;
+      &lt;FlatList
+        data={llocs}
+        keyExtractor={(l) =&gt; l.id}
+        renderItem={({ item }) =&gt; &lt;TarjetaLugar lugar={item} /&gt;}
+      /&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+<h3>La pantalla de detalle</h3>
+<pre><code>// src/app/detall/[id].jsx
+import { useLocalSearchParams } from 'expo-router';
+import { Text, View } from 'react-native';
+import { llocs } from '../../data/llocs';
+
+export default function Detalle() {
+  const { id } = useLocalSearchParams();            // "1", "2"… (texto)
+  const lugar = llocs.find((l) =&gt; l.id === id);     // busca el primero que cumpla
+
+  if (!lugar) return &lt;Text&gt;Lugar no encontrado&lt;/Text&gt;;
+  return (
+    &lt;View style={{ padding: 16 }}&gt;
+      &lt;Text style={{ fontSize: 24 }}&gt;{lugar.nombre}&lt;/Text&gt;
+      &lt;Text&gt;{lugar.descripcion}&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+<div class="sim" data-sim="nav"></div>
+<div class="card"><h4>Flujo completo</h4>
+Pulsas “Ver lugar” → <code>Link</code> navega a <code>/detall/2</code> → Expo Router abre <code>detall/[id].jsx</code> con <code>id = "2"</code> → <code>useLocalSearchParams</code> lo lee → <code>find</code> busca el lugar → se pinta.</div>
+<div class="card"><h4>Variante: navegar con <code>router.push</code> y poner el título de la barra desde la pantalla</h4>
+<ul><li>Si el botón es un componente tuyo (<code>BotonPlaces</code>), no hace falta <code>Link</code>: recibe una prop <code>onPress</code> y desde la lista haces <code>onPress={() =&gt; router.push({ pathname: '/lugar/[id]', params: { id: l.id } })}</code>.</li>
+<li>La pantalla de detalle puede cambiar su propio título con <code>&lt;Stack.Screen options={{ title: lugar.nombre }} /&gt;</code> dentro de su <code>return</code>.</li>
+<li>Pasa <b>solo el <code>id</code></b> y busca el resto en los datos compartidos (<code>src/data</code>).</li></ul>
+Receta completa con ejemplo, pasos y simulación en <a href="react-native-basico.html#nav">React Native desde cero</a>.</div>
+<div class="note">En <code>_layout.jsx</code> añade la pantalla nueva con <code>&lt;Stack.Screen name="nuevo" /&gt;</code> para ponerle título.</div>
+</section>
+
+<section id="B">
+<h2>B · Formulario y validación</h2>
+<p class="lead">Pantalla para añadir lugar (nombre + descripción). No deja guardar con el nombre vacío, enseña el error y permite volver.</p>
+<ul>
+<li><code>TextInput</code> + <code>useState</code> para cada campo (<code>onChangeText</code>).</li>
+<li>Estado extra <code>error</code>: si <code>nombre.trim() === ''</code> → mostrar mensaje y <b>no</b> guardar.</li>
+<li><code>router.back()</code> para volver a la lista.</li>
+</ul>
+<pre><code>const [nombre, setNombre] = useState('');
+const [descripcion, setDescripcion] = useState('');
+const [error, setError] = useState('');
+
+function guardar() {
+  if (nombre.trim() === '') {
+    setError('El nombre no puede estar vacío');
+    return;                       // se corta aquí: no se guarda
+  }
+  setError('');
+  // ...guardar con AsyncStorage (apartado C)...
+  router.back();
+}
+
+&lt;TextInput value={nombre} onChangeText={setNombre} placeholder="Nombre" /&gt;
+{error !== '' &amp;&amp; &lt;Text style={{ color: 'red' }}&gt;{error}&lt;/Text&gt;}</code></pre>
+
+<h3>Qué hace cada pieza</h3>
+<table><tr><th>Pieza</th><th>Qué hace</th></tr><tr><td><code>value</code> + <code>onChangeText</code></td><td>Es un campo “controlado”: lo que se ve viene siempre del estado (<code>value={nombre}</code>) y cada tecla actualiza el estado (<code>onChangeText={setNombre}</code>). Así siempre sabes qué ha escrito el usuario.</td></tr><tr><td><code>placeholder</code></td><td>Texto gris de ayuda cuando el campo está vacío.</td></tr><tr><td><code>multiline</code></td><td>Permite varias líneas (útil para la descripción).</td></tr><tr><td><code>.trim()</code></td><td>Quita espacios al principio y final. Sin él, un nombre de solo espacios pasaría la validación.</td></tr><tr><td><code>return;</code> temprano</td><td>Sale de la función en ese punto. Es la forma más sencilla de “si falla, no sigas”.</td></tr><tr><td><code>router.back()</code></td><td>Cierra la pantalla actual y vuelve a la anterior.</td></tr></table>
+<h3>Pantalla completa</h3>
+<pre><code>// src/app/nuevo.jsx
+import { router } from 'expo-router';
+import { useState } from 'react';
+import { Pressable, Text, TextInput, View } from 'react-native';
+import { leerLugares, guardarLugares } from '../storage/lugares';
+
+export default function Nuevo() {
+  const [nombre, setNombre] = useState('');
+  const [descripcion, setDescripcion] = useState('');
+  const [error, setError] = useState('');
+
+  async function guardar() {
+    if (nombre.trim() === '') {
+      setError('El nombre no puede estar vacío');
+      return;
+    }
+    const lista = await leerLugares();
+    const nuevo = { id: Date.now().toString(), nombre: nombre.trim(), descripcion };
+    await guardarLugares([...lista, nuevo]);   // copia de la lista + el nuevo
+    router.back();
+  }
+
+  return (
+    &lt;View style={{ padding: 16, gap: 8 }}&gt;
+      &lt;TextInput value={nombre} onChangeText={setNombre} placeholder="Nombre" style={{ borderWidth: 1, padding: 8 }} /&gt;
+      &lt;TextInput value={descripcion} onChangeText={setDescripcion} placeholder="Descripción" multiline style={{ borderWidth: 1, padding: 8 }} /&gt;
+      {error !== '' &amp;&amp; &lt;Text style={{ color: 'red' }}&gt;{error}&lt;/Text&gt;}
+      &lt;Pressable onPress={guardar}&gt;&lt;Text&gt;Guardar&lt;/Text&gt;&lt;/Pressable&gt;
+      &lt;Pressable onPress={() =&gt; router.back()}&gt;&lt;Text&gt;Cancelar&lt;/Text&gt;&lt;/Pressable&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+<div class="sim" data-sim="form"></div>
+<div class="note"><code>[...lista, nuevo]</code> es el <b>operador spread</b>: crea un array nuevo con todos los elementos de <code>lista</code> y añade <code>nuevo</code> al final. En React siempre se crean copias en vez de modificar el original.</div>
+</section>
+
+<section id="C">
+<h2>C · Persistencia local <span class="tag">AsyncStorage</span></h2>
+<p class="lead">Guardar los lugares para que sigan ahí al cerrar y abrir la app.</p>
+<div class="card"><b>AsyncStorage</b> es un “almacén de clave → texto”. Solo guarda <b>strings</b>, así que conviertes con <code>JSON.stringify</code> (guardar) y <code>JSON.parse</code> (leer). Todas sus funciones son <b>asíncronas</b>: usa <code>await</code>.</div>
+<pre><code>// src/storage/lugares.js
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const CLAVE = 'lugares';
+
+export async function leerLugares() {
+  const texto = await AsyncStorage.getItem(CLAVE);
+  return texto ? JSON.parse(texto) : [];          // lista vacía si no hay nada
+}
+export async function guardarLugares(lista) {
+  await AsyncStorage.setItem(CLAVE, JSON.stringify(lista));
+}
+export async function eliminarLugar(id) {
+  const lista = await leerLugares();
+  await guardarLugares(lista.filter(l =&gt; l.id !== id));
+}</code></pre>
+<h3>Cargar al abrir la pantalla</h3>
+<pre><code>import { useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
+
+const [lugares, setLugares] = useState([]);
+
+// se ejecuta cada vez que la pantalla vuelve a verse (p.ej. tras añadir uno)
+useFocusEffect(useCallback(() =&gt; {
+  leerLugares().then(setLugares);
+}, []));
+
+// lista vacía → mensaje amigable
+ListEmptyComponent={&lt;Text&gt;Aún no hay lugares. ¡Añade el primero!&lt;/Text&gt;}</code></pre>
+
+<h3>Qué hace cada pieza</h3>
+<table><tr><th>Pieza</th><th>Qué hace</th></tr><tr><td><code>async function</code></td><td>Marca una función que hace cosas lentas (disco, red). Siempre devuelve una <b>promesa</b>.</td></tr><tr><td><code>await</code></td><td>“Espera aquí a que termine esto antes de seguir”. Solo se puede usar dentro de una <code>async function</code>.</td></tr><tr><td><code>AsyncStorage.getItem(clave)</code></td><td>Devuelve el texto guardado con esa clave, o <code>null</code> si no existe.</td></tr><tr><td><code>AsyncStorage.setItem(clave, texto)</code></td><td>Guarda (o sustituye) el texto. Debe ser un string.</td></tr><tr><td><code>AsyncStorage.removeItem(clave)</code></td><td>Borra la clave. <code>clear()</code> borra todo.</td></tr><tr><td><code>JSON.stringify(obj)</code></td><td>Convierte un objeto/array en texto para poder guardarlo.</td></tr><tr><td><code>JSON.parse(texto)</code></td><td>Convierte el texto de vuelta en objeto/array.</td></tr><tr><td><code>texto ? ... : []</code></td><td>Si <code>texto</code> es <code>null</code> (primera vez), devuelve lista vacía: así la app no falla sin datos.</td></tr><tr><td><code>lista.filter(fn)</code></td><td>Devuelve una lista nueva solo con los elementos para los que <code>fn</code> da <code>true</code>. Para eliminar: quédate con todos menos el del <code>id</code> indicado.</td></tr><tr><td><code>useFocusEffect</code></td><td>Recarga la lista cada vez que la pantalla se muestra; sin él, al volver del formulario no verías el lugar nuevo.</td></tr><tr><td><code>ListEmptyComponent</code></td><td>Prop de <code>FlatList</code>: lo que se pinta cuando <code>data</code> es <code>[]</code>.</td></tr></table>
+<h3>Lista con borrado (index.jsx final)</h3>
+<pre><code>// src/app/index.jsx
+import { Link, useFocusEffect } from 'expo-router';
+import { useCallback, useState } from 'react';
+import { FlatList, Pressable, Text, View } from 'react-native';
+import { eliminarLugar, leerLugares } from '../storage/lugares';
+import TarjetaLugar from '../components/TarjetaLugar';
+
+export default function Lista() {
+  const [lugares, setLugares] = useState([]);
+
+  useFocusEffect(useCallback(() =&gt; {
+    leerLugares().then(setLugares);       // al mostrarse: leer del disco
+  }, []));
+
+  async function borrar(id) {
+    await eliminarLugar(id);              // 1. borrar del almacenamiento
+    setLugares(await leerLugares());      // 2. releer para repintar
+  }
+
+  return (
+    &lt;View style={{ flex: 1, padding: 16 }}&gt;
+      &lt;Link href="/nuevo" asChild&gt;&lt;Pressable&gt;&lt;Text&gt;+ Añadir lugar&lt;/Text&gt;&lt;/Pressable&gt;&lt;/Link&gt;
+      &lt;FlatList
+        data={lugares}
+        keyExtractor={(l) =&gt; l.id}
+        renderItem={({ item }) =&gt; &lt;TarjetaLugar lugar={item} onBorrar={() =&gt; borrar(item.id)} /&gt;}
+        ListEmptyComponent={&lt;Text&gt;Aún no hay lugares. ¡Añade el primero!&lt;/Text&gt;}
+      /&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+<div class="sim" data-sim="storage"></div>
+<div class="note"><code>leerLugares().then(setLugares)</code> es lo mismo que <code>const l = await leerLugares(); setLugares(l);</code> pero sin <code>async</code>. Se usa dentro de <code>useFocusEffect</code> porque su función no puede ser <code>async</code>.</div>
+<p>En <code>TarjetaLugar</code> añade un botón que llame a la prop <code>onBorrar</code>: <code>&lt;Pressable onPress={onBorrar}&gt;&lt;Text&gt;Eliminar&lt;/Text&gt;&lt;/Pressable&gt;</code>. Así el componente sigue siendo reutilizable: <b>no sabe</b> cómo se borra, solo avisa al padre.</p>
+<div class="tip">Para el <code>id</code> nuevo vale <code>Date.now().toString()</code>.</div>
+</section>
+
+<section id="D">
+<h2>D · Consulta HTTP: pantalla «Descobreix»</h2>
+<p class="lead">Pedir datos a una API pública con <code>fetch</code> y mostrar <b>tres estados</b>: cargando, error, vacío.</p>
+<div class="flow"><span>⏳ cargando</span><i>→</i><span>✅ datos</span><i>ó</i><span>❌ error</span><i>ó</i><span>📭 vacío</span></div>
+<ul>
+<li>APIs sin clave que sirven: <code>https://jsonplaceholder.typicode.com/posts</code>, Open-Meteo, REST Countries, Nominatim (OpenStreetMap)…</li>
+<li><b>Apunta en el README cuál usas</b> (lo piden).</li>
+</ul>
+<pre><code>const [datos, setDatos] = useState([]);
+const [cargando, setCargando] = useState(true);
+const [error, setError] = useState('');
+
+async function cargar() {
+  setCargando(true); setError('');
+  try {
+    const res = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=10');
+    if (!res.ok) throw new Error('Respuesta ' + res.status);
+    setDatos(await res.json());
+  } catch (e) {
+    setError('No se pudo cargar. Revisa tu conexión.');
+  } finally {
+    setCargando(false);
+  }
+}
+useEffect(() =&gt; { cargar(); }, []);
+
+if (cargando) return &lt;ActivityIndicator /&gt;;
+if (error)    return &lt;&gt;&lt;Text&gt;{error}&lt;/Text&gt;&lt;Button title="Reintentar" onPress={cargar} /&gt;&lt;/&gt;;
+if (datos.length === 0) return &lt;Text&gt;No hay resultados&lt;/Text&gt;;
+// si no: &lt;FlatList data={datos} ... /&gt;</code></pre>
+
+<h3>Qué hace cada pieza</h3>
+<table><tr><th>Pieza</th><th>Qué hace</th></tr><tr><td><code>fetch(url)</code></td><td>Hace la petición HTTP (GET por defecto). Devuelve una promesa con la <b>respuesta</b> (cabeceras y estado, aún no los datos).</td></tr><tr><td><code>res.ok</code></td><td><code>true</code> si el código HTTP es 200–299. <code>fetch</code> NO falla con 404 o 500, hay que mirarlo tú.</td></tr><tr><td><code>res.json()</code></td><td>Lee el cuerpo y lo convierte de JSON a objeto/array. También es asíncrona: usa <code>await</code>.</td></tr><tr><td><code>throw new Error(...)</code></td><td>Lanza un error a propósito; salta directamente al <code>catch</code>.</td></tr><tr><td><code>try { } catch (e) { }</code></td><td>Ejecuta el bloque; si algo falla (sin internet, JSON mal, <code>throw</code>), pasa al <code>catch</code> en vez de romper la app.</td></tr><tr><td><code>finally { }</code></td><td>Se ejecuta SIEMPRE, haya error o no. Ideal para apagar el “cargando”.</td></tr><tr><td><code>ActivityIndicator</code></td><td>La rueda de carga nativa.</td></tr><tr><td><code>Button</code></td><td>Botón nativo sencillo: <code>title</code> y <code>onPress</code>. Para botones con diseño propio usa <code>Pressable</code>.</td></tr><tr><td><code>useEffect(..., [])</code></td><td>Lanza la carga una vez al abrir la pantalla.</td></tr></table>
+<h3>Por qué tres estados</h3>
+<p>La pantalla siempre está en <b>una</b> de estas situaciones y tienes que pintar algo para cada una. Si no, el usuario ve una pantalla en blanco sin saber qué pasa. Los <code>if … return</code> del ejemplo se evalúan en orden: primero cargando, después error, después vacío, y si nada de eso, la lista.</p>
+<h3>Pantalla completa «Descobreix»</h3>
+<pre><code>// src/app/descubre.jsx
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Button, FlatList, Text, View } from 'react-native';
+
+export default function Descubre() {
+  const [datos, setDatos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState('');
+
+  async function cargar() {
+    setCargando(true);
+    setError('');
+    try {
+      const res = await fetch('https://jsonplaceholder.typicode.com/posts?_limit=10');
+      if (!res.ok) throw new Error('Respuesta ' + res.status);
+      setDatos(await res.json());
+    } catch (e) {
+      setError('No se pudo cargar. Revisa tu conexión.');
+    } finally {
+      setCargando(false);
+    }
+  }
+
+  useEffect(() =&gt; { cargar(); }, []);
+
+  if (cargando) return &lt;ActivityIndicator size="large" /&gt;;
+  if (error) return (
+    &lt;View&gt;&lt;Text&gt;{error}&lt;/Text&gt;&lt;Button title="Reintentar" onPress={cargar} /&gt;&lt;/View&gt;
+  );
+  if (datos.length === 0) return &lt;Text&gt;No hay resultados&lt;/Text&gt;;
+
+  return (
+    &lt;FlatList
+      data={datos}
+      keyExtractor={(d) =&gt; String(d.id)}
+      renderItem={({ item }) =&gt; &lt;Text style={{ padding: 8 }}&gt;{item.title}&lt;/Text&gt;}
+    /&gt;
+  );
+}</code></pre>
+<div class="sim" data-sim="fetch"></div>
+<div class="tip">Recuerda registrar la pantalla en el menú: añade un <code>&lt;Link href="/descubre"&gt;</code> en <code>index.jsx</code> y, si quieres título, <code>&lt;Stack.Screen name="descubre" options={{ title: 'Descobreix' }} /&gt;</code> en <code>_layout.jsx</code>.</div>
+<div class="note"><code>try/catch</code> recoge errores de red; <code>res.ok</code> recoge errores HTTP (404, 500), que <code>fetch</code> <b>no</b> lanza solo.</div>
+</section>
+
+<section id="E">
+<h2>E · Ubicación y permisos <span class="tag">expo-location</span></h2>
+<p class="lead">Botón «Utilitza la meva ubicació»: pide permiso, muestra coordenadas, y si se deniega la app sigue funcionando.</p>
+<div class="flow"><span>Pulsar botón</span><i>→</i><span>Pedir permiso</span><i>→</i><span>¿Concedido?</span><i>→</i><span>✅ coordenadas / ❌ mensaje</span></div>
+<pre><code>import * as Location from 'expo-location';
+
+const [coords, setCoords] = useState(null);
+const [mensaje, setMensaje] = useState('');
+
+async function usarUbicacion() {
+  const { status } = await Location.requestForegroundPermissionsAsync();
+  if (status !== 'granted') {
+    setMensaje('Permiso denegado. Puedes seguir usando la app sin ubicación.');
+    return;
+  }
+  const pos = await Location.getCurrentPositionAsync({});
+  setCoords(pos.coords);        // pos.coords.latitude / .longitude
+}
+
+&lt;Pressable onPress={usarUbicacion}&gt;&lt;Text&gt;Utilitza la meva ubicació&lt;/Text&gt;&lt;/Pressable&gt;
+{coords &amp;&amp; &lt;Text&gt;{coords.latitude}, {coords.longitude}&lt;/Text&gt;}
+{mensaje !== '' &amp;&amp; &lt;Text&gt;{mensaje}&lt;/Text&gt;}</code></pre>
+
+<h3>Qué hace cada pieza</h3>
+<table><tr><th>Pieza</th><th>Qué hace</th></tr><tr><td><code>import * as Location</code></td><td>Importa todas las funciones del módulo bajo el nombre <code>Location</code>.</td></tr><tr><td><code>requestForegroundPermissionsAsync()</code></td><td>Muestra el diálogo del sistema “¿Permitir ubicación?”. Devuelve un objeto con <code>status</code>: <code>'granted'</code>, <code>'denied'</code> o <code>'undetermined'</code>. Si ya decidió antes, no vuelve a preguntar y devuelve la decisión guardada.</td></tr><tr><td><code>getCurrentPositionAsync(opciones)</code></td><td>Pide el GPS y devuelve un objeto con <code>coords</code> (<code>latitude</code>, <code>longitude</code>, <code>accuracy</code>…) y <code>timestamp</code>. Puede tardar unos segundos.</td></tr><tr><td><code>{ accuracy: Location.Accuracy.Balanced }</code></td><td>Opción para elegir precisión (más precisión = más batería).</td></tr><tr><td><code>const { status } = ...</code></td><td>“Desestructurar”: saca solo <code>status</code> del objeto devuelto.</td></tr></table>
+<h3>Por qué hay que pedir permiso</h3>
+<p>Android e iOS no dejan acceder a la ubicación sin que el usuario lo acepte. Si dice que no, <b>la app no debe romperse</b>: se muestra un mensaje y todo lo demás sigue funcionando. Por eso el <code>return</code> temprano cuando <code>status !== 'granted'</code>.</p>
+<h3>Con control de errores</h3>
+<pre><code>async function usarUbicacion() {
+  try {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      setMensaje('Permiso denegado. Puedes seguir usando la app sin ubicación.');
+      return;
+    }
+    const pos = await Location.getCurrentPositionAsync({});
+    setCoords(pos.coords);
+    setMensaje('');
+  } catch (e) {
+    setMensaje('No se pudo obtener la ubicación.');   // GPS apagado, etc.
+  }
+}</code></pre>
+<div class="sim" data-sim="loc"></div>
+<div class="tip">En el emulador de Android fija una posición falsa en <i>Extended controls → Location</i>. En iOS: <i>Features → Location</i>.</div>
+<div class="note"><b>Foreground</b> = solo con la app abierta. Es lo único que necesitas.</div>
+</section>
+
+<section id="F">
+<h2>F · Conectividad <span class="tag">NetInfo</span></h2>
+<p class="lead">Mostrar si hay conexión y el tipo de red; no lanzar consultas si no hay.</p>
+<pre><code>import NetInfo from '@react-native-community/netinfo';
+
+const [red, setRed] = useState({ conectado: true, tipo: '' });
+
+useEffect(() =&gt; {
+  const dejarDeEscuchar = NetInfo.addEventListener(estado =&gt; {
+    setRed({ conectado: estado.isConnected, tipo: estado.type }); // wifi, cellular, none...
+  });
+  return dejarDeEscuchar;      // limpieza al salir de la pantalla
+}, []);
+
+// antes de pedir datos:
+if (!red.conectado) { setError('Sin conexión'); return; }
+
+{!red.conectado &amp;&amp; &lt;Text&gt;📴 Sin conexión&lt;/Text&gt;}
+&lt;Text&gt;Red: {red.tipo}&lt;/Text&gt;</code></pre>
+
+<h3>Qué hace cada pieza</h3>
+<table><tr><th>Pieza</th><th>Qué hace</th></tr><tr><td><code>NetInfo.addEventListener(fn)</code></td><td>Registra una función que se ejecuta <b>cada vez que cambia la conexión</b> (y una vez al empezar). Devuelve otra función para darse de baja.</td></tr><tr><td><code>estado.isConnected</code></td><td><code>true</code>/<code>false</code>, o <code>null</code> mientras no lo sabe.</td></tr><tr><td><code>estado.isInternetReachable</code></td><td>Si realmente hay internet (puedes estar en una wifi sin salida).</td></tr><tr><td><code>estado.type</code></td><td>Tipo de red: <code>wifi</code>, <code>cellular</code>, <code>none</code>, <code>unknown</code>…</td></tr><tr><td><code>return dejarDeEscuchar</code></td><td>Dentro de <code>useEffect</code>, la función que devuelves es la <b>limpieza</b>: React la llama al cerrar la pantalla. Sin ella el listener se quedaría funcionando para siempre.</td></tr><tr><td><code>NetInfo.fetch()</code></td><td>Consulta puntual (una sola vez) en vez de escuchar cambios.</td></tr></table>
+<h3>Componente <code>BannerRed</code> completo</h3>
+<pre><code>// src/components/BannerRed.jsx
+import NetInfo from '@react-native-community/netinfo';
+import { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
+
+export default function BannerRed() {
+  const [red, setRed] = useState({ conectado: true, tipo: '' });
+
+  useEffect(() =&gt; {
+    const dejarDeEscuchar = NetInfo.addEventListener((estado) =&gt; {
+      setRed({ conectado: estado.isConnected !== false, tipo: estado.type });
+    });
+    return dejarDeEscuchar;
+  }, []);
+
+  return (
+    &lt;View style={{ padding: 6, backgroundColor: red.conectado ? '#d8f0e0' : '#f6d5d5' }}&gt;
+      &lt;Text&gt;{red.conectado ? 'Red: ' + red.tipo : '📴 Sin conexión'}&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+<div class="sim" data-sim="net"></div>
+<p>Para <b>evitar consultas sin red</b> en «Descobreix», pásale la información como prop o consulta antes de cargar: <code>const e = await NetInfo.fetch(); if (!e.isConnected) { setError('Sin conexión'); setCargando(false); return; }</code></p>
+<div class="tip">Haz un componente <code>BannerRed</code> y úsalo en varias pantallas: cuenta como “componente reutilizable” extra.</div>
+<div class="note"><code>isConnected</code> puede ser <code>null</code> al principio; el código de arriba lo trata como “no conectado”. Si quieres evitarlo: <code>estado.isConnected !== false</code>.</div>
+</section>
+
+<section id="G">
+<h2>G · Pruebas y documentación</h2>
+<h3>Cinco casos a registrar en el README</h3>
+<table>
+<tr><th>#</th><th>Caso</th><th>Cómo provocarlo</th><th>Esperado</th></tr>
+<tr><td>1</td><td>Creación</td><td>Añadir un lugar válido</td><td>Aparece en la lista</td></tr>
+<tr><td>2</td><td>Reinicio</td><td>Cerrar app del todo y abrir</td><td>El lugar sigue ahí</td></tr>
+<tr><td>3</td><td>Sin datos</td><td>Borrar todos los lugares</td><td>Mensaje de lista vacía</td></tr>
+<tr><td>4</td><td>Error de red</td><td>Modo avión y abrir «Descobreix»</td><td>Mensaje de error / sin conexión</td></tr>
+<tr><td>5</td><td>Permiso denegado</td><td>Pulsar ubicación y denegar</td><td>Mensaje, app usable</td></tr>
+</table>
+<p>Añade columnas <b>Resultado obtenido</b> y <b>Observaciones</b>.</p>
+<h3>README.md debe incluir</h3>
+<ul class="check">
+<li>Instalación (<code>npm install</code>) y ejecución (<code>npx expo start</code>); indica también los comandos con los que creaste el proyecto</li>
+<li>Estructura de carpetas</li>
+<li>API usada (nombre y URL)</li>
+<li>Permisos (ubicación) y limitaciones de tu entorno</li>
+<li>Tabla de las 5 pruebas</li>
+<li>Capturas: pantallas principales y una prueba de persistencia</li>
+</ul>
+<h3>Entrega</h3>
+<ul class="check">
+<li>.zip del proyecto <b>sin <code>node_modules</code></b> ni secretos</li>
+<li>README.md + capturas + tabla de pruebas</li>
+<li>Fecha: <b>10/11/2026</b></li>
+</ul>
+</section>
+
+<section id="extra">
+<h2>Ampliación voluntaria</h2>
+<div class="grid">
+<div class="card"><h4>📳 Acelerómetro</h4><code>expo-sensors</code>:<pre><code>import { Accelerometer } from 'expo-sensors';
+useEffect(() =&gt; {
+  const s = Accelerometer.addListener(setDatos);
+  return () =&gt; s.remove();
+}, []);</code></pre></div>
+<div class="card"><h4>📍 Coordenadas por lugar</h4>Guarda <code>latitud</code> y <code>longitud</code> dentro del objeto lugar antes de persistirlo.</div>
+<div class="card"><h4>⭐ Sin duplicados</h4>Antes de añadir a favoritos: <code>lista.some(l =&gt; l.id === nuevo.id)</code>.</div>
+<div class="card"><h4>♿ Accesibilidad</h4><code>accessibilityLabel</code> y <code>accessibilityRole="button"</code> en los <code>Pressable</code>.</div>
+</div>
+</section>
+
+
+<section id="chuleta">
+<h2>📚 Chuleta de referencia <span class="tag">consulta rápida</span></h2>
+<p class="lead">Todo lo que has usado, agrupado para buscar rápido en el futuro.</p>
+
+<h3>Componentes y props más usadas</h3>
+<table><tr><th>Componente</th><th>Props principales</th><th>Notas</th></tr><tr><td><code>View</code></td><td><code>style</code></td><td>Contenedor. Se comporta como flexbox en columna.</td></tr><tr><td><code>Text</code></td><td><code>style</code>, <code>numberOfLines</code>, <code>onPress</code></td><td>Obligatorio para cualquier texto.</td></tr><tr><td><code>TextInput</code></td><td><code>value</code>, <code>onChangeText</code>, <code>placeholder</code>, <code>multiline</code>, <code>keyboardType</code>, <code>secureTextEntry</code>, <code>autoCapitalize</code></td><td>Siempre controlado con <code>useState</code>.</td></tr><tr><td><code>Pressable</code></td><td><code>onPress</code>, <code>onLongPress</code>, <code>disabled</code>, <code>style</code>, <code>accessibilityLabel</code></td><td>Para botones personalizados.</td></tr><tr><td><code>Button</code></td><td><code>title</code>, <code>onPress</code>, <code>color</code>, <code>disabled</code></td><td>Botón nativo sin estilos propios.</td></tr><tr><td><code>FlatList</code></td><td><code>data</code>, <code>renderItem</code>, <code>keyExtractor</code>, <code>ListEmptyComponent</code>, <code>ListHeaderComponent</code>, <code>ItemSeparatorComponent</code></td><td>Listas largas. Hace scroll sola.</td></tr><tr><td><code>ScrollView</code></td><td><code>contentContainerStyle</code></td><td>Para contenido corto que no cabe. No uses para listas largas.</td></tr><tr><td><code>Image</code></td><td><code>source</code>, <code>style</code></td><td>Imagen: <code>source={{ uri: 'https://…' }}</code>; hay que darle <code>width</code> y <code>height</code>.</td></tr><tr><td><code>ActivityIndicator</code></td><td><code>size</code>, <code>color</code></td><td>Spinner de carga.</td></tr><tr><td><code>SafeAreaView</code></td><td><code>style</code></td><td>Evita que el contenido quede bajo el notch (de <code>react-native-safe-area-context</code>).</td></tr></table>
+<h3>Expo Router</h3>
+<table><tr><th>Elemento</th><th>Para qué</th></tr><tr><td><code>src/app/index.jsx</code></td><td>Ruta <code>/</code>.</td></tr><tr><td><code>src/app/nuevo.jsx</code></td><td>Ruta <code>/nuevo</code>.</td></tr><tr><td><code>src/app/detall/[id].jsx</code></td><td>Ruta dinámica <code>/detall/lo-que-sea</code>.</td></tr><tr><td><code>_layout.jsx</code></td><td>Marco de una carpeta de rutas. Aquí va <code>&lt;Stack /&gt;</code>.</td></tr><tr><td><code>&lt;Stack.Screen name options /&gt;</code></td><td>Configura una pantalla (título, botón atrás…) desde el layout.</td></tr><tr><td><code>&lt;Link href&gt;</code></td><td>Navegar desde el JSX.</td></tr><tr><td><code>router.push / back / replace</code></td><td>Navegar desde código (tras guardar, tras un permiso…).</td></tr><tr><td><code>useLocalSearchParams()</code></td><td>Leer parámetros de la ruta.</td></tr><tr><td><code>useFocusEffect(cb)</code></td><td>Ejecutar algo cada vez que la pantalla se hace visible.</td></tr>
+<tr><td><code>router.replace('/dashboard')</code></td><td>Sustituir la pantalla actual (por ejemplo tras un login, para que “atrás” no vuelva a él). Ejemplo completo en <a href="react-native-basico.html#nav">React Native desde cero</a>.</td></tr></table>
+<h3>Métodos de array que usarás (JavaScript)</h3>
+<table><tr><th>Método</th><th>Qué hace</th><th>Ejemplo</th></tr><tr><td><code>map</code></td><td>Transforma cada elemento y devuelve una lista nueva.</td><td><code>nombres = lugares.map(l =&gt; l.nombre)</code></td></tr><tr><td><code>filter</code></td><td>Se queda con los que cumplen la condición.</td><td><code>lugares.filter(l =&gt; l.id !== id)</code></td></tr><tr><td><code>find</code></td><td>Devuelve el primero que cumple, o <code>undefined</code>.</td><td><code>lugares.find(l =&gt; l.id === id)</code></td></tr><tr><td><code>some</code></td><td><code>true</code> si al menos uno cumple.</td><td><code>lugares.some(l =&gt; l.id === id)</code></td></tr><tr><td><code>[...a, x]</code></td><td>Copia de <code>a</code> con <code>x</code> al final.</td><td><code>setLista([...lista, nuevo])</code></td></tr><tr><td><code>length</code></td><td>Cantidad de elementos.</td><td><code>if (datos.length === 0)</code></td></tr></table>
+<h3>Asincronía en una tabla</h3>
+<table><tr><th>Concepto</th><th>Idea</th></tr><tr><td>Promesa</td><td>Algo que terminará más tarde (leer disco, red, GPS).</td></tr><tr><td><code>async</code></td><td>La función puede usar <code>await</code> y devuelve una promesa.</td></tr><tr><td><code>await</code></td><td>Pausa esa función hasta que la promesa termine; el resto de la app sigue viva.</td></tr><tr><td><code>.then(fn)</code></td><td>Alternativa a <code>await</code>: “cuando termine, llama a <code>fn</code> con el resultado”.</td></tr><tr><td><code>try/catch/finally</code></td><td>Control de errores de cualquier <code>await</code>.</td></tr></table>
+<h3>Errores frecuentes</h3>
+<ul>
+<li><b>“Text strings must be rendered within a &lt;Text&gt;”</b>: has puesto texto suelto dentro de un <code>View</code>.</li>
+<li><b>La pantalla no se actualiza</b>: cambiaste una variable normal en vez de usar <code>setX</code> de <code>useState</code>.</li>
+<li><b>Al volver no aparece el dato nuevo</b>: cargaste con <code>useEffect([])</code> en vez de <code>useFocusEffect</code>.</li>
+<li><b><code>onPress={f()}</code></b> se ejecuta solo: debe ser <code>onPress={f}</code>.</li>
+<li><b>Falta <code>keyExtractor</code> / <code>key</code></b> en listas: aviso de React y comportamientos raros.</li>
+<li><b>Módulo nativo no encontrado</b>: lo instalaste con <code>npm install</code>; usa <code>npx expo install</code> y reinicia con <code>npx expo start -c</code>.</li>
+<li><b>El móvil no conecta</b>: PC y móvil deben estar en la misma wifi, o prueba <code>npx expo start --tunnel</code>.</li>
+</ul>
+</section>
+
+
+</main>
+
+<script>
+// ====== Simulaciones interactivas ======
+(function(){
+  function mount(el,o){
+    el.innerHTML='<div class="sim-head">▶ Simulación interactiva · '+o.title+'</div><div class="sim-body"><div><div class="phone"><div class="screen"></div></div></div><div><p class="hint">'+o.hint+'</p><div class="ctl"></div><div class="legend"></div><div class="trace"><b>Qué ejecuta el código (lo último arriba):</b><ol></ol></div></div></div>';
+    var screen=el.querySelector('.screen'),ol=el.querySelector('ol'),lg=el.querySelector('.legend'),ctl=el.querySelector('.ctl');
+    (o.legend||[]).forEach(function(t,i){var d=document.createElement('div');d.innerHTML='<i class="bd">'+(i+1)+'</i>'+t;
+      d.onmouseenter=function(){screen.querySelectorAll('[data-n="'+(i+1)+'"]').forEach(function(x){x.classList.add('hl')})};
+      d.onmouseleave=function(){screen.querySelectorAll('.hl').forEach(function(x){x.classList.remove('hl')})};lg.appendChild(d)});
+    var api={screen:screen,ctl:ctl,
+      log:function(code,txt){var li=document.createElement('li');li.innerHTML='<code>'+code+'</code> '+(txt||'');ol.insertBefore(li,ol.firstChild);while(ol.children.length>7)ol.removeChild(ol.lastChild)},
+      b:function(n){return '<i class="bd" data-n="'+n+'">'+n+'</i>'},
+      on:function(ev,fn){screen.addEventListener(ev,function(e){var a=e.target.closest('[data-act]');if(a)fn(a.dataset.act,a.dataset,e)})}};
+    o.build(api);
+  }
+  function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;')}
+  var LL=[{id:'1',n:'Sagrada Família',d:'Basílica de Gaudí.'},{id:'2',n:'Barceloneta',d:'Playa y paseo marítimo.'},{id:'3',n:'Parc Güell',d:'Parque con mosaicos.'}];
+
+  var S={};
+  S.counter=function(el){mount(el,{title:'useState',hint:'Pulsa los botones y mira cómo cada cambio de estado hace que la pantalla se vuelva a pintar.',
+    legend:['<code>{contador}</code>: se pinta el valor actual del estado','<code>onPress</code>: llama a <code>setContador</code>'],
+    build:function(a){var n=0,pintados=1;function r(){a.screen.innerHTML='<div class="p-bar">Contador</div><div class="p-big" data-n="1">'+a.b(1)+n+'</div><button class="p-btn" data-act="inc" data-n="2">'+a.b(2)+'+1</button><button class="p-btn sec" data-act="reset">Reiniciar</button><div style="color:#777;text-align:center">Veces que se ha pintado: '+pintados+'</div>'}
+      r();a.on('click',function(x){if(x==='inc'){n++;a.log('setContador('+(n-1)+' + 1)','→ el estado pasa a <b>'+n+'</b>; React vuelve a ejecutar el componente y repinta.')}else{n=0;a.log('setContador(0)','→ estado a 0 y repintado.')}pintados++;r()})}})};
+
+  S.nav=function(el){mount(el,{title:'Lista → Detalle',hint:'Pulsa «Ver lugar». Verás qué hace Link, qué lee useLocalSearchParams y cómo find localiza el lugar.',
+    legend:['<code>FlatList</code>: una fila por elemento de <code>data</code>','<code>Link … asChild</code> + <code>Pressable</code>: navega a <code>/detall/[id]</code>','<code>useLocalSearchParams()</code>: lee el id de la ruta'],
+    build:function(a){var cur=null;
+      function list(){cur=null;a.screen.innerHTML='<div class="p-bar">Lugares</div>'+LL.map(function(l){return '<div class="p-row" data-n="1"><span>'+l.n+'</span><button class="p-btn sm" data-n="2" data-act="go" data-id="'+l.id+'">Ver lugar</button></div>'}).join('')+'<button class="p-btn sec" data-act="go" data-id="99">Probar un id que no existe</button>'}
+      function det(id){var l=LL.filter(function(x){return x.id===id})[0];a.screen.innerHTML='<div class="p-bar"><u data-act="back">‹</u> detall/'+id+'</div>'+(l?'<div data-n="3" style="font-size:1.2rem;font-weight:700">'+a.b(3)+l.n+'</div><div>'+l.d+'</div>':'<div class="p-err">Lugar no encontrado</div>')+'<button class="p-btn sec" data-act="back">Volver</button>'}
+      list();a.on('click',function(x,d){if(x==='go'){a.log('&lt;Link href={{ pathname: \'/detall/[id]\', params: { id: \''+d.id+'\' } }}&gt;','→ el router abre <b>/detall/'+d.id+'</b>');
+          a.log('const { id } = useLocalSearchParams()','→ id = <b>"'+d.id+'"</b> (siempre texto)');
+          var l=LL.filter(function(q){return q.id===d.id})[0];a.log('llocs.find(l => l.id === id)',l?'→ encuentra «'+l.n+'»':'→ <b>undefined</b>, así que se pinta «Lugar no encontrado»');det(d.id)}
+        else{a.log('router.back()','→ se cierra el detalle y reaparece la lista.');list()}})}})};
+
+  S.form=function(el){mount(el,{title:'Formulario y validación',hint:'Prueba a guardar con el nombre vacío (o solo espacios), y luego con un nombre válido.',
+    legend:['<code>TextInput value/onChangeText</code>: campo controlado por el estado','<code>{error !== \'\' && …}</code>: solo se pinta si hay error','<code>onPress={guardar}</code>: ejecuta la validación'],
+    build:function(a){var saved=[],nombre='',desc='',err='',t;
+      function form(){a.screen.innerHTML='<div class="p-bar">Nuevo lugar</div><div data-n="1">'+a.b(1)+'<input class="p-input" id="fn" placeholder="Nombre" value="'+esc(nombre)+'"></div><input class="p-input" id="fd" placeholder="Descripción" value="'+esc(desc)+'"><div data-n="2" class="p-err">'+(err?a.b(2)+err:'')+'</div><button class="p-btn" data-n="3" data-act="save">'+a.b(3)+'Guardar</button><button class="p-btn sec" data-act="cancel">Cancelar</button>';
+        var fn=a.screen.querySelector('#fn'),fd=a.screen.querySelector('#fd');
+        fn.oninput=function(){nombre=fn.value;clearTimeout(t);t=setTimeout(function(){a.log('setNombre("'+esc(nombre)+'")','→ el estado <code>nombre</code> guarda lo escrito.')},500)};fd.oninput=function(){desc=fd.value}}
+      function list(){a.screen.innerHTML='<div class="p-bar">Lugares</div>'+(saved.length?saved.map(function(x){return '<div class="p-row">'+esc(x)+'</div>'}).join(''):'<div class="p-empty">Aún no hay lugares</div>')+'<button class="p-btn" data-act="new">+ Añadir lugar</button>'}
+      form();a.on('click',function(x){
+        if(x==='save'){if(nombre.trim()===''){err='El nombre no puede estar vacío';a.log('nombre.trim() === \'\'','→ <b>true</b>: setError(...) y <b>return</b>. No se guarda nada.');form()}
+          else{err='';a.log('nombre.trim() === \'\'','→ false, el nombre es válido.');a.log('guardarLugares([...lista, nuevo])','→ copia de la lista + «'+esc(nombre.trim())+'» al final.');a.log('router.back()','→ vuelve a la lista.');saved.push(nombre.trim());nombre='';desc='';list()}}
+        else if(x==='cancel'){a.log('router.back()','→ vuelves sin guardar.');err='';list()}
+        else if(x==='new'){a.log('&lt;Link href="/nuevo"&gt;','→ abre el formulario.');form()}})}})};
+
+  S.storage=function(el){mount(el,{title:'AsyncStorage',hint:'Añade y elimina lugares. Luego pulsa «Cerrar y reabrir la app»: la memoria de la pantalla se pierde, pero el disco no.',
+    legend:['<code>FlatList</code> con <code>ListEmptyComponent</code>','<code>eliminarLugar(id)</code>: <code>filter</code> + <code>setItem</code>','<code>useFocusEffect</code>: relee del disco al mostrarse'],
+    build:function(a){var disk=null,mem=[],cnt=0;
+      function r(){a.screen.innerHTML='<div class="p-bar">Lugares</div><button class="p-btn" data-act="add">+ Añadir lugar de prueba</button><div data-n="1">'+(mem.length?mem.map(function(x){return '<div class="p-row"><span>'+x.n+'</span><button class="p-btn red sm" data-n="2" data-act="del" data-id="'+x.id+'">Eliminar</button></div>'}).join(''):'<div class="p-empty">'+a.b(1)+'Aún no hay lugares. ¡Añade el primero!</div>')+'</div>';
+        d.textContent="getItem('lugares') → "+(disk===null?'null':disk)}
+      var d=document.createElement('div');d.className='disk';a.screen.parentNode.parentNode.appendChild(d);
+      var c=document.createElement('button');c.textContent='🔄 Cerrar y reabrir la app';a.ctl.appendChild(c);
+      c.onclick=function(){mem=[];r();a.log('(la app se cierra)','→ todos los <code>useState</code> se pierden: lista = [].');setTimeout(function(){a.log('useFocusEffect → leerLugares().then(setLugares)',disk?'→ se lee del disco y la lista <b>reaparece</b>.':'→ no hay nada guardado: lista vacía (<code>texto ? JSON.parse(texto) : []</code>).');mem=disk?JSON.parse(disk):[];r()},600)};
+      r();a.on('click',function(x,dt){if(x==='add'){cnt++;mem=mem.concat([{id:String(Date.now()+cnt),n:'Lugar '+cnt}]);disk=JSON.stringify(mem);a.log('setItem(\'lugares\', JSON.stringify(lista))','→ guardado en el disco como <b>texto</b>.')}
+        else{mem=mem.filter(function(q){return q.id!==dt.id});disk=mem.length?JSON.stringify(mem):'[]';a.log('lista.filter(l => l.id !== id)','→ lista sin ese lugar, y <code>setItem</code> la guarda.')}r()})}})};
+
+  S.fetch=function(el){mount(el,{title:'fetch con tres estados',hint:'Elige qué respondería la red y pulsa «Abrir Descobreix». Mira por qué ramas del código pasa.',
+    legend:['<code>ActivityIndicator</code>: <code>cargando === true</code>','<code>error</code> + <code>Reintentar</code>','<code>datos.length === 0</code>: lista vacía'],
+    build:function(a){var mode='ok';
+      a.ctl.innerHTML='<select><option value="ok">API responde bien</option><option value="e500">Error HTTP 500</option><option value="net">Sin internet (fetch falla)</option><option value="empty">Responde lista vacía</option></select> <button data-x="go">Abrir «Descobreix»</button>';
+      a.ctl.querySelector('select').onchange=function(e){mode=e.target.value};
+      a.screen.innerHTML='<div class="p-bar">Descobreix</div><div class="p-empty">Pulsa «Abrir Descobreix»</div>';
+      function run(){a.screen.innerHTML='<div class="p-bar">Descobreix</div><div class="p-spin" data-n="1"></div><div class="p-empty">'+a.b(1)+'Cargando…</div>';
+        a.log('setCargando(true); setError(\'\')','→ se pinta el spinner.');a.log('await fetch(url)','→ la petición está en marcha…');
+        setTimeout(function(){var h='<div class="p-bar">Descobreix</div>';
+          if(mode==='net'){a.log('fetch lanza una excepción','→ salta al <b>catch</b>: setError(\'No se pudo cargar…\')')}
+          else if(mode==='e500'){a.log('res.ok','→ <b>false</b> (500). <code>throw new Error(...)</code> → catch → setError.')}
+          else{a.log('res.ok','→ true. <code>setDatos(await res.json())</code>')}
+          a.log('finally { setCargando(false) }','→ se apaga el spinner pase lo que pase.');
+          if(mode==='net'||mode==='e500'){h+='<div class="p-err" data-n="2" style="padding:20px 6px;text-align:center">'+a.b(2)+'No se pudo cargar. Revisa tu conexión.</div><button class="p-btn" data-act="retry">Reintentar</button>'}
+          else if(mode==='empty'){h+='<div class="p-empty" data-n="3">'+a.b(3)+'No hay resultados</div>'}
+          else{h+=['sunt aut facere…','qui est esse','ea molestias quasi…','eum et est occaecati'].map(function(t){return '<div class="p-row">'+t+'</div>'}).join('')}
+          a.screen.innerHTML=h},1200)}
+      a.ctl.querySelector('button').onclick=run;a.on('click',function(x){if(x==='retry'){a.log('onPress={cargar}','→ vuelve a ejecutar la función de carga.');run()}})}})};
+
+  S.loc=function(el){mount(el,{title:'Ubicación y permisos',hint:'Pulsa el botón y elige qué hace el usuario en el diálogo del sistema. Fíjate en que, si deniega, el resto de la app sigue usable.',
+    legend:['<code>Pressable</code> → <code>usarUbicacion()</code>','<code>coords &amp;&amp; …</code>: coordenadas si las hay','<code>mensaje</code>: aviso cuando se deniega'],
+    build:function(a){var coords=null,msg='',modal=false;
+      function r(){a.screen.innerHTML='<div class="p-bar">Mi lugar</div><button class="p-btn" data-n="1" data-act="loc">'+a.b(1)+'Utilitza la meva ubicació</button>'+(coords?'<div data-n="2">'+a.b(2)+'📍 '+coords+'</div>':'')+(msg?'<div class="p-err" data-n="3">'+a.b(3)+msg+'</div>':'')+'<div class="p-row"><span>Sagrada Família</span><button class="p-btn sm" data-act="ok2">Ver</button></div><div class="p-row"><span>Barceloneta</span><button class="p-btn sm" data-act="ok2">Ver</button></div>'+(modal?'<div class="p-modal"><div><b>¿Permitir que MyPlaces acceda a tu ubicación?</b><button class="p-btn" data-act="allow">Permitir</button><button class="p-btn red" data-act="deny">Denegar</button></div></div>':'')}
+      r();a.on('click',function(x){
+        if(x==='loc'){modal=true;msg='';a.log('requestForegroundPermissionsAsync()','→ el sistema muestra el diálogo y la función <b>espera</b> (await).');r()}
+        else if(x==='allow'){modal=false;a.log('status === \'granted\'','→ sí: continúa.');a.log('getCurrentPositionAsync({})','→ devuelve pos.coords; <code>setCoords(pos.coords)</code>');coords='41.4036, 2.1744';r()}
+        else if(x==='deny'){modal=false;coords=null;msg='Permiso denegado. Puedes seguir usando la app sin ubicación.';a.log('status !== \'granted\'','→ <code>setMensaje(...)</code> y <b>return</b>: no se pide la posición.');r()}
+        else if(x==='ok2'){a.log('(otra pantalla)','→ el resto de la app funciona igual con o sin permiso.')}})}})};
+
+  S.net=function(el){mount(el,{title:'NetInfo',hint:'Cambia el tipo de red del «móvil» y prueba a cargar datos. Sin conexión, el código evita hacer la petición.',
+    legend:['<code>BannerRed</code>: se repinta en cuanto cambia la red','<code>if (!red.conectado)</code>: corta antes del fetch'],
+    build:function(a){var net='wifi',res='';
+      a.ctl.innerHTML='<button data-net="wifi" class="on">Wi-Fi</button><button data-net="cellular">Datos</button><button data-net="none">Modo avión</button>';
+      function r(){a.screen.innerHTML='<div class="p-net '+(net==='none'?'off':'on')+'" data-n="1">'+a.b(1)+(net==='none'?'📴 Sin conexión':'Red: '+net)+'</div><div class="p-bar">Descobreix</div><button class="p-btn" data-n="2" data-act="load">'+a.b(2)+'Cargar datos</button><div>'+res+'</div>'}
+      r();a.ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;net=b.dataset.net;[].forEach.call(a.ctl.children,function(c){c.classList.toggle('on',c===b)});
+        a.log('NetInfo.addEventListener(estado => …)','→ cambia la red: <code>estado.type = "'+net+'"</code>, <code>isConnected = '+(net!=='none')+'</code>. Se llama a <code>setRed(...)</code>.');res='';r()};
+      a.on('click',function(){if(net==='none'){res='<div class="p-err">Sin conexión</div>';a.log('if (!red.conectado) { setError(\'Sin conexión\'); return; }','→ <b>no se llama a fetch</b>: se ahorra la petición y se informa al usuario.')}
+        else{res='<div class="p-row">✅ Datos cargados</div>';a.log('red.conectado === true','→ pasa el filtro y se ejecuta <code>fetch(url)</code>.')}r()})}})};
+
+  document.querySelectorAll('.sim[data-sim]').forEach(function(el){S[el.dataset.sim](el)});
+})();
+</script>
+<script>
+// Resaltado de sintaxis sencillo (sin librerías) con colores de VS Code Dark+
+(function () {
+  var KW = 'const let var function return async await new typeof true false null undefined this default export class'.split(' ');
+  var CTL = 'import from if else try catch finally throw for while switch case break continue as'.split(' ');
+  var esc = function (s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var span = function (c, s) { return '<span class="t-' + c + '">' + esc(s) + '</span>'; };
+
+  var JS = /(\/\/[^\n]*|\{\/\*[\s\S]*?\*\/\})|('(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*"|`(?:\\.|[^`\\])*`)|(<\/?[A-Z][\w.]*|<\/?[a-z][a-z0-9]*(?=[\s>\/])|<\/?>)|\b(\d+(?:\.\d+)?)\b|([A-Za-z_$][\w$]*)/g;
+  var PLAIN = /((?:#|←)[^\n]*)/g;
+
+  function js(src) {
+    return src.replace(JS, function (m, com, str, tag, num, id, off) {
+      if (com) return span('com', com);
+      if (str) return span('str', str);
+      if (tag) {
+        var name = tag.replace(/^<\/?/, '');
+        var pre = tag.slice(0, tag.length - name.length);
+        return esc(pre) + (name ? span(/^[A-Z]/.test(name) ? 'cmp' : 'tag', name) : '');
+      }
+      if (num) return span('num', num);
+      if (CTL.indexOf(id) > -1) return span('ctl', id);
+      if (KW.indexOf(id) > -1) return span('kw', id);
+      var next = src.charAt(off + id.length), prev = src.charAt(off - 1);
+      if (next === '(') return span('fn', id);
+      if (/^[A-Z]/.test(id)) return span('cls', id);
+      return span('var', id);
+    });
+  }
+  function plain(src) {
+    return src.replace(PLAIN, function (m) { return '\u0000' + m + '\u0001'; })
+      .split(/(\u0000[^\u0001]*\u0001)/).map(function (p) {
+        return p.charAt(0) === '\u0000' ? span('com', p.slice(1, -1)) : esc(p);
+      }).join('');
+  }
+  // los bloques de JS contienen texto "import/const/..." ; los de consola/árbol no
+  document.querySelectorAll('pre code').forEach(function (el) {
+    var t = el.textContent;
+    var isJs = /\b(import|const|function|useState|useEffect|export)\b/.test(t) && !/^#|^src\//.test(t);
+    el.innerHTML = isJs ? js(t) : plain(t);
+  });
+})();
+</script>
+
+<script>
+// ====== Paso a paso para TODOS los bloques de código ======
+(function(){
+  var B=function(t){return '<div class="p-bar">'+t+'</div>'};
+  var R=function(t,b){return '<div class="p-row"><span>'+t+'</span>'+(b?'<button class="p-btn sm">'+b+'</button>':'')+'</div>'};
+  var BTN=function(t,c){return '<button class="p-btn '+(c||'')+'">'+t+'</button>'};
+  var P=function(h){return {p:h}};
+  var T=function(){return {o:[].slice.call(arguments)}};
+  var NONE='<div class="none">Todavía no se dibuja nada</div>';
+  var LIST=R('Sagrada Família','Ver lugar')+R('Barceloneta','Ver lugar')+R('Parc Güell','Ver lugar');
+  var ERR=function(t){return '<div class="p-err">'+t+'</div>'};
+  var FORM=function(n,e){return B('Nuevo lugar')+'<input class="p-input" placeholder="Nombre" value="'+(n||'')+'"><input class="p-input" placeholder="Descripción">'+(e?ERR(e):'')+BTN('Guardar')+BTN('Cancelar','sec')};
+  var DISK=function(t){return '<div class="disk">'+t+'</div>'};
+  var SPIN='<div class="p-spin"></div><div class="p-empty">Cargando…</div>';
+
+  var STEPS=[
+  /*0 StyleSheet*/[
+   [1,1,'Importas de <code>react-native</code> los tres ingredientes: <code>StyleSheet</code> (estilos), <code>Text</code> y <code>View</code>. Si no importas un componente, no puedes usarlo.',P(NONE)],
+   [3,3,'<code>export default function</code>: este es el componente-pantalla. Es una función normal que empieza por <b>mayúscula</b>; otros ficheros lo importarán con ese export por defecto.'],
+   [4,4,'<code>return</code>: lo que devuelve la función es lo que React dibuja.'],
+   [5,5,'<code>View</code> es la caja contenedora. <code>style={estilos.caja}</code> le aplica el objeto <code>caja</code> que se define abajo (líneas 13).',P('<div style="flex:1;padding:16px;background:#fff;border:1px dashed #bbb;min-height:240px"></div>')],
+   [6,6,'Dentro, un <code>Text</code> con el estilo <code>titulo</code>: 24 px, negrita y verde.',P('<div style="flex:1;padding:16px;background:#fff;border:1px dashed #bbb;min-height:240px"><div style="font-size:24px;font-weight:bold;color:#234c3b">Hola</div></div>')],
+   [11,11,'Comentario: <code>StyleSheet.create</code> define todos los estilos de una vez y los valida (si escribes mal una propiedad, avisa).'],
+   [12,15,'Aquí están los estilos. <code>flex: 1</code> = ocupa todo el alto disponible; <code>padding: 16</code> = 16 de espacio interior; <code>fontSize</code>/<code>fontWeight</code>/<code>color</code> solo afectan a textos.']],
+  /*1 useState*/[
+   [1,1,'Crea una variable de estado. <code>useState(0)</code> da el valor inicial; devuelve <code>[contador, setContador]</code> y se guardan con desestructuración. Ahora <code>contador = 0</code>.',P(B('Contador')+'<div class="p-big">0</div>')],
+   [2,2,'<code>setContador(contador + 1)</code> pide a React guardar un 1. React <b>vuelve a ejecutar el componente</b> con <code>contador = 1</code> y repinta.',P(B('Contador')+'<div class="p-big">1</div>')]],
+  /*2 useEffect*/[
+   [1,3,'<b>Primer efecto.</b> Se ejecuta <i>después</i> de pintar la pantalla por primera vez y llama a <code>cargar()</code>. El <code>[]</code> final significa “solo esa primera vez”.',P(SPIN)],
+   [5,6,'<b>Segundo efecto.</b> Al aparecer, te suscribes a los cambios de red y guardas la “llave” para darte de baja en <code>sub</code>.'],
+   [7,7,'La función que <b>devuelves</b> es la limpieza: React la ejecuta al cerrar la pantalla. Sin ella, la suscripción seguiría viva para siempre.'],
+   [8,8,'Otro <code>[]</code>: esto no se vuelve a ejecutar aunque la pantalla se repinte.']],
+  /*diagrama layout/index (sin paso a paso)*/null,
+  /*diagrama stack (sin paso a paso)*/null,
+  /*3 mkdir/npm install*/[
+   [1,2,'Crea la carpeta del proyecto y entra en ella. Todo lo que hagas a partir de aquí ocurre dentro.',T('<b>$</b> mkdir MyPlaces','<b>$</b> cd MyPlaces')],
+   [4,4,'<code>npm install expo</code> descarga Expo y sus dependencias. Crea <code>package.json</code> (lista de paquetes), <code>package-lock.json</code> y la carpeta <code>node_modules</code> (los paquetes).',T('','<b>MyPlaces $</b> npm install expo','<i>added 120 packages in 8s</i>','<i>→ creados: package.json, package-lock.json, node_modules/</i>')],
+   [5,5,'Arranca el servidor de desarrollo. La primera vez detecta que faltan <code>react</code> y <code>react-native</code> y pregunta si instalarlos: responde <b>Y</b>.',T('','<b>MyPlaces $</b> npx expo start','<i>It looks like you are missing react and react-native. Install? (Y/n)</i> Y','Starting Metro Bundler','› Metro waiting on exp://192.168.1.153:8081','<i>(aparece un código QR)</i>')]],
+  /*4 install*/[
+   [1,1,'Instala de golpe todo lo que necesita la app: React, React Native, <b>Expo Router</b> (navegación) y sus piezas (<code>safe-area-context</code>, <code>screens</code>, <code>linking</code>, <code>constants</code>, <code>status-bar</code>). <code>expo install</code> elige la versión compatible con tu SDK.',T('<b>$</b> npx expo install react react-native expo-router …','› Installing 8 SDK 58.0.0 compatible native modules','<i>added 74 packages</i>')],
+   [3,4,'Para la <b>versión web</b>: <code>react-dom</code> y <code>react-native-web</code> traducen los componentes a HTML, y <code>@expo/metro-runtime</code> hace funcionar el servidor en navegador. Sin ellos, pulsar <code>w</code> da error.',T('','<b>$</b> npx expo install react-dom react-native-web @expo/metro-runtime','<i>added 3 packages</i>','<i>→ ahora "w" abrirá la app en el navegador</i>')]],
+  /*5 package.json*/[
+   [2,2,'<code>"main": "expo-router/entry"</code>: indica por dónde empieza la app. Con esto, Expo Router lee las carpetas de <code>src/app</code> y crea las rutas.'],
+   [3,8,'<code>scripts</code>: atajos. <code>npm run web</code> ejecuta <code>expo start --web</code>, <code>npm run android</code> abre Android, etc.',T('<b>$</b> npm run web','&gt; expo start --web','Starting Metro Bundler','Web is waiting on http://localhost:8081')],
+   [9,9,'<code>dependencies</code>: ya las rellenó <code>expo install</code>; no la edites a mano.']],
+  /*6 app.json*/[
+   [3,4,'<code>name</code>: nombre visible de la app. <code>slug</code>: identificador corto en minúsculas.'],
+   [5,5,'<code>scheme</code>: prefijo de enlaces profundos (<code>myplaces://…</code>). <b>Expo Router lo necesita</b>; sin él, avisa y falla.'],
+   [6,6,'<code>web</code>: usa Metro para empaquetar la versión web como una única página (<code>single</code>).'],
+   [7,7,'<code>plugins</code>: activan configuración extra en Expo Router y la barra de estado.']],
+  /*7 mkdir src/app*/[
+   [1,1,'Crea las carpetas <code>src</code> y <code>app</code> de golpe (<code>-p</code> crea también las intermedias). Expo Router busca las pantallas dentro de <code>src/app</code>.',T('<b>$</b> mkdir -p src/app','<i>src/</i>','<i>└─ app/</i>')],
+   [2,2,'<code>touch</code> crea ficheros vacíos: el layout y la pantalla de inicio.',T('','<b>$</b> touch src/app/_layout.jsx src/app/index.jsx','<i>src/app/</i>','<i>├─ _layout.jsx</i>','<i>└─ index.jsx</i>')]],
+  /*8 layout+index*/[
+   [2,2,'Importas <code>Stack</code> de Expo Router: la navegación “pila”.'],
+   [4,6,'<code>_layout.jsx</code> es el marco de toda la app. Devuelve <code>&lt;Stack /&gt;</code>: Expo Router pinta dentro la pantalla activa y añade una barra superior con el nombre de la ruta.',P(B('index')+'<div class="none">(la pantalla aún está vacía)</div>')],
+   [9,9,'En <code>index.jsx</code> importas <code>View</code> y <code>Text</code>.'],
+   [11,11,'Esta es la pantalla de la ruta <code>/</code>. Expo Router busca su <b>export default</b>.'],
+   [12,16,'Una caja con un texto. Como <code>Text</code> está dentro de <code>View</code>, es válido.',P(B('index')+'<div style="padding:10px">MyPlaces</div>')]],
+  /*9 expo start*/[
+   [1,1,'Arranca Metro (el empaquetador). Verás un QR y un menú de teclas.',T('<b>$</b> npx expo start','Starting Metro Bundler','› Metro waiting on exp://192.168.1.153:8081','› Press <b>w</b> │ open web','› Press <b>a</b> │ open Android','› Press <b>r</b> │ reload app')],
+   [2,2,'Pulsa <b>w</b> y el navegador abre <code>http://localhost:8081</code> con tu app.',T('','<i>(pulsas w)</i>','Web Bundled 4210ms','<i>→ el navegador muestra MyPlaces</i>')],
+   [3,3,'<b>a</b> abre el emulador de Android, <b>i</b> el de iOS, o escaneas el QR con <b>Expo Go</b> desde el móvil (misma wifi).'],
+   [4,4,'<code>-c</code> limpia la caché. Úsalo si cambias dependencias o algo “no se actualiza”.',T('','<b>$</b> npx expo start -c','<i>Starting project… (cache cleared)</i>')]],
+  /*10 libs*/[
+   [1,1,'Recordatorio: para librerías de Expo usa <b>siempre</b> <code>expo install</code>, que respeta el SDK.'],
+   [2,2,'<b>AsyncStorage</b>: guardar datos en el dispositivo (apartado C).',T('<b>$</b> npx expo install @react-native-async-storage/async-storage','<i>› Installing 1 SDK 58 compatible native module</i>')],
+   [3,3,'<b>expo-location</b>: pedir permiso y leer el GPS (apartado E).',T('','<b>$</b> npx expo install expo-location')],
+   [4,4,'<b>NetInfo</b>: saber si hay conexión y qué tipo (apartado F).',T('','<b>$</b> npx expo install @react-native-community/netinfo')],
+   [6,6,'Solo para la ampliación: lecturas del acelerómetro.',T('','<b>$</b> npx expo install expo-sensors')]],
+  /*11 doctor*/[
+   [1,1,'<code>expo-doctor</code> hace ~20 comprobaciones del proyecto (versiones incompatibles, configuración).',T('<b>$</b> npx expo-doctor','Running 20 checks on your project…','<b>20/20 checks passed. No issues detected!</b>')],
+   [2,2,'<code>expo lint</code> revisa el estilo del código con ESLint. La primera vez ofrece instalarlo: acepta.',T('','<b>$</b> npx expo lint','<i>✔ No problems found</i>')]],
+  /*12 resumen*/[
+   [1,1,'1 · Carpeta nueva.',T('<b>$</b> mkdir MyPlaces && cd MyPlaces')],
+   [2,2,'2 · Instalas Expo.',T('<b>$</b> npm install expo')],
+   [3,3,'3 · Instalas React Native, Router y soporte web.',T('<b>$</b> npx expo install react react-native … react-native-web')],
+   [4,4,'4 · Configuración y pantallas (hecho a mano en el editor).'],
+   [5,5,'5 · Librerías de la práctica.',T('<b>$</b> npx expo install async-storage expo-location netinfo')],
+   [6,6,'6 · A funcionar.',T('<b>$</b> npx expo start','<i>→ pulsa w</i>')]],
+  /*13 estructura*/[
+   [1,1,'Todo tu código vive en <code>src/</code>.',P(NONE)],
+   [2,2,'<code>app/</code>: <b>solo</b> pantallas. Cada fichero es una ruta; no metas aquí otras cosas.'],
+   [3,3,'<code>_layout.jsx</code>: el marco (<code>Stack</code>) que envuelve todas las pantallas.'],
+   [4,4,'<code>index.jsx</code> → ruta <code>/</code>: la lista.',P(B('Lugares')+LIST)],
+   [5,5,'<code>nuevo.jsx</code> → ruta <code>/nuevo</code>: el formulario.',P(FORM())],
+   [6,6,'<code>descubre.jsx</code> → ruta <code>/descubre</code>: la pantalla de la API.',P(B('Descobreix')+R('sunt aut facere…')+R('qui est esse'))],
+   [7,7,'<code>detall/[id].jsx</code> → <code>/detall/1</code>, <code>/detall/2</code>… <code>[id]</code> es un comodín.',P(B('detall/2')+'<b style="font-size:1.1rem">Barceloneta</b><div>Playa y paseo marítimo.</div>')],
+   [8,8,'<code>components/</code>: piezas reutilizables (no son pantallas).'],
+   [9,9,'<code>storage/</code>: funciones de leer/guardar en AsyncStorage.'],
+   [10,10,'<code>data/</code>: los datos de prueba.']],
+  /*14 TarjetaLugar*/[
+   [5,5,'El componente recibe <b>props</b>. <code>({ lugar })</code> saca la prop <code>lugar</code> del objeto de props. Ahora puedes usarlo con cualquier lugar.'],
+   [7,8,'Una caja con el nombre del lugar (<code>{lugar.nombre}</code>: las llaves meten JavaScript).',P(R('Barceloneta'))],
+   [9,9,'<code>Link</code> navega a <code>/detall/[id]</code> pasando <code>id: lugar.id</code>. <code>asChild</code> = “no dibujes un enlace propio, usa el hijo”.'],
+   [10,10,'El <code>Pressable</code> es el botón que realmente se ve y se pulsa.',P(R('Barceloneta','Ver lugar'))],
+   [17,18,'Al usarlo en una <code>FlatList</code>, <code>renderItem</code> crea una tarjeta por cada <code>item</code> y <code>keyExtractor</code> da a cada fila un identificador único.',P(LIST)]],
+  /*15 llocs*/[
+   [2,2,'<code>export const</code>: permite importarlo desde otros ficheros con <code>import { llocs } …</code>. Es un array de objetos.',P(NONE)],
+   [3,3,'Primer lugar: <code>id</code> (único, como texto), <code>nombre</code> y <code>descripcion</code>.',P(R('Sagrada Família'))],
+   [4,4,'Segundo.',P(R('Sagrada Família')+R('Barceloneta'))],
+   [5,5,'Tercero. Ya hay datos de prueba para la lista.',P(R('Sagrada Família')+R('Barceloneta')+R('Parc Güell'))]],
+  /*16 index A*/[
+   [2,4,'Imports: componentes de React Native, tu <code>TarjetaLugar</code> (con <code>../</code> subes una carpeta) y los datos.'],
+   [8,8,'<code>flex: 1</code> para ocupar toda la pantalla y <code>padding: 16</code> de margen interior.',P(B('index')+'<div style="padding:8px"></div>')],
+   [9,13,'<code>FlatList</code> recorre <code>data={llocs}</code>: para cada elemento llama a <code>renderItem</code> y pinta una <code>TarjetaLugar</code>. <code>keyExtractor</code> usa el <code>id</code> como clave.',P(B('index')+LIST)]],
+  /*17 detalle*/[
+   [7,7,'<code>useLocalSearchParams()</code> lee los parámetros de la URL. Si abriste <code>/detall/2</code>, <code>id = "2"</code> (siempre texto).',P(B('detall/2'))],
+   [8,8,'<code>find</code> recorre <code>llocs</code> y devuelve el <b>primero</b> cuyo <code>id</code> coincide; si no hay, <code>undefined</code>.'],
+   [10,10,'Si no se encontró, pinta un aviso y <b>sale</b> (<code>return</code>).',P(B('detall/99')+ERR('Lugar no encontrado'))],
+   [11,15,'Si existe, pinta el nombre en grande y la descripción.',P(B('detall/2')+'<div style="padding:8px"><div style="font-size:1.3rem;font-weight:700">Barceloneta</div><div>Playa y paseo marítimo.</div></div>')]],
+  /*18 form fragmento*/[
+   [1,3,'Tres estados: lo escrito en nombre, en descripción y el mensaje de error (vacío al principio).',P(FORM())],
+   [5,5,'<code>guardar()</code> es la función que se ejecutará al pulsar el botón.'],
+   [6,6,'<code>nombre.trim()</code> quita espacios de los extremos; si queda vacío (<code>\'\'</code>) el nombre no es válido.'],
+   [7,8,'Se guarda el mensaje en el estado <code>error</code> y <code>return</code> corta la función: <b>no se guarda nada</b>.',P(FORM('',  'El nombre no puede estar vacío'))],
+   [10,10,'Si pasó la validación, se limpia el error anterior.',P(FORM('Teatre Nacional'))],
+   [11,12,'Aquí se guarda (apartado C) y <code>router.back()</code> vuelve a la lista.',P(B('Lugares')+R('Teatre Nacional'))],
+   [15,15,'El <code>TextInput</code> está “controlado”: muestra <code>nombre</code> y cada tecla llama a <code>setNombre</code>.'],
+   [16,16,'<code>&amp;&amp;</code>: el <code>Text</code> rojo solo se pinta si hay error.']],
+  /*19 nuevo.jsx*/[
+   [2,5,'Imports: <code>router</code> para navegar, <code>useState</code> para el estado, componentes, y tus funciones de almacenamiento.'],
+   [8,10,'Tres estados del formulario.',P(FORM())],
+   [12,12,'<code>async</code> porque dentro hay <code>await</code> (leer y guardar en disco es asíncrono).'],
+   [13,16,'Validación: nombre vacío → error y <code>return</code>.',P(FORM('','El nombre no puede estar vacío'))],
+   [17,17,'<code>await leerLugares()</code>: espera a tener la lista guardada hasta ahora.',P(FORM('Teatre Nacional'))],
+   [18,18,'Crea el objeto nuevo. <code>Date.now().toString()</code> da un id único (milisegundos actuales como texto).'],
+   [19,19,'<code>[...lista, nuevo]</code>: copia de la lista con el nuevo al final, y se guarda en disco.',P(DISK('lugares → [{"id":"1731…","nombre":"Teatre Nacional"}]'))],
+   [20,20,'<code>router.back()</code>: vuelves a la lista, que se recarga y ya lo muestra.',P(B('Lugares')+R('Teatre Nacional'))],
+   [24,26,'Dos campos de texto (el segundo admite varias líneas con <code>multiline</code>).',P(FORM())],
+   [27,27,'El error solo se ve si <code>error !== \'\'</code>.'],
+   [28,29,'Dos botones: Guardar (ejecuta <code>guardar</code>) y Cancelar (vuelve atrás sin guardar).']],
+  /*20 lugares.js*/[
+   [3,3,'La clave con la que se guarda todo en el disco. Una constante evita escribirla mal.'],
+   [5,5,'<code>export async function</code>: la podrán usar otras pantallas y es asíncrona.'],
+   [6,6,'<code>getItem</code> devuelve el <b>texto</b> guardado, o <code>null</code> si no hay nada aún.',P(DISK('getItem("lugares") → null'))],
+   [7,7,'Si hay texto, <code>JSON.parse</code> lo convierte en array; si no, devuelve <code>[]</code> (lista vacía, no rompe la app).',P(DISK('→ []'))],
+   [9,11,'<code>setItem</code> guarda; como solo admite texto, <code>JSON.stringify</code> convierte el array en string.',P(DISK('setItem("lugares", \'[{"id":"1","nombre":"Teatre"}]\')'))],
+   [12,15,'Eliminar: lee la lista, <code>filter</code> se queda con todos <b>menos</b> el del id dado, y lo guarda.',P(DISK('antes: 2 lugares → después: 1 lugar'))]],
+  /*21 useFocusEffect*/[
+   [4,4,'Estado con la lista de lugares, vacía al principio.',P(B('Lugares')+'<div class="p-empty">Aún no hay lugares</div>')],
+   [7,9,'<code>useFocusEffect</code> ejecuta su función <b>cada vez que la pantalla se hace visible</b> (incluso al volver del formulario). <code>useCallback</code> es obligatorio aquí. <code>leerLugares().then(setLugares)</code> lee del disco y guarda el resultado en el estado.',P(B('Lugares')+R('Teatre Nacional'))],
+   [12,12,'<code>ListEmptyComponent</code>: lo que se pinta si la lista está vacía.',P(B('Lugares')+'<div class="p-empty">Aún no hay lugares. ¡Añade el primero!</div>')]],
+  /*22 index C*/[
+   [5,6,'Importas las funciones de almacenamiento y la tarjeta.'],
+   [9,9,'Estado de la lista, vacía.',P(B('Lugares')+BTN('+ Añadir lugar')+'<div class="p-empty">Aún no hay lugares. ¡Añade el primero!</div>')],
+   [11,13,'Al mostrarse la pantalla, se lee del disco y se actualiza la lista.',P(B('Lugares')+BTN('+ Añadir lugar')+R('Teatre Nacional','Eliminar')+R('Parc Güell','Eliminar'))],
+   [15,18,'<code>borrar(id)</code>: 1) elimina del disco, 2) vuelve a leer y actualiza el estado para repintar.',P(B('Lugares')+BTN('+ Añadir lugar')+R('Parc Güell','Eliminar'))],
+   [22,22,'Enlace a <code>/nuevo</code> con un botón dentro (<code>asChild</code>).'],
+   [23,28,'<code>FlatList</code> con la lista real; cada tarjeta recibe <code>onBorrar</code>; si la lista queda vacía, muestra el mensaje.',P(B('Lugares')+BTN('+ Añadir lugar')+'<div class="p-empty">Aún no hay lugares. ¡Añade el primero!</div>')]],
+  /*23 fetch fragmento*/[
+   [1,3,'Tres estados: los datos, si está cargando (empieza en <code>true</code>) y el error.',P(SPIN)],
+   [6,6,'Al empezar a cargar: se enciende el spinner y se borra el error anterior.'],
+   [8,8,'<code>await fetch(url)</code>: lanza la petición y espera la <b>respuesta</b>.'],
+   [9,9,'<code>fetch</code> no falla con un 404/500; hay que mirarlo: si <code>!res.ok</code>, lanzas tú el error y saltas al <code>catch</code>.'],
+   [10,10,'<code>res.json()</code> convierte el cuerpo JSON en un array y se guarda en <code>datos</code>.',P(B('Descobreix')+R('sunt aut facere…')+R('qui est esse'))],
+   [11,12,'<code>catch</code>: si algo falló (sin internet, error HTTP), guarda un mensaje.',P(B('Descobreix')+ERR('No se pudo cargar. Revisa tu conexión.')+BTN('Reintentar'))],
+   [13,15,'<code>finally</code> se ejecuta <b>siempre</b>: aquí se apaga el spinner.'],
+   [17,17,'Al aparecer la pantalla se llama a <code>cargar()</code> una vez.',P(SPIN)],
+   [19,19,'Si está cargando → spinner y <code>return</code> (el resto no se evalúa).',P(SPIN)],
+   [20,20,'Si hay error → mensaje y botón que vuelve a llamar a <code>cargar</code>.',P(B('Descobreix')+ERR('No se pudo cargar. Revisa tu conexión.')+BTN('Reintentar'))],
+   [21,21,'Si no hay datos → “No hay resultados”.',P(B('Descobreix')+'<div class="p-empty">No hay resultados</div>')],
+   [22,22,'Si nada de lo anterior, se pinta la <code>FlatList</code> con los datos.',P(B('Descobreix')+R('sunt aut facere…')+R('qui est esse')+R('ea molestias…'))]],
+  /*24 descubre.jsx*/[
+   [2,3,'Imports: hooks de React y los componentes de React Native necesarios.'],
+   [6,8,'Tres estados.',P(SPIN)],
+   [10,12,'Función de carga: spinner on y error borrado.'],
+   [13,16,'<code>try</code>: pide los datos, comprueba <code>res.ok</code> y los guarda.',P(B('Descobreix')+R('sunt aut facere…')+R('qui est esse'))],
+   [17,18,'<code>catch</code>: mensaje de error.',P(B('Descobreix')+ERR('No se pudo cargar. Revisa tu conexión.')+BTN('Reintentar'))],
+   [19,21,'<code>finally</code>: siempre apaga el spinner.'],
+   [24,24,'<code>useEffect</code> con <code>[]</code>: carga una vez al abrir.',P(SPIN)],
+   [26,26,'Estado “cargando”: <code>ActivityIndicator</code> grande.',P(SPIN)],
+   [27,29,'Estado “error”: texto + botón <code>Reintentar</code> (<code>onPress={cargar}</code>).',P(B('Descobreix')+ERR('No se pudo cargar. Revisa tu conexión.')+BTN('Reintentar'))],
+   [30,30,'Estado “vacío”.',P(B('Descobreix')+'<div class="p-empty">No hay resultados</div>')],
+   [32,38,'Estado “con datos”: <code>FlatList</code>. <code>String(d.id)</code> porque <code>keyExtractor</code> necesita texto.',P(B('Descobreix')+R('sunt aut facere…')+R('qui est esse')+R('ea molestias…'))]],
+  /*25 location fragmento*/[
+   [1,1,'Importa todo el módulo como <code>Location</code>.'],
+   [3,4,'<code>coords</code> (posición, <code>null</code> al principio) y <code>mensaje</code> (avisos).',P(B('Mi lugar')+BTN('Utilitza la meva ubicació'))],
+   [7,7,'Pide permiso: el sistema muestra un diálogo y el <code>await</code> espera la respuesta. Devuelve <code>{ status }</code>.',P(B('Mi lugar')+'<div class="p-modal" style="position:relative;min-height:200px"><div><b>¿Permitir que MyPlaces acceda a tu ubicación?</b>'+BTN('Permitir')+BTN('Denegar','red')+'</div></div>')],
+   [8,11,'Si <code>status</code> no es <code>\'granted\'</code>: mensaje y <code>return</code>. La app sigue usable.',P(B('Mi lugar')+BTN('Utilitza la meva ubicació')+ERR('Permiso denegado. Puedes seguir usando la app sin ubicación.'))],
+   [12,13,'Si se concedió, <code>getCurrentPositionAsync</code> pide el GPS y se guardan las coordenadas.',P(B('Mi lugar')+BTN('Utilitza la meva ubicació')+'<div>📍 41.4036, 2.1744</div>')],
+   [16,16,'El botón ejecuta <code>usarUbicacion</code>.'],
+   [17,18,'<code>coords &amp;&amp; …</code> muestra las coordenadas solo si existen; igual con el mensaje.']],
+  /*26 location try/catch*/[
+   [2,2,'<code>try</code>: ahora todo está protegido por si algo falla.'],
+   [3,7,'Permiso: igual que antes; si lo deniegan, mensaje y salida.',P(B('Mi lugar')+ERR('Permiso denegado. Puedes seguir usando la app sin ubicación.'))],
+   [8,10,'Posición, guardado y se borra cualquier mensaje anterior.',P(B('Mi lugar')+'<div>📍 41.4036, 2.1744</div>')],
+   [11,13,'<code>catch</code>: si el GPS está apagado o hay timeout, mensaje en lugar de romper la app.',P(B('Mi lugar')+ERR('No se pudo obtener la ubicación.'))]],
+  /*27 netinfo fragmento*/[
+   [3,3,'Estado de la red: empezamos suponiendo que hay conexión.',P('<div class="p-net on">Red: </div>')],
+   [5,6,'<code>useEffect</code>: al abrir, <code>addEventListener</code> registra una función que se llama <b>cada vez que cambia la red</b>. Guardas la función de baja.'],
+   [7,7,'Cada cambio: <code>isConnected</code> (true/false/null) y <code>type</code> (wifi, cellular, none…) pasan al estado.',P('<div class="p-net on">Red: wifi</div>')],
+   [9,9,'La limpieza: al salir de la pantalla se cancela la suscripción.'],
+   [13,13,'Antes de pedir datos: sin conexión → aviso y <code>return</code>, sin llamar a <code>fetch</code>.',P('<div class="p-net off">📴 Sin conexión</div>'+ERR('Sin conexión'))],
+   [15,16,'Se muestra el aviso cuando no hay red y siempre el tipo.',P('<div class="p-net on">Red: cellular</div>')]],
+  /*28 BannerRed*/[
+   [7,7,'Estado con la información de red.',P('<div class="p-net on">Red: </div>')],
+   [9,14,'Te suscribes a cambios y devuelves la baja. <code>isConnected !== false</code> trata el <code>null</code> inicial como “conectado”.'],
+   [17,17,'El color del fondo cambia con la condición: verde si hay red, rojo si no (ternario <code>cond ? a : b</code>).',P('<div class="p-net on">Red: wifi</div>')],
+   [18,18,'El texto cambia igual. Al poner <code>&lt;BannerRed /&gt;</code> en varias pantallas, todas muestran el estado.',P('<div class="p-net off">📴 Sin conexión</div>')]],
+  /*29 acelerometro*/[
+   [1,1,'Importas el sensor de <code>expo-sensors</code>.'],
+   [3,3,'<code>addListener(setDatos)</code>: cada vez que el sensor mide, llama a <code>setDatos</code> con <code>{ x, y, z }</code> y la pantalla se repinta. Guardas la suscripción en <code>s</code>.',P(B('Acelerómetro')+'<div class="p-big" style="font-size:1rem;text-align:left">x: 0.02<br>y: -0.98<br>z: 0.11</div>')],
+   [4,4,'Al salir, <code>s.remove()</code> apaga el sensor para no gastar batería.']]
+  ];
+
+  function wrap(code){var h=code.innerHTML.split('\n');code.innerHTML=h.map(function(l){return '<span class="ln">'+(l===''?'&#8203;':l)+'</span>'}).join('')}
+
+  var pres=document.querySelectorAll('main pre');
+  pres.forEach(function(pre,i){
+    var st=STEPS[i];if(!st)return;
+    var code=pre.querySelector('code');wrap(code);var lines=code.querySelectorAll('.ln');
+    var box=document.createElement('div');box.className='sim stp';
+    box.innerHTML='<div class="sim-head">▶ Paso a paso · ejecuta este código línea a línea</div><div class="sim-body"><div class="pv"></div><div><div class="nav"><button class="prev">◀ Anterior</button><button class="next">Siguiente ▶</button><button class="auto">⏵ Auto</button><span class="cnt"></span></div><div class="expl"></div></div></div>';
+    pre.parentNode.insertBefore(box,pre.nextSibling);
+    var pv=box.querySelector('.pv'),ex=box.querySelector('.expl'),cnt=box.querySelector('.cnt'),pb=box.querySelector('.prev'),nb=box.querySelector('.next'),ab=box.querySelector('.auto');
+    var cur=-1,timer=null;
+    var isTerm=st.some(function(x){return x[3]&&x[3].o});
+    function draw(){
+      lines.forEach(function(l){l.classList.remove('cur')});
+      if(cur<0){ex.innerHTML='Pulsa <b>Siguiente ▶</b> para ir ejecutando el código paso a paso. Se resaltará la línea explicada y verás a la izquierda qué ocurre.';cnt.textContent='';
+        pv.innerHTML=isTerm?'<div class="term"><i>Terminal vacía…</i></div>':'<div class="phone"><div class="screen">'+NONE+'</div></div>';pb.disabled=true;nb.disabled=false;return}
+      var s=st[cur];for(var k=s[0]-1;k<=s[1]-1&&k<lines.length;k++)lines[k].classList.add('cur');
+      ex.innerHTML=s[2];cnt.textContent='Paso '+(cur+1)+' de '+st.length;
+      if(isTerm){var o=[];for(var j=0;j<=cur;j++)if(st[j][3]&&st[j][3].o)o=o.concat(st[j][3].o);pv.innerHTML='<div class="term">'+o.join('\n')+'<b>█</b></div>'}
+      else{var h=NONE;for(var j=cur;j>=0;j--)if(st[j][3]&&st[j][3].p){h=st[j][3].p;break}pv.innerHTML='<div class="phone"><div class="screen">'+h+'</div></div>'}
+      pb.disabled=cur===0;nb.disabled=cur===st.length-1;if(cur===st.length-1)stop()}
+    function stop(){if(timer){clearInterval(timer);timer=null;ab.textContent='⏵ Auto'}}
+    pb.onclick=function(){stop();if(cur>0){cur--;draw()}};
+    nb.onclick=function(){stop();if(cur<st.length-1){cur++;draw()}};
+    ab.onclick=function(){if(timer){stop();return}ab.textContent='⏸ Pausa';if(cur>=st.length-1)cur=-1;timer=setInterval(function(){if(cur<st.length-1){cur++;draw()}else stop()},2800)};
+    draw();
+  });
+})();
+</script>
+</body>
+</html>

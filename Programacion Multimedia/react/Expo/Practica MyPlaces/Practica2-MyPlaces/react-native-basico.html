@@ -1,0 +1,1255 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>React Native desde cero</title>
+<style>
+:root{--bg:#f7f4ed;--card:#fff;--ink:#23302a;--muted:#5d6b62;--accent:#234c3b;--accent2:#e07a2f;--code:#14211b;--codeink:#e6f0ea;--line:#ddd7c8;--ok:#2e7d4f;--warn:#b3541a}
+@media (prefers-color-scheme:dark){:root{--bg:#10170f;--card:#18221a;--ink:#e6efe8;--muted:#9bb0a2;--accent:#6fcf9c;--accent2:#f0a060;--code:#0a100b;--codeink:#d8eadf;--line:#2a382d;--ok:#6fcf9c;--warn:#f0a060}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 system-ui,sans-serif}
+header{padding:48px 20px 32px;max-width:960px;margin:auto}
+header h1{font-size:clamp(2rem,6vw,3rem);margin:0 0 8px;color:var(--accent)}
+header p{color:var(--muted);max-width:60ch;margin:0}
+nav{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+nav div{max-width:960px;margin:auto;padding:10px 20px;display:flex;gap:8px;overflow-x:auto}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);padding:4px 12px;border-radius:99px;font-size:.9rem}
+nav a:hover{border-color:var(--accent)}
+main{max-width:960px;margin:auto;padding:0 20px 80px}
+section{margin-top:48px}
+h2{font-size:1.7rem;color:var(--accent);margin:0 0 4px;display:flex;align-items:center;gap:10px}
+h2 .tag{font-size:.75rem;background:var(--accent);color:var(--bg);padding:2px 10px;border-radius:99px}
+h3{margin:28px 0 6px}
+.lead{color:var(--muted);margin-top:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:14px 0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.grid .card{margin:0}
+.card h4{margin:0 0 6px}
+code{background:color-mix(in srgb,var(--accent) 12%,transparent);padding:1px 6px;border-radius:5px;font-size:.9em}
+pre{background:var(--code);color:var(--codeink);padding:16px;border-radius:12px;overflow-x:auto;font-size:.85rem;line-height:1.5;margin:10px 0}
+pre code{background:none;padding:0}
+/* Colores tipo VS Code "Dark+" */
+pre{background:#1e1e1e;color:#d4d4d4;border:1px solid #333}
+.t-kw{color:#569cd6}.t-ctl{color:#c586c0}.t-str{color:#ce9178}.t-com{color:#6a9955;font-style:italic}
+.t-fn{color:#dcdcaa}.t-cls{color:#4ec9b0}.t-num{color:#b5cea8}.t-var{color:#9cdcfe}.t-tag{color:#569cd6}.t-cmp{color:#4ec9b0}
+.note,.warn,.tip{border-left:4px solid;padding:10px 14px;border-radius:0 10px 10px 0;margin:14px 0;background:var(--card)}
+.note{border-color:var(--accent)}.warn{border-color:var(--warn)}.tip{border-color:var(--accent2)}
+.cmd{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden;font-size:.92rem}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+.flow span{background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:10px}
+.flow i{color:var(--accent2);font-style:normal;font-weight:700}
+.phone{width:210px;border:6px solid var(--ink);border-radius:28px;padding:14px 10px;background:var(--card);font-size:.8rem;margin:auto}
+.phone .row{background:color-mix(in srgb,var(--accent) 12%,transparent);border-radius:8px;padding:8px;margin:6px 0}
+.phone .btn{background:var(--accent);color:var(--bg);border-radius:8px;text-align:center;padding:6px;margin-top:8px}
+.two{display:grid;gap:20px;grid-template-columns:1fr 240px;align-items:center}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+.check li{list-style:none;margin-left:-20px}
+.check li::before{content:"☐ ";color:var(--accent2)}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 16px;margin:10px 0}
+summary{cursor:pointer;font-weight:600}
+
+/* ---- Simulaciones interactivas ---- */
+.sim{background:var(--card);border:2px solid var(--accent2);border-radius:16px;margin:22px 0;overflow:hidden}
+.sim-head{background:var(--accent2);color:#fff;font-weight:700;padding:8px 16px;font-size:.92rem}
+.sim-body{display:grid;grid-template-columns:260px 1fr;gap:20px;padding:16px;align-items:start}
+@media(max-width:720px){.sim-body{grid-template-columns:1fr}}
+.sim .phone{width:240px;margin:0 auto;padding:10px 8px;background:#fff;color:#1b1b1b;border-color:#222}
+.sim .screen{min-height:340px;position:relative;font-size:.82rem;display:flex;flex-direction:column;gap:6px}
+.sim .hint{margin:0 0 10px;color:var(--muted);font-size:.9rem}
+.sim .legend{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;font-size:.85rem}
+.sim .legend div{padding:4px 8px;border-radius:8px;border:1px solid var(--line);cursor:default}
+.sim .legend div:hover{border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 12%,transparent)}
+.sim .trace{font-size:.85rem}
+.sim .trace ol{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:5px;min-height:60px}
+.sim .trace li{border-left:3px solid var(--accent);padding:3px 8px;background:color-mix(in srgb,var(--accent) 8%,transparent);border-radius:0 8px 8px 0;animation:in .25s}
+.sim .trace li:first-child{border-color:var(--accent2);font-weight:600}
+@keyframes in{from{opacity:0;transform:translateX(-6px)}to{opacity:1}}
+.sim .bd{display:inline-flex;width:16px;height:16px;border-radius:50%;background:var(--accent2);color:#fff;font:700 10px/16px system-ui;justify-content:center;font-style:normal;margin-right:4px;vertical-align:middle;flex:none}
+.sim .hl{outline:2px solid var(--accent2);outline-offset:1px}
+.p-bar{background:#234c3b;color:#fff;padding:7px 8px;border-radius:8px;font-weight:600;display:flex;gap:6px;align-items:center}
+.p-bar u{text-decoration:none;cursor:pointer;opacity:.9}
+.p-row{background:#eef3ef;border-radius:8px;padding:7px 8px;display:flex;justify-content:space-between;align-items:center;gap:6px}
+.p-btn{background:#234c3b;color:#fff;border:0;border-radius:8px;padding:6px 10px;font:inherit;cursor:pointer;text-align:center}
+.p-btn.sec{background:#cfd8d2;color:#222}.p-btn.red{background:#b3541a}.p-btn.sm{padding:3px 8px;font-size:.75rem}
+.p-input{border:1px solid #999;border-radius:6px;padding:6px;font:inherit;width:100%;background:#fff;color:#111}
+.p-err{color:#c0392b;font-weight:600}
+.p-empty{color:#777;text-align:center;padding:24px 8px}
+.p-big{font-size:2.4rem;text-align:center;font-weight:700;margin:20px 0}
+.p-spin{width:30px;height:30px;border:4px solid #ccc;border-top-color:#234c3b;border-radius:50%;animation:sp 1s linear infinite;margin:40px auto}
+@keyframes sp{to{transform:rotate(360deg)}}
+.p-modal{position:absolute;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;border-radius:8px;z-index:3}
+.p-modal div{background:#fff;border-radius:12px;padding:14px;width:88%;display:flex;flex-direction:column;gap:8px;text-align:center}
+.p-net{padding:5px 8px;border-radius:8px;font-weight:600}
+.p-net.on{background:#d8f0e0;color:#1d5e36}.p-net.off{background:#f6d5d5;color:#8a2323}
+.sim select,.sim .ctl button{font:inherit;padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.sim .ctl{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px}
+.sim .ctl button.on{background:var(--accent);color:var(--bg)}
+.disk{font:12px/1.4 ui-monospace,monospace;background:#1e1e1e;color:#ce9178;border-radius:8px;padding:8px;margin-top:8px;word-break:break-all}
+
+/* ---- Paso a paso ---- */
+main pre code .ln{display:block;padding:0 6px;margin:0 -6px;border-left:3px solid transparent}
+main pre code .ln.cur{background:rgba(224,122,47,.22);border-left-color:#e07a2f}
+.stp .sim-head{background:var(--accent)}
+.stp{border-color:var(--accent)}
+.stp .expl{background:color-mix(in srgb,var(--accent2) 10%,transparent);border-left:4px solid var(--accent2);border-radius:0 10px 10px 0;padding:10px 12px;min-height:90px;font-size:.93rem}
+.stp .nav{display:flex;gap:6px;align-items:center;margin:0 0 10px;flex-wrap:wrap}
+.stp .nav button{font:inherit;padding:4px 12px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.stp .nav button:disabled{opacity:.4;cursor:default}
+.stp .nav span{color:var(--muted);font-size:.85rem}
+.term{background:#0c0c0c;color:#d0d0d0;font:12px/1.5 ui-monospace,monospace;border-radius:10px;padding:10px;min-height:300px;white-space:pre-wrap;word-break:break-word;width:100%}
+.term b{color:#6fcf9c}.term i{color:#888;font-style:normal}
+.stp .phone .screen{min-height:300px}
+.stp .none{color:#888;text-align:center;padding:40px 8px}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚛️ React Native desde cero</h1>
+  <p>Principios básicos y componentes explicados para quien está perdido. Complementa los <a href="apuntes-expo.html">apuntes de Expo · MyPlaces</a>: allí está el proyecto paso a paso; aquí, <b>cómo piensa React Native</b> y qué hace cada pieza.</p>
+</header>
+<nav><div>
+<a href="#mapa">0 · Mapa mental + layout</a><a href="#js">1 · JavaScript</a><a href="#layout">2 · Ficheros e imports</a><a href="#comp">3 · Componentes</a><a href="#jsx">4 · JSX</a><a href="#core">5 · Componentes básicos</a><a href="#estilos">6 · Estilos y Flexbox</a><a href="#estado">7 · Estado</a><a href="#efectos">8 · Efectos</a><a href="#listas">9 · Listas</a><a href="#nav">10 · Navegación</a><a href="#anat">11 · Anatomía</a><a href="#plat">12 · Plataformas</a><a href="#errores">Errores</a><a href="#glosario">Glosario</a>
+</div></nav>
+<main>
+
+<section id="mapa">
+<h2>0 · Mapa mental y primeros ficheros <span class="tag">empieza aquí</span></h2>
+<p class="lead">Si entiendes estas cuatro ideas, todo lo demás son detalles.</p>
+<div class="grid">
+<div class="card"><h4>1 · La pantalla es una función de los datos</h4>Tú no dices “pon un texto aquí y cámbialo después”. Dices <b>“con estos datos, la pantalla es así”</b>. Si los datos cambian, React vuelve a ejecutar tu función y actualiza lo necesario.</div>
+<div class="card"><h4>2 · Todo es un componente</h4>Una pantalla, un botón, una tarjeta: son <b>funciones</b> que devuelven lo que se ve. Se combinan como piezas de Lego.</div>
+<div class="card"><h4>3 · Los datos bajan, los eventos suben</h4>El padre pasa datos al hijo con <b>props</b>. El hijo avisa al padre de que algo pasó llamando a una <b>función</b> que el padre le dio.</div>
+<div class="card"><h4>4 · El estado es la memoria</h4>Lo que cambia con el tiempo (texto escrito, lista, “cargando”) vive en <b>estado</b> (<code>useState</code>). Cambiar el estado = repintar.</div>
+</div>
+<div class="flow"><span>Datos (estado + props)</span><i>→</i><span>Tu componente (función)</span><i>→</i><span>JSX (descripción)</span><i>→</i><span>Pantalla</span></div>
+<div class="flow"><span>Usuario pulsa</span><i>→</i><span>onPress</span><i>→</i><span>setEstado(nuevo)</span><i>→</i><span>React vuelve a ejecutar el componente</span></div>
+<h3>React Native frente a la web</h3>
+<table><tr><th>Web (HTML/CSS)</th><th>React Native</th><th>Nota</th></tr><tr><td><code>&lt;div&gt;</code></td><td><code>&lt;View&gt;</code></td><td>Contenedor</td></tr><tr><td><code>&lt;p&gt;</code>, <code>&lt;span&gt;</code>, <code>&lt;h1&gt;</code></td><td><code>&lt;Text&gt;</code></td><td>Todo texto va dentro de <code>Text</code></td></tr><tr><td><code>&lt;img&gt;</code></td><td><code>&lt;Image&gt;</code></td><td>Necesita ancho y alto</td></tr><tr><td><code>&lt;input&gt;</code></td><td><code>&lt;TextInput&gt;</code></td><td>Con <code>value</code> y <code>onChangeText</code></td></tr><tr><td><code>&lt;button&gt;</code></td><td><code>&lt;Pressable&gt;</code> / <code>&lt;Button&gt;</code></td><td><code>onPress</code> en vez de <code>onClick</code></td></tr><tr><td>CSS en archivo aparte</td><td>Objetos JS (<code>StyleSheet</code>)</td><td>camelCase, sin “px”</td></tr><tr><td><code>&lt;a href&gt;</code></td><td><code>&lt;Link href&gt;</code></td><td>De Expo Router</td></tr><tr><td>Scroll automático</td><td><code>ScrollView</code> / <code>FlatList</code></td><td>Nada hace scroll por sí solo</td></tr><tr><td>Todo apilado en bloque</td><td>Flexbox en columna</td><td><code>flexDirection: 'column'</code> por defecto</td></tr></table>
+<div class="note">React Native <b>no</b> usa un navegador dentro: convierte cada <code>&lt;View&gt;</code> y <code>&lt;Text&gt;</code> en elementos reales de Android/iOS. Por eso se siente nativo y por eso hay que usar sus componentes, no HTML.</div>
+
+<h3>Los dos primeros ficheros que verás: <code>_layout.jsx</code> e <code>index.jsx</code></h3>
+<p>En un proyecto con Expo Router, todo está dentro de la carpeta <code>src/app/</code>, y los dos primeros ficheros son estos. Una analogía: <b>una tele</b>.</p>
+<div class="grid">
+<div class="card"><h4>📺 <code>_layout.jsx</code> = el marco de la tele</h4>El aparato: la pantalla con su borde y botones. No cambia nunca. Su trabajo es <code>&lt;Stack /&gt;</code>: “aquí dentro se muestra la pantalla que toque, con su barra de arriba”. Se ejecuta <b>una vez</b> y se queda.</div>
+<div class="card"><h4>🎬 <code>index.jsx</code> = un canal</h4>Lo que sale cuando enciendes la tele: la <b>primera pantalla</b>, la ruta <code>/</code>. Luego habrá más canales (<code>nuevo.jsx</code>, <code>descubre.jsx</code>) y cambiarás entre ellos, pero el marco es siempre el mismo.</div>
+</div>
+<pre style="background:#1e1e1e;color:#d4d4d4"><code>┌───────────────────────────┐
+│ index                     │  ← barra superior: la pone el &lt;Stack /&gt; (_layout.jsx)
+├───────────────────────────┤
+│                           │
+│   MyPlaces                │  ← contenido: viene de index.jsx
+│   Tour                    │
+│                           │
+└───────────────────────────┘</code></pre>
+<table><tr><th></th><th><code>_layout.jsx</code></th><th><code>index.jsx</code></th></tr>
+<tr><td>Qué es</td><td>El marco de la app</td><td>La primera pantalla</td></tr>
+<tr><td>Qué contiene</td><td><code>&lt;Stack /&gt;</code> y cosas fijas</td><td>Lo que ve el usuario al abrir</td></tr>
+<tr><td>Cuántos hay</td><td>Uno por carpeta</td><td>Uno por carpeta (ruta <code>/</code>)</td></tr>
+<tr><td>Si lo cambio…</td><td>Cambia la barra / lo que rodea a todas</td><td>Cambia el contenido de esa pantalla</td></tr>
+</table>
+<div class="warn"><b>El nombre del fichero ES la ruta.</b> <code>index.jsx</code> = <code>/</code>, <code>nuevo.jsx</code> = <code>/nuevo</code>. Si lo llamas <code>indice.jsx</code>, la ruta sería <code>/indice</code> y la pantalla de inicio <b>no existiría</b> (error “Unmatched Route”). Los nombres de <code>src/app</code> se escriben tal cual, en inglés.</div>
+<div class="sim" data-sim="marco"></div>
+<div class="note"><b>Regla corta:</b> ¿cambia de una pantalla a otra (textos, listas, botones)? → va en la <b>pantalla</b>. ¿Rodea a todas (barra, navegación)? → va en el <b>layout</b>. Un componente solo se ve donde lo escribes como etiqueta; el layout no es un “registro” de componentes.</div>
+
+
+<h3>Ficheros y carpetas con nombre especial (reservados)</h3>
+<p>Expo Router mira los <b>nombres</b> de los ficheros de <code>src/app/</code> y les da un significado. El nombre de las funciones, en cambio, es libre.</p>
+<table><tr><th>Nombre</th><th>Dónde</th><th>Qué hace</th><th>Ejemplo</th></tr>
+<tr><td><code>index.jsx</code></td><td>Cualquier carpeta de <code>src/app</code></td><td>Pantalla de la ruta base de esa carpeta</td><td><code>app/index.jsx</code> → <code>/</code><br><code>app/local/index.jsx</code> → <code>/local</code></td></tr>
+<tr><td><code>_layout.jsx</code></td><td>Cualquier carpeta de <code>src/app</code></td><td>Marco de las pantallas de esa carpeta (<code>Stack</code>, <code>Tabs</code>…). No es una ruta.</td><td><code>app/_layout.jsx</code></td></tr>
+<tr><td><code>[id].jsx</code></td><td>Cualquier carpeta</td><td>Ruta <b>dinámica</b>: el trozo entre corchetes es variable y se lee con <code>useLocalSearchParams()</code></td><td><code>local/[id].jsx</code> → <code>/local/1</code>, <code>/local/2</code>…</td></tr>
+<tr><td><code>[...resto].jsx</code></td><td>Cualquier carpeta</td><td>Ruta “comodín”: recoge <b>varios</b> trozos de la ruta</td><td><code>[...resto].jsx</code> → <code>/a/b/c</code></td></tr>
+<tr><td><code>+not-found.jsx</code></td><td><code>src/app</code></td><td>Pantalla que se muestra si la ruta no existe (tu “404”)</td><td><code>app/+not-found.jsx</code></td></tr>
+<tr><td><code>(grupo)/</code></td><td>Carpeta</td><td>Agrupa ficheros <b>sin</b> añadir nada a la ruta</td><td><code>(auth)/login.jsx</code> → <code>/login</code></td></tr>
+<tr><td><code>+html.jsx</code></td><td><code>src/app</code></td><td>Solo web: personaliza el HTML de base (avanzado)</td><td>—</td></tr>
+</table>
+<div class="warn"><b>Todo lo que pongas en <code>src/app/</code> se convierte en una pantalla.</b> Si metes ahí un componente suelto (<code>Tarjeta.jsx</code>), Expo Router lo trata como la ruta <code>/Tarjeta</code> y avisa de que falta un <code>export default</code> de pantalla. Los componentes van en <code>src/components/</code>, fuera de <code>app</code>.</div>
+<table><tr><th>Fichero / carpeta</th><th>Para qué sirve</th></tr>
+<tr><td><code>package.json</code></td><td>Dependencias y scripts. Su <code>"main": "expo-router/entry"</code> arranca el router.</td></tr>
+<tr><td><code>app.json</code></td><td>Configuración de Expo: nombre, <code>scheme</code>, plugins…</td></tr>
+<tr><td><code>jsconfig.json</code> / <code>tsconfig.json</code></td><td>Configuración del editor para JS (o TS): autocompletado e imports.</td></tr>
+<tr><td><code>assets/</code></td><td>Imágenes e iconos de la app (por convención).</td></tr>
+<tr><td><code>node_modules/</code></td><td>Paquetes instalados. Nunca se edita ni se entrega.</td></tr>
+<tr><td><code>.expo/</code></td><td>Datos locales de Expo. Se ignora en git.</td></tr>
+<tr><td><code>src/components</code>, <code>src/storage</code>, <code>src/data</code></td><td><b>No son reservados</b>: son carpetas de convención nuestras; las puedes llamar como quieras.</td></tr>
+</table>
+<div class="sim" data-sim="rutas"></div>
+<h3>¿Qué es un <code>Stack</code>? La pila de pantallas</h3>
+<p><b>Stack</b> significa “pila”. Piensa en folios apilados en una mesa: <b>solo ves el de arriba</b>.</p>
+<ul>
+<li><code>push</code> = poner un folio <b>encima</b> (abres una pantalla nueva).</li>
+<li><code>back</code> = <b>quitar</b> el de arriba y ver el de debajo (volver atrás).</li>
+<li><code>&lt;Stack /&gt;</code> es el componente de Expo Router que <b>gestiona esa pila</b>: sabe qué pantallas hay apiladas, dibuja la de arriba y pone la barra superior con la flecha ‹.</li>
+</ul>
+<pre style="background:#1e1e1e;color:#d4d4d4"><code>push('/nuevo')       push('/detall/3')       back()
+┌──────────┐         ┌──────────┐            ┌──────────┐
+│          │         │ detall/3 │ ← ves      │          │
+│ nuevo    │ ← ves   │ nuevo    │            │ nuevo    │ ← ves
+│ index    │         │ index    │            │ index    │
+└──────────┘         └──────────┘            └──────────┘</code></pre>
+<div class="sim" data-sim="stack"></div>
+<h3>El mismo ejemplo, línea a línea</h3>
+<pre data-id="stack1"><code>// Estás en index. La pila es: [index]
+router.push('/nuevo');      // pila: [index, nuevo]              → ves «nuevo»
+router.push('/detall/3');   // pila: [index, nuevo, detall/3]    → ves «detall/3»
+router.back();              // pila: [index, nuevo]              → ves «nuevo»
+router.back();              // pila: [index]                     → ves «index»
+router.replace('/nuevo');   // cambia la de arriba por «nuevo»   → no se puede volver a la anterior</code></pre>
+<h3>Qué te da <code>&lt;Stack /&gt;</code></h3>
+<table><tr><th>Cosa</th><th>Explicación</th></tr>
+<tr><td>Barra superior</td><td>Con el título (por defecto, el nombre del fichero) y la flecha ‹ cuando hay pantallas debajo.</td></tr>
+<tr><td>Botón atrás</td><td>La flecha de la barra, el botón atrás de Android y el gesto de deslizar en iOS llaman a <code>back</code> solos.</td></tr>
+<tr><td>Animación</td><td>La pantalla nueva entra deslizándose y sale al volver.</td></tr>
+<tr><td>Las de debajo siguen vivas</td><td><code>index</code> no se destruye al abrir <code>nuevo</code>: al volver conserva su estado. Por eso, para recargar datos al volver se usa <code>useFocusEffect</code>.</td></tr>
+</table>
+<h3>Stack frente a otras opciones</h3>
+<table><tr><th>Componente</th><th>Qué hace</th><th>Cuándo</th></tr>
+<tr><td><code>&lt;Stack /&gt;</code></td><td>Pila de pantallas con barra y botón atrás</td><td><b>Tu práctica</b>: lista → detalle → volver</td></tr>
+<tr><td><code>&lt;Slot /&gt;</code></td><td>Dibuja la pantalla actual y nada más (sin barra ni pila)</td><td>Cuando quieres hacerlo todo a mano</td></tr>
+<tr><td><code>&lt;Tabs /&gt;</code></td><td>Pestañas abajo; cambias entre pantallas sin apilar</td><td>Apps con 3–5 secciones fijas</td></tr>
+</table>
+<div class="note"><code>Stack</code> no tiene contenido propio: solo es el <b>sistema que apila y muestra</b> tus pantallas. El contenido sale de los ficheros de <code>src/app/</code>.</div>
+
+<h3>Un fichero, un <code>export default</code></h3>
+<p>En cada fichero puede haber <b>muchas funciones</b>, pero solo <b>una</b> con <code>export default</code>: la pieza “principal” del fichero. En <code>src/app/</code> esa es la pantalla.</p>
+<table><tr><th>Tipo</th><th>Cuántos por fichero</th><th>Cómo se importa</th></tr>
+<tr><td><code>export default function Pantalla()</code></td><td><b>Uno</b> como máximo</td><td><code>import Pantalla from './x'</code> (sin llaves)</td></tr>
+<tr><td><code>export function leerLugares()</code></td><td>Todos los que quieras</td><td><code>import { leerLugares } from './x'</code> (con llaves)</td></tr>
+<tr><td><code>function Auxiliar()</code> (sin export)</td><td>Todos los que quieras</td><td>No se puede importar: es privada del fichero</td></tr>
+</table>
+<h3>La estructura de un fichero, de arriba abajo</h3>
+<pre data-id="fich1"><code>// 1. IMPORTS (arriba del todo)
+import { StyleSheet, Text, View } from 'react-native';
+
+// 2. Piezas auxiliares: SIN export default, solo se usan en este fichero
+function Titulo() {
+  return &lt;Text style={estilos.titulo}&gt;MyPlaces&lt;/Text&gt;;
+}
+
+// 3. El componente principal: SOLO UNO con export default
+export default function Inicio() {
+  // 3a. aquí irían el estado y las funciones (useState, eventos…)
+  return (
+    &lt;View&gt;
+      &lt;Titulo /&gt;
+      &lt;Text&gt;Tour&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+
+// 4. Estilos (opcional, al final)
+const estilos = StyleSheet.create({ titulo: { fontSize: 24 } });</code></pre>
+<div class="note">Si necesitas esa pieza auxiliar en <b>varias</b> pantallas, sácala a <code>src/components/</code> en su propio fichero (con su <code>export default</code>) e impórtala donde la uses. Más en la <a href="#layout">sección 2</a>.</div>
+</section>
+
+<section id="js">
+<h2>1 · El JavaScript que sí o sí necesitas</h2>
+<p class="lead">No hace falta saberlo todo. Estas 15 piezas aparecen en casi todo el código de React Native. Pulsa «Siguiente» y verás el resultado en la consola.</p>
+<pre data-id="js1"><code>const nombre = 'Ana';                 // const: no se puede reasignar
+let edad = 20;                        // let: sí se puede cambiar
+edad = 21;
+
+const sumar = (a, b) =&gt; a + b;        // función flecha
+sumar(2, 3);                          // devuelve 5
+
+const lugar = { id: '1', nombre: 'Parc Güell' };   // objeto
+const { nombre: titulo } = lugar;     // desestructurar: titulo = 'Parc Güell'
+const copia = { ...lugar, id: '2' };  // spread: copia con otro id
+
+const lista = [1, 2, 3];
+const doble = lista.map(n =&gt; n * 2);        // [2, 4, 6]
+const mayores = lista.filter(n =&gt; n &gt; 1);   // [2, 3]
+const nueva = [...lista, 4];                // [1, 2, 3, 4]
+
+const saludo = `Hola ${nombre}`;             // plantilla de texto
+const msg = edad &gt;= 18 ? 'mayor' : 'menor';  // ternario: si/entonces/si no
+const visible = edad &gt; 0 &amp;&amp; 'tiene edad';    // &amp;&amp;: si lo de la izquierda es true, da lo de la derecha
+
+export function util() {}             // export: se podrá importar desde otro fichero
+import { util } from './util';        // import: traer algo de otro fichero
+
+async function cargar() {
+  const res = await fetch(url);       // await: espera sin congelar la app
+}</code></pre>
+</section>
+
+<section id="layout">
+<h2>2 · Ficheros, <code>export</code> e <code>import</code> <span class="tag">cómo se conectan las piezas</span></h2>
+<p class="lead">Una app son muchos ficheros que se conectan: uno <b>exporta</b> una pieza y otro la <b>importa</b> para usarla. Aquí aprendes cómo.</p>
+
+<div class="note">Antes de seguir: si aún no tienes claro qué es <code>_layout.jsx</code> y qué es <code>index.jsx</code>, repasa el final de la <a href="#mapa">sección 0</a>.</div>
+<table><tr><th>Quiero…</th><th>Lo pongo en…</th></tr>
+<tr><td>Algo que se vea en <b>todas</b> las pantallas</td><td><code>_layout.jsx</code></td></tr>
+<tr><td>Título y color de la barra superior</td><td><code>_layout.jsx</code> (<code>screenOptions</code> / <code>Stack.Screen</code>)</td></tr>
+<tr><td>El contenido de una pantalla</td><td>Su fichero en <code>src/app/</code></td></tr>
+<tr><td>Una pieza reutilizable (tarjeta, banner)</td><td><code>src/components/</code> y la <b>importas</b> donde la uses</td></tr>
+<tr><td>Funciones de datos (AsyncStorage)</td><td><code>src/storage/</code></td></tr>
+</table>
+<div class="note">Un componente de <code>src/components</code> se puede importar en el layout, en una pantalla o dentro de otro componente. No pertenece a un sitio concreto: pertenece a donde lo <b>importes</b>.</div>
+
+<div class="warn"><b>Ojo, confusión habitual:</b> el layout <b>no</b> es un “registro” donde se exportan los componentes para que se vean. Un componente se ve <b>solo donde lo escribes como etiqueta</b> (<code>&lt;BannerRed /&gt;</code>). Para eso: <b>1)</b> lo exportas en <u>su propio fichero</u>, <b>2)</b> lo importas en el fichero donde lo quieres ver y <b>3)</b> lo pones en su <code>return</code>. Ese fichero puede ser una pantalla, otro componente o el layout (si lo pones en el layout, se ve en todas las pantallas). Las <b>pantallas</b> sí se registran solas, por existir como fichero en <code>src/app/</code>.</div>
+<div class="grid">
+<div class="card"><h4>Lo uso en <code>index.jsx</code></h4>Solo se ve en la lista.</div>
+<div class="card"><h4>Lo uso en <code>nuevo.jsx</code></h4>Solo se ve en el formulario.</div>
+<div class="card"><h4>Lo uso en <code>_layout.jsx</code></h4>Se ve en <b>todas</b> las pantallas.</div>
+</div>
+<h3>Importar: export por defecto y con nombre</h3>
+<pre data-id="exp1"><code>// src/components/BannerRed.jsx
+export default function BannerRed() { /* … */ }          // export POR DEFECTO
+
+// src/storage/lugares.js
+export async function leerLugares() { /* … */ }          // export CON NOMBRE
+export async function guardarLugares(l) { /* … */ }
+
+// En otro fichero:
+import BannerRed from '../components/BannerRed';                     // por defecto: sin llaves
+import { leerLugares, guardarLugares } from '../storage/lugares';    // con nombre: con llaves</code></pre>
+<h3>Importar un componente en el layout</h3>
+<p>Los pasos son siempre los mismos: <b>1)</b> el componente tiene su <code>export</code>, <b>2)</b> lo importas arriba con la ruta correcta, <b>3)</b> lo usas como etiqueta.</p>
+<pre data-id="lay1"><code>// src/app/_layout.jsx
+import { Stack } from 'expo-router';
+import { View } from 'react-native';
+import BannerRed from '../components/BannerRed';   // ← importar un componente
+
+export default function Layout() {
+  return (
+    &lt;View style={{ flex: 1 }}&gt;
+      &lt;BannerRed /&gt;            {/* se ve en TODAS las pantallas */}
+      &lt;Stack /&gt;                {/* aquí se dibuja la pantalla activa */}
+    &lt;/View&gt;
+  );
+}</code></pre>
+<div class="sim" data-sim="layout"></div>
+<h3>La ruta del <code>import</code> (relativa)</h3>
+<p>Cuenta carpetas desde el fichero donde <b>escribes</b> el import: <code>./</code> = esta misma carpeta, <code>../</code> = subir una. Elige desde dónde importas y qué quieres traer:</p>
+<div class="sim" data-sim="paths"></div>
+<div class="warn"><b>Errores típicos:</b> <b>(1)</b> poner llaves en un export por defecto (<code>import { BannerRed }</code>) o quitarlas en uno con nombre; <b>(2)</b> contar mal los <code>../</code>; <b>(3)</b> olvidar el <code>export default</code> del componente;</div>
+</section>
+
+<section id="comp">
+<h2>3 · Componentes y props</h2>
+<p class="lead">Un componente es una función que devuelve JSX. Las <b>props</b> son sus parámetros.</p>
+<div class="card"><b>Reglas de oro</b><ul>
+<li>El nombre empieza por <b>mayúscula</b> (<code>Saludo</code>, no <code>saludo</code>): así React sabe que es un componente y no una etiqueta nativa.</li>
+<li>Recibe <b>un solo parámetro</b>: el objeto de props. Se suele desestructurar: <code>({ nombre, edad })</code>.</li>
+<li>Las props son de <b>solo lectura</b>: el hijo no las modifica; si hay que cambiarlas, avisa al padre.</li>
+<li>Devuelve <b>un único elemento raíz</b> (o un fragmento <code>&lt;&gt;…&lt;/&gt;</code>).</li>
+</ul></div>
+<pre data-id="comp1"><code>function Saludo({ nombre, edad }) {
+  return (
+    &lt;View&gt;
+      &lt;Text&gt;Hola {nombre}&lt;/Text&gt;
+      &lt;Text&gt;Tienes {edad} años&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+
+// Usarlo varias veces con datos distintos
+&lt;Saludo nombre="Ana" edad={20} /&gt;
+&lt;Saludo nombre="Luis" edad={31} /&gt;</code></pre>
+<div class="sim" data-sim="props"></div>
+<h3>Props especial: <code>children</code></h3>
+<p>Lo que escribes entre las etiquetas de un componente llega como <code>children</code>. Sirve para crear contenedores reutilizables.</p>
+<pre data-id="comp2"><code>function Caja({ titulo, children }) {
+  return (
+    &lt;View style={{ borderWidth: 1, padding: 8 }}&gt;
+      &lt;Text style={{ fontWeight: 'bold' }}&gt;{titulo}&lt;/Text&gt;
+      {children}
+    &lt;/View&gt;
+  );
+}
+
+&lt;Caja titulo="Mi lugar"&gt;
+  &lt;Text&gt;Descripción&lt;/Text&gt;
+  &lt;Text&gt;Dirección&lt;/Text&gt;
+&lt;/Caja&gt;</code></pre>
+<h3>Props que son funciones (cómo el hijo avisa al padre)</h3>
+<div class="card">El hijo no puede cambiar datos del padre. Pero el padre puede darle una función: <code>&lt;Tarjeta onBorrar={() =&gt; borrar(id)} /&gt;</code>. Dentro, el hijo hace <code>&lt;Pressable onPress={onBorrar}&gt;</code>. Así <b>el hijo no sabe cómo se borra</b>, solo avisa. Ese es el patrón de <code>TarjetaLugar</code> de la práctica.</div>
+</section>
+
+<section id="jsx">
+<h2>4 · JSX: HTML dentro de JavaScript</h2>
+<p class="lead">JSX es una sintaxis cómoda para describir pantallas. Con llaves <code>{ }</code> vuelves a JavaScript.</p>
+<pre data-id="jsx1"><code>const logueado = true;
+const items = ['a', 'b'];
+
+return (
+  &lt;View&gt;
+    &lt;Text&gt;{logueado ? 'Bienvenido' : 'Inicia sesión'}&lt;/Text&gt;
+    {items.length === 0 &amp;&amp; &lt;Text&gt;Vacío&lt;/Text&gt;}
+    {items.map(i =&gt; &lt;Text key={i}&gt;{i}&lt;/Text&gt;)}
+    &lt;Text onPress={() =&gt; alert('hola')}&gt;Pulsa&lt;/Text&gt;
+  &lt;/View&gt;
+);</code></pre><table><tr><th>Quiero…</th><th>Escribo</th><th>Ojo con</th></tr><tr><td>Mostrar una variable</td><td><code>{nombre}</code></td><td>Solo texto, números o elementos; un objeto da error</td></tr><tr><td>Pintar si se cumple</td><td><code>{cond &amp;&amp; &lt;Text/&gt;}</code></td><td>Si <code>cond</code> es <code>0</code> pinta un 0; usa <code>cond &gt; 0 &amp;&amp;</code></td></tr><tr><td>Uno u otro</td><td><code>{cond ? &lt;A/&gt; : &lt;B/&gt;}</code></td><td>Ambas ramas deben ser válidas</td></tr><tr><td>Repetir</td><td><code>{lista.map(x =&gt; &lt;Fila key={x.id} /&gt;)}</code></td><td>Falta <code>key</code> → aviso</td></tr><tr><td>Comentario</td><td><code>{/* texto */}</code></td><td>Dentro del JSX, no <code>//</code></td></tr><tr><td>Estilos</td><td><code>style={{ padding: 8 }}</code></td><td>Dos llaves: una de JSX y otra del objeto</td></tr><tr><td>Varios elementos sin caja</td><td><code>&lt;&gt; … &lt;/&gt;</code></td><td>Fragmento: no pinta nada</td></tr></table>
+</section>
+
+<section id="core">
+<h2>5 · Los componentes básicos de React Native</h2>
+<p class="lead">Elige uno en la galería: verás su código y cómo se ve. Algunos son interactivos.</p>
+<div class="sim" data-sim="gallery"></div>
+<h3>Cuál uso para qué</h3>
+<table><tr><th>Necesito…</th><th>Uso</th><th>Props clave</th></tr><tr><td>Una caja / agrupar</td><td><code>View</code></td><td><code>style</code></td></tr><tr><td>Mostrar texto</td><td><code>Text</code></td><td><code>style</code>, <code>numberOfLines</code></td></tr><tr><td>Imagen</td><td><code>Image</code></td><td><code>source</code>, <code>style</code> (con tamaño)</td></tr><tr><td>Que el usuario escriba</td><td><code>TextInput</code></td><td><code>value</code>, <code>onChangeText</code>, <code>placeholder</code></td></tr><tr><td>Un botón con diseño propio</td><td><code>Pressable</code></td><td><code>onPress</code>, <code>style</code></td></tr><tr><td>Un botón rápido</td><td><code>Button</code></td><td><code>title</code>, <code>onPress</code></td></tr><tr><td>Contenido corto que no cabe</td><td><code>ScrollView</code></td><td><code>contentContainerStyle</code></td></tr><tr><td>Lista larga</td><td><code>FlatList</code></td><td><code>data</code>, <code>renderItem</code>, <code>keyExtractor</code></td></tr><tr><td>Indicar que carga</td><td><code>ActivityIndicator</code></td><td><code>size</code>, <code>color</code></td></tr><tr><td>Interruptor on/off</td><td><code>Switch</code></td><td><code>value</code>, <code>onValueChange</code></td></tr><tr><td>Ventana emergente</td><td><code>Modal</code></td><td><code>visible</code>, <code>onRequestClose</code></td></tr></table>
+<div class="warn"><b>Importante:</b> debes importar cada componente: <code>import { View, Text } from 'react-native'</code>. Si falta uno, error “X is not defined”.</div>
+</section>
+
+<section id="estilos">
+<h2>6 · Estilos: <code>StyleSheet</code> y Flexbox</h2>
+<p class="lead">Primero qué es un estilo y cómo se escribe con <code>StyleSheet</code>; después cómo se colocan las cosas con <b>flexbox</b>.</p>
+<h3>Qué es un estilo en React Native</h3>
+<p>No hay CSS ni ficheros de estilos. Un estilo es un <b>objeto de JavaScript</b> con propiedades en <i>camelCase</i>, que se pasa a la prop <code>style</code> de un componente.</p>
+<div class="grid">
+<div class="card"><h4>1 · En línea</h4><code>&lt;View style={{ padding: 8 }} /&gt;</code><br>Las dos llaves: una de JSX y otra del objeto. Cómodo para algo puntual; con muchos estilos se llena el JSX.</div>
+<div class="card"><h4>2 · Con <code>StyleSheet.create</code></h4><code>style={estilos.caja}</code><br>Los estilos se definen <b>aparte</b>, con nombre, y el JSX queda limpio. <b>Es lo recomendado.</b></div>
+<div class="card"><h4>3 · Combinados (array)</h4><code>style={[estilos.base, activo &amp;&amp; estilos.activo]}</code><br>Varios estilos a la vez; el último gana. Para versiones y condiciones.</div>
+</div>
+<h3>Reglas que cambian respecto al CSS</h3>
+<table><tr><th>En CSS</th><th>En React Native</th><th>Nota</th></tr>
+<tr><td><code>background-color: red</code></td><td><code>backgroundColor: 'red'</code></td><td>camelCase, un valor con comillas</td></tr>
+<tr><td><code>padding: 16px</code></td><td><code>padding: 16</code></td><td>Número sin “px” (píxeles lógicos)</td></tr>
+<tr><td><code>width: 50%</code></td><td><code>width: '50%'</code></td><td>Porcentajes, entre comillas</td></tr>
+<tr><td><code>font-weight: bold</code></td><td><code>fontWeight: 'bold'</code></td><td>Valores de texto entre comillas</td></tr>
+<tr><td><code>border: 1px solid #ccc</code></td><td><code>borderWidth: 1, borderColor: '#ccc'</code></td><td>No hay atajos tipo <code>border</code> ni <code>background</code>; se escribe cada propiedad</td></tr>
+<tr><td><code>.clase { … }</code>, selectores, <code>:hover</code></td><td>—</td><td>No existen. Cada componente recibe su <code>style</code></td></tr>
+<tr><td>Herencia (texto hereda color del padre)</td><td>Solo entre <code>Text</code> anidados</td><td>Un <code>View</code> no pasa su <code>color</code> a los <code>Text</code></td></tr>
+<tr><td>Cascada (<i>Cascading</i>)</td><td>—</td><td>Solo existe el orden dentro de un array</td></tr>
+<tr><td><code>display: block</code> por defecto</td><td>Flexbox en columna</td><td>Todo es <code>display: flex</code></td></tr>
+</table>
+<h3>Probar estilos en vivo</h3>
+<p>Mueve los controles y mira cómo cambia la tarjeta y el código <code>StyleSheet</code> que lo produce.</p>
+<div class="sim" data-sim="estilos"></div>
+<h3>Una tarjeta con <code>StyleSheet.create</code>, paso a paso</h3>
+<pre data-id="sty1"><code>import { StyleSheet, Text, View } from 'react-native';
+
+export default function Tarjeta({ nombre }) {
+  return (
+    &lt;View style={estilos.caja}&gt;
+      &lt;Text style={estilos.titulo}&gt;{nombre}&lt;/Text&gt;
+      &lt;Text style={estilos.detalle}&gt;Pulsa para ver más&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}
+
+const estilos = StyleSheet.create({
+  caja: {
+    backgroundColor: '#ffffff',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#dddddd',
+    marginBottom: 12,
+  },
+  titulo: { fontSize: 20, fontWeight: 'bold', color: '#234c3b' },
+  detalle: { fontSize: 14, color: '#666666' },
+});</code></pre>
+<div class="card"><h4>¿Por qué <code>StyleSheet.create</code> y no un objeto normal?</h4>
+<ul><li><b>Orden:</b> todos los estilos del fichero en un solo sitio, con nombre.</li>
+<li><b>Avisos:</b> si escribes mal una propiedad (<code>backgroudColor</code>), lo detecta.</li>
+<li><b>Reutilización:</b> el mismo estilo se usa en varios elementos.</li>
+<li>Funciona exactamente igual con un objeto normal (<code>const caja = {…}</code>), pero <code>StyleSheet.create</code> es la convención.</li></ul></div>
+<h3>Combinar estilos: versiones y condiciones</h3>
+<div class="sim" data-sim="combinar"></div>
+<pre data-id="sty2"><code>function Boton({ texto, activo, peligro }) {
+  return (
+    &lt;Pressable style={[estilos.base, activo &amp;&amp; estilos.activo, peligro &amp;&amp; estilos.peligro]}&gt;
+      &lt;Text style={estilos.texto}&gt;{texto}&lt;/Text&gt;
+    &lt;/Pressable&gt;
+  );
+}
+
+const estilos = StyleSheet.create({
+  base:    { padding: 12, borderRadius: 8, backgroundColor: '#cccccc' },
+  activo:  { backgroundColor: '#234c3b' },
+  peligro: { backgroundColor: '#b3541a' },
+  texto:   { color: '#ffffff', textAlign: 'center' },
+});</code></pre>
+<h3>Otras herramientas de <code>StyleSheet</code></h3>
+<table><tr><th>Herramienta</th><th>Para qué</th></tr>
+<tr><td><code>StyleSheet.absoluteFill</code></td><td>Atajo para <code>{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }</code> (cubrir todo el padre).</td></tr>
+<tr><td><code>StyleSheet.hairlineWidth</code></td><td>El grosor de línea más fino que admite el dispositivo (bordes sutiles).</td></tr>
+<tr><td><code>StyleSheet.flatten([a, b])</code></td><td>Convierte un array de estilos en un único objeto (útil para ver el resultado final).</td></tr>
+<tr><td><code>useWindowDimensions()</code></td><td>Hook que da <code>{ width, height }</code> de la pantalla, para estilos que dependen del tamaño.</td></tr>
+</table>
+<div class="warn"><b>Errores típicos con estilos:</b>
+<b>(1)</b> poner <code>color</code> o <code>fontSize</code> en un <code>View</code> (solo valen en <code>Text</code>);
+<b>(2)</b> escribir <code>'16px'</code> en vez de <code>16</code>;
+<b>(3)</b> usar <code>background-color</code> en vez de <code>backgroundColor</code>;
+<b>(4)</b> esperar que un <code>Text</code> herede el color de su <code>View</code>;
+<b>(5)</b> olvidar <code>borderColor</code> al poner <code>borderWidth</code> (sale negro);
+<b>(6)</b> poner un estilo después en el array y que “pise” otro sin querer.</div>
+<h3>Flexbox: colocar las cosas</h3>
+<div class="card"><b>La clave:</b> un contenedor tiene un <b>eje principal</b> (<code>flexDirection</code>) y un <b>eje contrario</b>.<ul>
+<li><code>justifyContent</code> reparte los hijos a lo largo del eje <b>principal</b>.</li>
+<li><code>alignItems</code> los coloca en el eje <b>contrario</b>.</li>
+<li>Por defecto el eje principal es vertical (<code>column</code>), al revés que en CSS.</li>
+</ul></div>
+<div class="sim" data-sim="flex"></div>
+<pre data-id="flex1"><code>&lt;View style={{
+  flex: 1,
+  flexDirection: 'row',        // fila (por defecto: 'column')
+  justifyContent: 'center',    // eje PRINCIPAL
+  alignItems: 'center',        // eje CONTRARIO
+  gap: 8,
+}}&gt;
+  &lt;Caja&gt;A&lt;/Caja&gt;
+  &lt;Caja&gt;B&lt;/Caja&gt;
+  &lt;Caja&gt;C&lt;/Caja&gt;
+&lt;/View&gt;</code></pre><table><tr><th>Propiedad</th><th>Para qué</th></tr><tr><td><code>flex: 1</code></td><td>Ocupa todo el espacio libre. Si hay hermanos con <code>flex: 2</code>, reparten proporcionalmente.</td></tr><tr><td><code>width</code>, <code>height</code></td><td>Tamaño fijo (números = píxeles lógicos) o porcentaje <code>'50%'</code>.</td></tr><tr><td><code>padding</code>, <code>margin</code></td><td>Espacio interior / exterior. También <code>paddingHorizontal</code>, <code>marginTop</code>…</td></tr><tr><td><code>backgroundColor</code>, <code>color</code></td><td>Color de fondo / de texto (<code>color</code> solo en <code>Text</code>).</td></tr><tr><td><code>borderWidth</code>, <code>borderColor</code>, <code>borderRadius</code></td><td>Borde y esquinas redondeadas.</td></tr><tr><td><code>position: 'absolute'</code></td><td>Saca el elemento del flujo; se coloca con <code>top/left/right/bottom</code>.</td></tr><tr><td><code>fontSize</code>, <code>fontWeight</code>, <code>textAlign</code></td><td>Texto.</td></tr><tr><td><code>StyleSheet.create({})</code></td><td>Agrupa estilos con nombre y los valida.</td></tr><tr><td><code>style={[a, b]}</code></td><td>Combina estilos; el último gana. Útil para condicionales: <code>[estilos.base, activo &amp;&amp; estilos.activo]</code>.</td></tr></table>
+</section>
+
+<section id="estado">
+<h2>7 · Estado y eventos</h2>
+<p class="lead">El estado es la memoria del componente. Cambiarlo con <code>setX</code> es lo que hace que la pantalla se actualice.</p>
+<pre data-id="state1"><code>function Contador() {
+  const [n, setN] = useState(0);
+  const [texto, setTexto] = useState('');
+
+  return (
+    &lt;View&gt;
+      &lt;Text&gt;Pulsado {n} veces&lt;/Text&gt;
+      &lt;Pressable onPress={() =&gt; setN(n + 1)}&gt;&lt;Text&gt;+1&lt;/Text&gt;&lt;/Pressable&gt;
+      &lt;TextInput value={texto} onChangeText={setTexto} /&gt;
+      &lt;Text&gt;Escribiste: {texto}&lt;/Text&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+<div class="sim" data-sim="state"></div>
+<div class="grid">
+<div class="card"><h4>✅ Haz</h4><ul><li><code>setLista([...lista, nuevo])</code> (copia nueva)</li><li>Pasar la función: <code>onPress={guardar}</code></li><li>Un <code>useState</code> por cada dato independiente</li></ul></div>
+<div class="card"><h4>❌ No hagas</h4><ul><li><code>lista.push(nuevo)</code> (modifica el original)</li><li><code>contador = contador + 1</code> (no repinta)</li><li><code>onPress={guardar()}</code> (se ejecuta al pintar)</li></ul></div>
+</div>
+</section>
+
+<section id="efectos">
+<h2>8 · Efectos: cosas que pasan al aparecer, cambiar o desaparecer</h2>
+<p class="lead"><code>useEffect</code> es para hablar con el “mundo exterior”: red, temporizadores, suscripciones, sensores.</p>
+<pre data-id="effect1"><code>function Reloj() {
+  const [seg, setSeg] = useState(0);
+
+  useEffect(() =&gt; {
+    const id = setInterval(() =&gt; setSeg(s =&gt; s + 1), 1000);
+    return () =&gt; clearInterval(id);     // limpieza
+  }, []);
+
+  return &lt;Text&gt;{seg} segundos&lt;/Text&gt;;
+}</code></pre>
+<div class="sim" data-sim="effects"></div>
+<table><tr><th>Escribo</th><th>Se ejecuta</th></tr><tr><td><code>useEffect(fn, [])</code></td><td>Una vez, al aparecer la pantalla.</td></tr><tr><td><code>useEffect(fn, [x])</code></td><td>Al aparecer y cada vez que <code>x</code> cambia.</td></tr><tr><td><code>useEffect(fn)</code></td><td>Después de <b>cada</b> repintado (casi nunca lo quieres).</td></tr><tr><td><code>return () =&gt; …</code> dentro del efecto</td><td>Limpieza: antes de repetir el efecto y al desaparecer.</td></tr><tr><td><code>useFocusEffect(useCallback(fn, []))</code></td><td>Cada vez que la pantalla vuelve a estar visible (Expo Router).</td></tr></table>
+</section>
+
+<section id="listas">
+<h2>9 · Listas, keys y renderizado condicional</h2>
+<p class="lead">Casi toda app es “una lista de cosas”. Aquí ves cómo se filtra, se pinta y se gestiona que esté vacía.</p>
+<pre data-id="list1"><code>const [items, setItems] = useState(['Pan', 'Leche']);
+const [busqueda, setBusqueda] = useState('');
+
+const visibles = items.filter(i =&gt; i.toLowerCase().includes(busqueda.toLowerCase()));
+
+&lt;FlatList
+  data={visibles}
+  keyExtractor={i =&gt; i}
+  renderItem={({ item }) =&gt; &lt;Text&gt;{item}&lt;/Text&gt;}
+  ListEmptyComponent={&lt;Text&gt;No hay resultados&lt;/Text&gt;}
+/&gt;</code></pre>
+<div class="sim" data-sim="list"></div>
+<div class="card"><b>¿Por qué <code>key</code>?</b> Cuando la lista cambia, React compara la anterior y la nueva. Con una <code>key</code> única por elemento sabe qué fila se ha añadido, movido o quitado y solo toca esa. Usa el <code>id</code> de tus datos; <b>no uses el índice</b> si la lista puede reordenarse.</div>
+</section>
+
+<section id="nav">
+<h2>10 · Navegación con Expo Router</h2>
+<p class="lead">Las pantallas forman una <b>pila</b>: <code>push</code> apila una encima, <code>back</code> quita la de arriba.</p>
+<div class="note">La simulación de la pila está en la <a href="#mapa">sección 0</a>. Aquí tienes la chuleta de las funciones del router.</div>
+<table><tr><th>Quiero…</th><th>Escribo</th></tr><tr><td>Ir a una pantalla (JSX)</td><td><code>&lt;Link href="/nuevo"&gt;…&lt;/Link&gt;</code></td></tr><tr><td>Ir desde código</td><td><code>router.push('/nuevo')</code></td></tr><tr><td>Volver</td><td><code>router.back()</code></td></tr><tr><td>Reemplazar la actual</td><td><code>router.replace('/')</code></td></tr><tr><td>Pasar un dato</td><td><code>router.push({ pathname: '/detall/[id]', params: { id: 5 } })</code></td></tr><tr><td>Leer el dato</td><td><code>const { id } = useLocalSearchParams()</code></td></tr><tr><td>Título de la barra</td><td><code>&lt;Stack.Screen name="nuevo" options={{ title: 'Nuevo' }} /&gt;</code> en <code>_layout.jsx</code></td></tr></table>
+<div class="note">Cada fichero de <code>src/app</code> es una ruta: <code>index.jsx</code> = <code>/</code>, <code>nuevo.jsx</code> = <code>/nuevo</code>, <code>detall/[id].jsx</code> = <code>/detall/5</code>.</div>
+<h3>Títulos y colores desde el layout</h3>
+<pre data-id="lay2"><code>&lt;Stack screenOptions={{ headerStyle: { backgroundColor: '#234c3b' }, headerTintColor: '#fff' }}&gt;
+  &lt;Stack.Screen name="index" options={{ title: 'Mis lugares' }} /&gt;
+  &lt;Stack.Screen name="nuevo" options={{ title: 'Nuevo lugar' }} /&gt;
+  &lt;Stack.Screen name="detall/[id]" options={{ title: 'Detalle' }} /&gt;
+&lt;/Stack&gt;</code></pre>
+<div class="warn"><b>Ojo:</b> el <code>name</code> de <code>Stack.Screen</code> tiene que ser igual al nombre del fichero (sin <code>.jsx</code>); si no, no se aplica.</div>
+
+<h3>Receta: de la lista de lugares a la pantalla de cada lugar</h3>
+<p>Lo que quieres construir: una lista de botones (Gotham, Metropolis, Coast City) y que, <b>al pulsar uno, se abra su propia pantalla</b> con su nombre y su descripción. Todo lo necesario ya está en esta página; esto es el mapa para unirlo.</p>
+<div class="flow"><span>Datos (<code>lugares.js</code>)</span><i>→</i><span>Lista: un <code>BotonPlaces</code> por lugar</span><i>→</i><span>onPress → <code>router.push</code> con <code>id</code></span><i>→</i><span>Pantalla <code>lugar/[id].jsx</code></span><i>→</i><span>Lee el <code>id</code>, busca el lugar y lo muestra</span></div>
+<table><tr><th>#</th><th>Paso</th><th>Dónde</th><th>Concepto</th></tr>
+<tr><td>1</td><td>Crear los datos: <code>id</code>, <code>nombre</code>, <code>descripcion</code>, <code>color</code>…</td><td><code>src/data/lugares.js</code></td><td><code>export const</code> + array de objetos</td></tr>
+<tr><td>2</td><td>Pintar los botones con <code>map</code> a partir de los datos</td><td><code>src/app/index.jsx</code></td><td><code>map</code> y <code>key</code></td></tr>
+<tr><td>3</td><td>Hacer que cada botón navegue pasando el <code>id</code></td><td><code>index.jsx</code> (prop <code>onPress</code>)</td><td><code>router.push</code> con <code>params</code></td></tr>
+<tr><td>4</td><td>Crear la pantalla dinámica</td><td><code>src/app/lugar/[id].jsx</code></td><td>Ruta dinámica (<code>[id]</code>)</td></tr>
+<tr><td>5</td><td>Leer el <code>id</code> y buscar el lugar</td><td>en esa pantalla</td><td><code>useLocalSearchParams</code> y <code>find</code></td></tr>
+<tr><td>6</td><td>Mostrar nombre y descripción; título de la barra con el nombre</td><td>en esa pantalla</td><td><code>Stack.Screen options</code></td></tr>
+<tr><td>7</td><td>Estilos de la pantalla</td><td>en esa pantalla</td><td><code>StyleSheet</code></td></tr>
+</table>
+<div class="sim" data-sim="ciudades"></div>
+<h3>Paso 1 · los datos compartidos</h3>
+<pre data-id="rec1"><code>// src/data/lugares.js
+export const lugares = [
+  { id: "gotham", nombre: "Gotham", color: "#111111", coordenadas: "Desconocido",
+    descripcion: "Ciudad oscura y lluviosa, siempre en vilo." },
+  { id: "metropolis", nombre: "Metropolis", color: "#1e63d6", coordenadas: "Desconocido",
+    descripcion: "La ciudad del mañana, llena de rascacielos." },
+  { id: "coast", nombre: "Coast City", color: "#d62828", coordenadas: "Desconocido",
+    descripcion: "Ciudad costera de cielos despejados." },
+];</code></pre>
+<h3>Pasos 2 y 3 · la lista que navega</h3>
+<pre data-id="rec2"><code>// src/app/index.jsx (lo que cambia)
+import { router } from "expo-router";
+import { lugares } from "../data/lugares";
+
+&lt;View style={estilos.lista}&gt;
+    {lugares.map(l =&gt; (
+        &lt;BotonPlaces
+            key={l.id}
+            nombre={l.nombre}
+            coordenadas={l.coordenadas}
+            color={l.color}
+            onPress={() =&gt; router.push({ pathname: "/lugar/[id]", params: { id: l.id } })}
+        /&gt;
+    ))}
+&lt;/View&gt;</code></pre>
+<h3>Pasos 4, 5 y 6 · la pantalla de cada lugar</h3>
+<pre data-id="rec3"><code>// src/app/lugar/[id].jsx
+import { Stack, useLocalSearchParams } from "expo-router";
+import { Text, View } from "react-native";
+import { lugares } from "../../data/lugares";
+
+export default function Lugar() {
+    const { id } = useLocalSearchParams();
+    const lugar = lugares.find(l =&gt; l.id === id);
+
+    if (!lugar) return &lt;Text&gt;Lugar no encontrado&lt;/Text&gt;;
+
+    return (
+        &lt;View&gt;
+            &lt;Stack.Screen options={{ title: lugar.nombre }} /&gt;
+            &lt;Text&gt;{lugar.nombre}&lt;/Text&gt;
+            &lt;Text&gt;{lugar.descripcion}&lt;/Text&gt;
+        &lt;/View&gt;
+    );
+}</code></pre>
+<div class="card"><h4>Por qué se pasa solo el <code>id</code> y no todo el lugar</h4>
+Las rutas llevan texto simple. Pasar el nombre, la descripción y el color por la ruta sería largo y se desincroniza si cambias un dato. Con solo el <code>id</code>, la pantalla de detalle <b>busca el lugar en los datos</b> y siempre muestra la información actual. Es el mismo patrón que lista → detalle de la práctica.</div>
+<div class="warn"><b>Errores típicos en este montaje:</b>
+<b>(1)</b> el fichero debe llamarse <code>[id].jsx</code> con corchetes, dentro de una carpeta (<code>lugar/</code>);
+<b>(2)</b> el <code>id</code> de los datos y el de la ruta tienen que coincidir <b>exactamente</b> (mayúsculas incluidas) y ser texto;
+<b>(3)</b> contar mal los <code>../</code> en los imports: <code>index.jsx</code> usa <code>../data/lugares</code> y <code>lugar/[id].jsx</code> usa <code>../../data/lugares</code> (usa la calculadora de la sección 2);
+<b>(4)</b> olvidar la <code>key</code> en el <code>map</code>;
+<b>(5)</b> borra el <code>local1.jsx</code> vacío de <code>src/app</code>: esta pantalla dinámica lo sustituye y un fichero vacío en esa carpeta da error;
+<b>(6)</b> escribir el <code>pathname</code> con el valor ya puesto (<code>"/lugar/gotham"</code>) y a la vez <code>params</code>: o una cosa o la otra; con <code>"/lugar/[id]"</code> el <code>id</code> va en <code>params</code>.</div>
+<h3>Flujos de navegación: del login al dashboard</h3>
+<p>Un <code>Stack</code> sirve igual para <b>flujos paso a paso</b> (bienvenida → login → dashboard). Lo que cambia es <b>cómo navegas</b>: depende de si el usuario debe poder volver o no.</p>
+<table><tr><th>Situación</th><th>Uso</th><th>Por qué</th></tr>
+<tr><td>Lista → detalle</td><td><code>router.push()</code></td><td>Quieres poder volver a la lista.</td></tr>
+<tr><td>Login → dashboard</td><td><code>router.replace()</code></td><td>Una vez dentro, “atrás” no debe llevar al login.</td></tr>
+<tr><td>Cerrar sesión</td><td><code>router.dismissAll()</code> + <code>router.replace('/login')</code></td><td>Vaciar la pila y volver a una pantalla “limpia”.</td></tr>
+</table>
+<div class="sim" data-sim="login"></div>
+<h3>El login paso a paso</h3>
+<pre data-id="login1"><code>// src/app/login.jsx
+import { router } from 'expo-router';
+import { Pressable, Text, TextInput, View } from 'react-native';
+
+export default function Login() {
+  function entrar() {
+    // aquí comprobarías usuario y contraseña
+    router.replace('/dashboard');   // sustituye login por dashboard: no se puede volver
+  }
+  return (
+    &lt;View&gt;
+      &lt;TextInput placeholder="Usuario" /&gt;
+      &lt;TextInput placeholder="Contraseña" secureTextEntry /&gt;
+      &lt;Pressable onPress={entrar}&gt;&lt;Text&gt;Entrar&lt;/Text&gt;&lt;/Pressable&gt;
+    &lt;/View&gt;
+  );
+}</code></pre>
+<h3>Impedir saltarse el login (rutas protegidas)</h3>
+<p>Hasta aquí, nada evita que alguien abra <code>/dashboard</code> directamente. Con <code>Stack.Protected</code> las pantallas del dashboard solo existen si hay sesión.</p>
+<pre data-id="prot1"><code>// src/app/_layout.jsx
+import { Stack } from 'expo-router';
+import { useState } from 'react';
+
+export default function Layout() {
+  const [logueado, setLogueado] = useState(false);   // en una app real viene de una sesión compartida
+
+  return (
+    &lt;Stack&gt;
+      &lt;Stack.Protected guard={!logueado}&gt;
+        &lt;Stack.Screen name="login" /&gt;
+      &lt;/Stack.Protected&gt;
+      &lt;Stack.Protected guard={logueado}&gt;
+        &lt;Stack.Screen name="dashboard" /&gt;
+        &lt;Stack.Screen name="perfil" /&gt;
+      &lt;/Stack.Protected&gt;
+    &lt;/Stack&gt;
+  );
+}</code></pre>
+<div class="warn"><b>Esto es un esquema, no un login completo.</b> Para que <code>login.jsx</code> pueda cambiar <code>logueado</code> hace falta compartir el estado entre ficheros (un <i>contexto</i> de React) y guardar la sesión (AsyncStorage). Además, la sintaxis de rutas protegidas depende de la versión: revisa la documentación de Expo Router de tu SDK. Para la práctica MyPlaces no lo necesitas.</div>
+<h3>Organizar con carpetas de grupo</h3>
+<p>Los paréntesis en el nombre de una carpeta <b>no cuentan como parte de la ruta</b>: solo agrupan ficheros.</p>
+<pre><code>src/app/
+├─ _layout.jsx
+├─ (auth)/
+│  └─ login.jsx        → ruta /login
+└─ (app)/
+   ├─ dashboard.jsx    → ruta /dashboard
+   └─ perfil.jsx       → ruta /perfil</code></pre>
+</section>
+
+<section id="anat">
+<h2>11 · Anatomía de una pantalla típica</h2>
+<p class="lead">Casi todas tus pantallas siguen este orden. Memorízalo y sabrás dónde va cada cosa.</p>
+<pre data-id="anat"><code>// 1. IMPORTS
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+
+export default function Pantalla() {
+  // 2. ESTADO
+  const [datos, setDatos] = useState([]);
+  const [cargando, setCargando] = useState(true);
+
+  // 3. EFECTOS (cosas que pasan al aparecer)
+  useEffect(() =&gt; {
+    fetch(URL).then(r =&gt; r.json()).then(d =&gt; { setDatos(d); setCargando(false); });
+  }, []);
+
+  // 4. CÁLCULOS Y EVENTOS
+  const total = datos.length;
+
+  // 5. RENDER (lo que se ve)
+  if (cargando) return &lt;ActivityIndicator /&gt;;
+  return (
+    &lt;View style={estilos.contenedor}&gt;
+      &lt;Text&gt;{total} elementos&lt;/Text&gt;
+      &lt;FlatList data={datos} renderItem={({ item }) =&gt; &lt;Text&gt;{item.title}&lt;/Text&gt;} /&gt;
+    &lt;/View&gt;
+  );
+}
+
+// 6. ESTILOS
+const estilos = StyleSheet.create({ contenedor: { flex: 1, padding: 16 } });</code></pre>
+</section>
+
+<section id="plat">
+<h2>12 · Android, iOS y web</h2>
+<p class="lead">El 95 % del código es igual en las tres. Esto es lo que suele cambiar.</p>
+<pre data-id="plat"><code>import { Platform } from 'react-native';
+
+const margen = Platform.OS === 'ios' ? 20 : 10;
+
+const estilo = Platform.select({
+  ios:     { shadowOpacity: 0.3 },
+  android: { elevation: 4 },
+  default: { boxShadow: '0 2px 6px #0003' },   // web
+});</code></pre><table><tr><th>Tema</th><th>Android / iOS</th><th>Web</th></tr><tr><td>Sombras</td><td><code>elevation</code> (Android), <code>shadow*</code> (iOS)</td><td><code>boxShadow</code></td></tr><tr><td>Permisos (ubicación…)</td><td>Diálogo del sistema</td><td>Diálogo del navegador (necesita https o localhost)</td></tr><tr><td>Almacenamiento</td><td>AsyncStorage en el disco</td><td>AsyncStorage usa localStorage</td></tr><tr><td>Teclado, gestos</td><td>Táctil</td><td>Ratón; algunos gestos no existen</td></tr><tr><td>Probar</td><td>Expo Go o emulador</td><td><code>npx expo start</code> y tecla <code>w</code></td></tr></table>
+</section>
+
+<section id="errores">
+<h2>Errores frecuentes y qué significan</h2>
+<table><tr><th>Mensaje / síntoma</th><th>Causa</th><th>Solución</th></tr><tr><td><i>Text strings must be rendered within a &lt;Text&gt;</i></td><td>Texto suelto dentro de un <code>View</code>.</td><td>Envuélvelo en <code>&lt;Text&gt;</code>.</td></tr><tr><td><i>X is not defined</i> / <i>Property X doesn't exist</i></td><td>Falta el <code>import</code>.</td><td>Importa el componente o la función.</td></tr><tr><td><i>Each child in a list should have a unique "key"</i></td><td>Falta <code>key</code>/<code>keyExtractor</code>.</td><td>Usa el <code>id</code> del dato.</td></tr><tr><td>Cambio una variable y la pantalla no cambia</td><td>No es estado.</td><td>Usa <code>useState</code> y su <code>setX</code>.</td></tr><tr><td>La app se queda en bucle / se repinta sin parar</td><td><code>setX</code> llamado directamente en el render, o <code>useEffect</code> sin <code>[]</code> que cambia su propio estado.</td><td>Mueve el <code>setX</code> a un evento o pon dependencias.</td></tr><tr><td>El botón actúa al abrir la pantalla</td><td><code>onPress={f()}</code>.</td><td><code>onPress={f}</code> o <code>() =&gt; f()</code>.</td></tr><tr><td>La imagen no se ve</td><td>Sin <code>width</code>/<code>height</code>.</td><td>Dale tamaño en <code>style</code>.</td></tr><tr><td>La lista no hace scroll</td><td><code>FlatList</code> dentro de un <code>ScrollView</code> o sin altura.</td><td>Quita el <code>ScrollView</code>; dale <code>flex: 1</code> al contenedor.</td></tr><tr><td><i>Cannot read property 'x' of undefined</i></td><td>Usas un dato que aún no ha llegado.</td><td>Comprueba antes: <code>if (!dato) return …</code> o <code>dato?.x</code>.</td></tr><tr><td>Todo apilado y pegado arriba</td><td>Falta flexbox/ <code>padding</code>.</td><td><code>flex: 1</code>, <code>justifyContent</code>, <code>padding</code>.</td></tr><tr><td><i>Unmatched route</i></td><td>Ruta mal escrita o fichero fuera de <code>src/app</code>.</td><td>Revisa el nombre del fichero y el <code>href</code>.</td></tr></table>
+</section>
+
+<section id="glosario">
+<h2>Glosario rápido</h2>
+<table><tr><th>Término</th><th>Significa</th></tr><tr><td>Componente</td><td>Función que devuelve JSX.</td></tr><tr><td>JSX</td><td>Sintaxis tipo HTML dentro de JavaScript.</td></tr><tr><td>Props</td><td>Parámetros que un componente recibe del padre (solo lectura).</td></tr><tr><td>Estado</td><td>Datos que cambian y que, al cambiar, repintan la pantalla.</td></tr><tr><td>Hook</td><td>Función <code>useAlgo</code> que da capacidades a un componente (estado, efectos…).</td></tr><tr><td>Render / repintar</td><td>Volver a ejecutar el componente para obtener el JSX actualizado.</td></tr><tr><td>Montar / desmontar</td><td>Aparecer / desaparecer un componente de la pantalla.</td></tr><tr><td>Promesa</td><td>Resultado que llegará más tarde (red, disco). Se espera con <code>await</code>.</td></tr><tr><td>Metro</td><td>El empaquetador que construye tu código para el móvil/web.</td></tr><tr><td>Expo</td><td>Herramientas y librerías sobre React Native.</td></tr><tr><td>Expo Go</td><td>App del móvil para probar tu proyecto sin compilar.</td></tr><tr><td>SDK</td><td>Versión de Expo; cada una fija las versiones de las librerías.</td></tr><tr><td>Flexbox</td><td>Sistema de colocación de elementos de React Native.</td></tr><tr><td>Stack</td><td>Navegación en pila de pantallas.</td></tr><tr><td>Ruta</td><td>Dirección de una pantalla (<code>/nuevo</code>).</td></tr></table>
+<h3>Ruta de estudio sugerida</h3>
+<ol>
+<li>Entender el mapa mental y qué son <code>_layout</code> e <code>index</code> (sección 0).</li>
+<li>JavaScript básico hasta que <code>map</code>, <code>filter</code> y desestructurar te suenen (sección 1).</li>
+<li>Cómo se conectan los ficheros con <code>export</code> e <code>import</code> (sección 2).</li>
+<li>Hacer a mano 3 componentes con props (sección 3) y conocer los componentes básicos (sección 5).</li>
+<li>Jugar con flexbox hasta colocar cualquier cosa (sección 6).</li>
+<li>Estado + eventos: contador y formulario (sección 7).</li>
+<li>Lista + detalle con navegación (secciones 9 y 10).</li>
+<li>Efectos y datos remotos (sección 8 y apuntes de la práctica).</li>
+</ol>
+<div class="tip">Cuando algo falle: 1) lee el mensaje rojo entero, 2) busca el primer fichero tuyo que nombra, 3) mira la línea, 4) usa <code>console.log</code> para ver el valor real de las variables.</div>
+</section>
+
+</main>
+<script>
+// Resaltado de sintaxis sencillo (sin librerías) con colores de VS Code Dark+
+(function () {
+  var KW = 'const let var function return async await new typeof true false null undefined this default export class'.split(' ');
+  var CTL = 'import from if else try catch finally throw for while switch case break continue as'.split(' ');
+  var esc = function (s) { return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var span = function (c, s) { return '<span class="t-' + c + '">' + esc(s) + '</span>'; };
+
+  var JS = /(\/\/[^\n]*|\{\/\*[\s\S]*?\*\/\})|('(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*"|`(?:\\.|[^`\\])*`)|(<\/?[A-Z][\w.]*|<\/?[a-z][a-z0-9]*(?=[\s>\/])|<\/?>)|\b(\d+(?:\.\d+)?)\b|([A-Za-z_$][\w$]*)/g;
+  var PLAIN = /((?:#|←)[^\n]*)/g;
+
+  function js(src) {
+    return src.replace(JS, function (m, com, str, tag, num, id, off) {
+      if (com) return span('com', com);
+      if (str) return span('str', str);
+      if (tag) {
+        var name = tag.replace(/^<\/?/, '');
+        var pre = tag.slice(0, tag.length - name.length);
+        return esc(pre) + (name ? span(/^[A-Z]/.test(name) ? 'cmp' : 'tag', name) : '');
+      }
+      if (num) return span('num', num);
+      if (CTL.indexOf(id) > -1) return span('ctl', id);
+      if (KW.indexOf(id) > -1) return span('kw', id);
+      var next = src.charAt(off + id.length), prev = src.charAt(off - 1);
+      if (next === '(') return span('fn', id);
+      if (/^[A-Z]/.test(id)) return span('cls', id);
+      return span('var', id);
+    });
+  }
+  function plain(src) {
+    return src.replace(PLAIN, function (m) { return '\u0000' + m + '\u0001'; })
+      .split(/(\u0000[^\u0001]*\u0001)/).map(function (p) {
+        return p.charAt(0) === '\u0000' ? span('com', p.slice(1, -1)) : esc(p);
+      }).join('');
+  }
+  // los bloques de JS contienen texto "import/const/..." ; los de consola/árbol no
+  window.HL = function (el) {
+    var t = el.textContent;
+    var isJs = /\b(import|const|function|useState|useEffect|export)\b|<[A-Z]/.test(t) && !/^#|^src\//.test(t);
+    el.innerHTML = isJs ? js(t) : plain(t);
+  };
+  document.querySelectorAll('pre code').forEach(window.HL);
+})();
+</script>
+<script>
+(function(){
+  function mount(el,o){
+    el.innerHTML='<div class="sim-head">▶ Simulación interactiva · '+o.title+'</div><div class="sim-body"><div><div class="phone"><div class="screen"></div></div></div><div><p class="hint">'+o.hint+'</p><div class="ctl"></div><div class="legend"></div><div class="trace"><b>Qué ocurre (lo último arriba):</b><ol></ol></div></div></div>';
+    var screen=el.querySelector('.screen'),ol=el.querySelector('ol'),lg=el.querySelector('.legend'),ctl=el.querySelector('.ctl');
+    (o.legend||[]).forEach(function(t,i){var d=document.createElement('div');d.innerHTML='<i class="bd">'+(i+1)+'</i>'+t;
+      d.onmouseenter=function(){screen.querySelectorAll('[data-n="'+(i+1)+'"]').forEach(function(x){x.classList.add('hl')})};
+      d.onmouseleave=function(){screen.querySelectorAll('.hl').forEach(function(x){x.classList.remove('hl')})};lg.appendChild(d)});
+    var api={screen:screen,ctl:ctl,el:el,
+      log:function(code,txt){var li=document.createElement('li');li.innerHTML='<code>'+code+'</code> '+(txt||'');ol.insertBefore(li,ol.firstChild);while(ol.children.length>7)ol.removeChild(ol.lastChild)},
+      b:function(n){return '<i class="bd" data-n="'+n+'">'+n+'</i>'},
+      on:function(ev,fn){screen.addEventListener(ev,function(e){var a=e.target.closest('[data-act]');if(a)fn(a.dataset.act,a.dataset,e)})}};
+    o.build(api);return api;
+  }
+  function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;')}
+  var S={};
+
+  S.props=function(el){mount(el,{title:'Un componente, muchas props',hint:'Cambia las props de la tercera tarjeta. Las dos primeras no cambian aunque usen el mismo componente.',
+    legend:['<code>{nombre}</code>: valor de la prop','<code>{edad}</code>: valor de la prop'],
+    build:function(a){var nom='Marta',ed=25;
+      a.ctl.innerHTML='<input class="p-input" style="width:140px;background:var(--bg);color:var(--ink)" value="Marta"> <input type="range" min="1" max="99" value="25"> <span id="v">25</span>';
+      function card(n,e,i){return '<div class="p-row" data-n="'+i+'"><span>'+a.b(1)+'Hola '+esc(n)+'<br>'+a.b(2)+'Tienes '+e+' años</span></div>'}
+      function r(){a.screen.innerHTML=B('Mi pantalla')+card('Ana',20,1)+card('Luis',31,1)+card(nom||'…',ed,1)}
+      function B(t){return '<div class="p-bar">'+t+'</div>'}
+      r();var inp=a.ctl.querySelector('input'),rg=a.ctl.querySelector('input[type=range]'),v=a.ctl.querySelector('#v');
+      inp.oninput=function(){nom=inp.value;a.log('&lt;Saludo nombre="'+esc(nom)+'" edad={'+ed+'} /&gt;','→ React ejecuta <code>Saludo({ nombre: "'+esc(nom)+'", edad: '+ed+' })</code> y sale una tarjeta nueva.');r()};
+      rg.oninput=function(){ed=+rg.value;v.textContent=ed;a.log('edad={'+ed+'}','→ solo cambia la prop de ESTA tarjeta; las otras son instancias independientes.');r()}}})};
+
+  S.gallery=function(el){
+    var G=[
+     {n:'View',d:'Caja contenedora. Equivale a un <code>div</code>.',c:"<View style={{ padding: 12, backgroundColor: '#eef3ef' }}>\n  <Text>Dentro de una caja</Text>\n</View>",r:function(s){s.innerHTML='<div style="padding:12px;background:#eef3ef">Dentro de una caja</div>'}},
+     {n:'Text',d:'Todo texto va aquí. Admite estilos y anidar otros <code>Text</code>.',c:"<Text style={{ fontSize: 20, color: '#234c3b' }}>\n  Hola <Text style={{ fontWeight: 'bold' }}>mundo</Text>\n</Text>",r:function(s){s.innerHTML='<div style="font-size:20px;color:#234c3b">Hola <b>mundo</b></div>'}},
+     {n:'Image',d:'Imagen. Necesita <code>width</code> y <code>height</code>.',c:"<Image\n  source={{ uri: 'https://…/foto.jpg' }}\n  style={{ width: 120, height: 80 }}\n/>",r:function(s){s.innerHTML='<div style="width:120px;height:80px;background:linear-gradient(135deg,#7fc8a9,#234c3b);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff">🖼️ 120×80</div>'}},
+     {n:'TextInput',d:'Campo de texto controlado por estado. Escribe y mira el eco.',c:"const [t, setT] = useState('');\n<TextInput value={t} onChangeText={setT} placeholder=\"Escribe\" />\n<Text>Eco: {t}</Text>",r:function(s){s.innerHTML='<input class="p-input" placeholder="Escribe"><div>Eco: <b></b></div>';var i=s.querySelector('input'),b=s.querySelector('b');i.oninput=function(){b.textContent=i.value}}},
+     {n:'Pressable',d:'Cualquier cosa pulsable. Pulsa el botón.',c:"const [n, setN] = useState(0);\n<Pressable onPress={() => setN(n + 1)}>\n  <Text>Pulsado {n} veces</Text>\n</Pressable>",r:function(s){var n=0;s.innerHTML='<button class="p-btn">Pulsado 0 veces</button>';var b=s.querySelector('button');b.onclick=function(){n++;b.textContent='Pulsado '+n+' veces'}}},
+     {n:'Button',d:'Botón nativo sencillo. No admite estilos; para diseño usa <code>Pressable</code>.',c:"<Button title=\"Guardar\" onPress={guardar} />",r:function(s){s.innerHTML='<button style="font:inherit;color:#007aff;background:none;border:0;font-size:1.1rem;padding:8px;cursor:pointer">Guardar</button>'}},
+     {n:'ScrollView',d:'Contenido que hace scroll. Para pocas cosas.',c:"<ScrollView>\n  <Text>Línea 1</Text>\n  <Text>Línea 2</Text>\n  …\n</ScrollView>",r:function(s){var h='';for(var i=1;i<=14;i++)h+='<div class="p-row">Línea '+i+'</div>';s.innerHTML='<div style="max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:4px">'+h+'</div>'}},
+     {n:'FlatList',d:'Lista larga eficiente: solo dibuja lo visible.',c:"<FlatList\n  data={datos}\n  keyExtractor={d => d.id}\n  renderItem={({ item }) => <Text>{item.n}</Text>}\n/>",r:function(s){var h='';for(var i=1;i<=30;i++)h+='<div class="p-row">Elemento '+i+'</div>';s.innerHTML='<div style="max-height:260px;overflow:auto;display:flex;flex-direction:column;gap:4px">'+h+'</div><div style="color:#777">(30 elementos, pero solo se dibujan los que caben)</div>'}},
+     {n:'ActivityIndicator',d:'Rueda de carga.',c:"<ActivityIndicator size=\"large\" color=\"#234c3b\" />",r:function(s){s.innerHTML='<div class="p-spin"></div>'}},
+     {n:'Switch',d:'Interruptor. Púlsalo.',c:"const [on, setOn] = useState(false);\n<Switch value={on} onValueChange={setOn} />",r:function(s){s.innerHTML='<label style="display:flex;gap:8px;align-items:center"><input type="checkbox"> <span>Apagado</span></label>';var i=s.querySelector('input'),t=s.querySelector('span');i.onchange=function(){t.textContent=i.checked?'Encendido':'Apagado'}}},
+     {n:'Modal',d:'Ventana por encima de todo.',c:"const [ver, setVer] = useState(false);\n<Modal visible={ver} onRequestClose={() => setVer(false)}>\n  <Text>Hola</Text>\n</Modal>",r:function(s){s.style.position='relative';s.innerHTML='<button class="p-btn" id="o">Abrir modal</button>';s.querySelector('#o').onclick=function(){var m=document.createElement('div');m.className='p-modal';m.innerHTML='<div><b>Hola desde el Modal</b><button class="p-btn">Cerrar</button></div>';m.querySelector('button').onclick=function(){m.remove()};s.appendChild(m)}}}
+    ];
+    var st={i:0};
+    mount(el,{title:'Galería de componentes',hint:'Elige un componente.',legend:[],build:function(a){
+      a.ctl.innerHTML=G.map(function(g,i){return '<button data-i="'+i+'"'+(i===0?' class="on"':'')+'>'+g.n+'</button>'}).join('');
+      var hint=a.el.querySelector('.hint'),tr=a.el.querySelector('.trace');tr.innerHTML='<pre style="margin:0"><code></code></pre>';var code=tr.querySelector('code');
+      function show(i){var g=G[i];hint.innerHTML=g.d;code.textContent=g.c;window.HL&&window.HL(code);a.screen.style.position='';a.screen.innerHTML='';g.r(a.screen);[].forEach.call(a.ctl.children,function(b,k){b.classList.toggle('on',k===i)})}
+      a.ctl.onclick=function(e){var b=e.target.closest('button');if(b)show(+b.dataset.i)};show(0)}})};
+
+  S.flex=function(el){mount(el,{title:'Flexbox',hint:'Cambia las propiedades del contenedor (línea punteada) y mira dónde van A, B y C.',
+    legend:['<code>flexDirection</code>: eje principal','<code>justifyContent</code>: reparto en el eje principal','<code>alignItems</code>: colocación en el eje contrario'],
+    build:function(a){var v={flexDirection:'column',justifyContent:'flex-start',alignItems:'stretch',gap:0,flex2:false};
+      var opts={flexDirection:['column','row'],justifyContent:['flex-start','center','flex-end','space-between','space-around'],alignItems:['stretch','flex-start','center','flex-end']};
+      var h='';Object.keys(opts).forEach(function(k){h+='<div style="width:100%"><b>'+k+':</b> '+opts[k].map(function(o){return '<button data-k="'+k+'" data-v="'+o+'"'+(v[k]===o?' class="on"':'')+'>'+o+'</button>'}).join('')+'</div>'});
+      h+='<div style="width:100%"><b>gap:</b> <button data-k="gap" data-v="0" class="on">0</button><button data-k="gap" data-v="8">8</button><button data-k="gap" data-v="20">20</button> <b>flex en B:</b> <button data-k="flex2" data-v="0" class="on">no</button><button data-k="flex2" data-v="1">flex: 1</button></div>';
+      a.ctl.innerHTML=h;a.ctl.style.flexDirection='column';
+      var code=document.createElement('div');code.className='disk';code.style.color='#dcdcaa';a.el.querySelector('.trace').innerHTML='';a.el.querySelector('.trace').appendChild(code);
+      function r(){var box=function(t,x){return '<div style="background:#cfe8da;border:1px solid #234c3b;min-width:46px;min-height:46px;display:flex;align-items:center;justify-content:center;font-weight:700;'+(x||'')+'">'+t+'</div>'};
+        a.screen.innerHTML='<div data-n="1" style="flex:1;min-height:300px;border:2px dashed #e07a2f;display:flex;flex-direction:'+v.flexDirection+';justify-content:'+v.justifyContent+';align-items:'+v.alignItems+';gap:'+v.gap+'px">'+box('A')+box('B',v.flex2?'flex:1':'')+box('C')+'</div>';
+        code.textContent="style={{\n  flex: 1,\n  flexDirection: '"+v.flexDirection+"',\n  justifyContent: '"+v.justifyContent+"',\n  alignItems: '"+v.alignItems+"',\n  gap: "+v.gap+"\n}}  // B: "+(v.flex2?'flex: 1':'sin flex')}
+      r();a.ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;var k=b.dataset.k;v[k]=(k==='gap')?+b.dataset.v:(k==='flex2'?b.dataset.v==='1':b.dataset.v);
+        [].forEach.call(b.parentNode.querySelectorAll('button[data-k="'+k+'"]'),function(x){x.classList.toggle('on',x===b)});
+        var msg={flexDirection:'Cambia el <b>eje principal</b>: ahora justifyContent y alignItems intercambian su dirección.',justifyContent:'Reparte A, B y C a lo largo del eje principal.',alignItems:'Los coloca en el eje contrario. <code>stretch</code> los estira.',gap:'Separación entre hijos.',flex2:'B crece y ocupa el espacio libre del eje principal.'}[k];
+        a.log(k+': '+b.dataset.v,'→ '+msg);r()}}})};
+
+  S.state=function(el){mount(el,{title:'Estado vs variable normal',hint:'Compara: el botón de estado repinta; el de la variable normal cambia el dato pero la pantalla no se entera hasta que algo la repinta.',
+    legend:['Valor de <code>useState</code>','Variable normal (<code>let</code>)','Veces que se ha ejecutado el componente'],
+    build:function(a){var n=0,normal=0,veces=1;
+      function r(){a.screen.innerHTML='<div class="p-bar">Contador</div><div data-n="1">'+a.b(1)+'Estado: <b>'+n+'</b></div><button class="p-btn" data-act="st">setN(n + 1)</button><div data-n="2">'+a.b(2)+'Variable normal en pantalla: <b>'+shown+'</b></div><button class="p-btn sec" data-act="nm">normal = normal + 1</button><div data-n="3">'+a.b(3)+'Pintado '+veces+' veces</div>'}
+      var shown=0;r();
+      a.on('click',function(x){if(x==='st'){n++;veces++;shown=normal;a.log('setN('+(n-1)+' + 1)','→ React repinta. Ya que repinta, también se lee la variable normal (ahora vale '+normal+').')}
+        else{normal++;a.log('normal = '+normal,'→ el dato cambió en memoria ('+normal+') pero <b>nadie avisó a React</b>: la pantalla sigue mostrando '+shown+'.')}r()})}})};
+
+  S.effects=function(el){mount(el,{title:'useEffect: montar, repetir, limpiar',hint:'Abre y cierra la pantalla del reloj y cambia la dependencia x. Elige las dependencias del efecto.',
+    legend:['Pantalla con <code>Reloj</code> montada','Valor de <code>x</code>'],
+    build:function(a){var open=false,seg=0,x=0,deps='[]',timer=null,runs=0;
+      a.ctl.innerHTML='<button data-c="open">Abrir pantalla</button><button data-c="close">Cerrar pantalla</button><button data-c="x">x = x + 1</button><button data-c="deps" class="on">deps: []</button>';
+      function start(why){runs++;seg=0;clearInterval(timer);timer=setInterval(function(){seg++;paint()},1000);a.log('useEffect(() =&gt; {…}, '+deps+')','→ se ejecuta ('+why+'). Crea <code>setInterval</code>. Ejecuciones: '+runs+'.')}
+      function stop(why){clearInterval(timer);timer=null;a.log('return () =&gt; clearInterval(id)','→ limpieza ejecutada ('+why+').')}
+      function paint(){a.screen.innerHTML='<div class="p-bar">'+(open?'Pantalla Reloj':'Pantalla vacía')+'</div>'+(open?'<div class="p-big" data-n="1" style="font-size:1.8rem">'+a.b(1)+seg+' segundos</div><div data-n="2">'+a.b(2)+'x = '+x+'</div>':'<div class="p-empty">El componente no está montado</div>')}
+      paint();a.ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;var c=b.dataset.c;
+        if(c==='open'&&!open){open=true;runs=0;start('montaje');paint()}
+        else if(c==='close'&&open){open=false;stop('desmontaje');paint()}
+        else if(c==='x'){x++;if(open){if(deps==='[x]'){stop('x cambió');start('x cambió')}else a.log('x cambió a '+x,'→ las dependencias son <code>[]</code>: el efecto <b>no</b> se vuelve a ejecutar.')}paint()}
+        else if(c==='deps'){deps=deps==='[]'?'[x]':'[]';b.textContent='deps: '+deps;a.log('dependencias = '+deps,deps==='[x]'?'→ ahora el efecto se repite cuando <code>x</code> cambie.':'→ el efecto solo se ejecuta al montar.')}}}})};
+
+  S.list=function(el){mount(el,{title:'Lista, filtro y lista vacía',hint:'Busca, añade y elimina. Fíjate en cómo se recalcula la lista visible y en el mensaje cuando no hay resultados.',
+    legend:['Buscador (estado <code>busqueda</code>)','Lista visible = <code>items.filter(...)</code>','<code>ListEmptyComponent</code>'],
+    build:function(a){var items=['Pan','Leche','Huevos'],q='',cnt=0;
+      a.ctl.innerHTML='<button data-c="add">+ Añadir elemento</button>';
+      function r(){var vis=items.filter(function(i){return i.toLowerCase().indexOf(q.toLowerCase())>-1});
+        a.screen.innerHTML='<div data-n="1">'+a.b(1)+'<input class="p-input" id="q" placeholder="Buscar…" value="'+esc(q)+'" style="width:85%"></div>'+(vis.length?vis.map(function(i){return '<div class="p-row" data-n="2"><span>'+a.b(2)+esc(i)+'</span><button class="p-btn red sm" data-act="del" data-i="'+esc(i)+'">✕</button></div>'}).join(''):'<div class="p-empty" data-n="3">'+a.b(3)+'No hay resultados</div>');
+        var inp=a.screen.querySelector('#q');inp.oninput=function(){q=inp.value;a.log('setBusqueda("'+esc(q)+'")','→ visibles = items.filter(…) → '+items.filter(function(i){return i.toLowerCase().indexOf(q.toLowerCase())>-1}).length+' resultado(s).');var pos=inp.selectionStart;r();var n=a.screen.querySelector('#q');n.focus();n.setSelectionRange(pos,pos)}}
+      r();a.ctl.onclick=function(e){if(e.target.dataset.c==='add'){cnt++;items=items.concat(['Elemento '+cnt]);a.log('setItems([...items, "Elemento '+cnt+'"])','→ array nuevo con el elemento al final (nunca <code>push</code>).');r()}};
+      a.on('click',function(x,d){if(x==='del'){items=items.filter(function(i){return i!==d.i});a.log('items.filter(i => i !== "'+esc(d.i)+'")','→ lista nueva sin ese elemento; <code>key</code> permite a React quitar solo esa fila.');r()}})}})};
+
+  S.stack=function(el){mount(el,{title:'Pila de navegación',hint:'Usa los botones de router y mira cómo cambia la pila (a la derecha del móvil, en el registro).',
+    legend:['Barra con botón atrás: aparece si hay pantallas debajo','Pantalla actual = la de arriba de la pila'],
+    build:function(a){var stk=['index'];
+      a.ctl.innerHTML='<button data-c="/detalle">push(\'/detalle\')</button><button data-c="/nuevo">push(\'/nuevo\')</button><button data-c="back">back()</button><button data-c="rep">replace(\'/nuevo\')</button>';
+      function r(){var top=stk[stk.length-1];a.screen.innerHTML='<div class="p-bar" data-n="1">'+(stk.length>1?'‹ ':'')+top+'</div><div data-n="2" style="padding:8px">'+a.b(2)+'Estás en <b>/'+(top==='index'?'':top)+'</b></div><div style="margin-top:8px;font-size:.75rem;color:#555"><b>Pila</b> (arriba = visible):</div>'+stk.slice().reverse().map(function(s,i){return '<div class="p-row" style="'+(i===0?'outline:2px solid #e07a2f':'')+'">'+s+'</div>'}).join('')}
+      r();a.ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;var c=b.dataset.c;
+        if(c==='back'){if(stk.length>1){var q=stk.pop();a.log('router.back()','→ se quita «'+q+'» de la pila; vuelve a «'+stk[stk.length-1]+'».')}else a.log('router.back()','→ no hay nada debajo: no hace nada.')}
+        else if(c==='rep'){var q2=stk.pop();stk.push('nuevo');a.log('router.replace(\'/nuevo\')','→ sustituye «'+q2+'» por «nuevo» (no se puede volver a «'+q2+'»).')}
+        else{stk.push(c.slice(1));a.log('router.push(\''+c+'\')','→ se apila «'+c.slice(1)+'» encima.')}r()}}})};
+
+
+  S.layout=function(el){mount(el,{title:'El layout se queda, las pantallas cambian',hint:'Elige dónde pones el <code>BannerRed</code> y navega entre pantallas. Fíjate en cuántas veces se crea el banner.',
+    legend:['<code>BannerRed</code> (importado)','<code>&lt;Stack /&gt;</code>: aquí se dibuja la pantalla activa'],
+    build:function(a){var where='layout',screen='index',montajes=1;
+      a.ctl.innerHTML='<button data-w="layout" class="on">Banner en _layout</button><button data-w="pantalla">Banner en cada pantalla</button><button data-n="index">Ir a index</button><button data-n="nuevo">Ir a nuevo</button>';
+      function r(){var ban='<div class="p-net on" data-n="1">'+a.b(1)+'Red: wifi · creado '+montajes+' vez/veces</div>';
+        var cont='<div data-n="2">'+a.b(2)+'</div><div class="p-bar">'+(screen==='index'?'Lugares':'Nuevo lugar')+'</div>'+(screen==='index'?'<div class="p-row">Sagrada Família</div><div class="p-row">Barceloneta</div>':'<input class="p-input" placeholder="Nombre">');
+        a.screen.innerHTML=(where==='layout'?ban+cont:cont.replace('</div><div class="p-bar">','</div>'+ban+'<div class="p-bar">'))}
+      r();a.ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;
+        if(b.dataset.w){where=b.dataset.w;montajes=1;[].forEach.call(a.ctl.querySelectorAll('[data-w]'),function(x){x.classList.toggle('on',x===b)});a.log(where==='layout'?'&lt;BannerRed /&gt; dentro de _layout.jsx':'&lt;BannerRed /&gt; dentro de cada pantalla',where==='layout'?'→ se crea <b>una vez</b> y acompaña a todas las pantallas.':'→ cada pantalla tiene su copia: al navegar se destruye y se vuelve a crear.')}
+        else{if(screen===b.dataset.n)return;screen=b.dataset.n;if(where==='pantalla'){montajes++;a.log('navegar a «'+screen+'»','→ el banner se <b>vuelve a montar</b> (creado '+montajes+' veces): pierde su estado.')}else a.log('navegar a «'+screen+'»','→ el layout no se toca: el banner sigue igual. Solo cambia lo que hay dentro de &lt;Stack /&gt;.')}
+        r()}}})};
+
+  S.paths=function(el){var F=['src/app/_layout.jsx','src/app/index.jsx','src/app/nuevo.jsx','src/app/detall/[id].jsx','src/components/BannerRed.jsx','src/components/TarjetaLugar.jsx','src/storage/lugares.js','src/data/llocs.js'];
+    mount(el,{title:'Calculadora de rutas de import',hint:'Elige el fichero donde escribes el import y el que quieres traer.',legend:[],
+    build:function(a){
+      var opt=F.map(function(f){return '<option>'+f+'</option>'}).join('');
+      a.ctl.innerHTML='<label>Estoy en: <select id="f1">'+opt+'</select></label><label>Quiero importar: <select id="f2">'+opt.replace('<option>src/app/_layout.jsx','<option selected>src/app/_layout.jsx')+'</select></label>';
+      a.ctl.style.flexDirection='column';
+      var f1=a.ctl.querySelector('#f1'),f2=a.ctl.querySelector('#f2');f2.value='src/components/BannerRed.jsx';
+      var tr=a.el.querySelector('.trace');tr.innerHTML='<pre style="margin:0"><code></code></pre><div class="expl" style="margin-top:8px;padding:8px 10px;background:color-mix(in srgb,var(--accent2) 10%,transparent);border-left:4px solid var(--accent2);border-radius:0 8px 8px 0"></div>';
+      var code=tr.querySelector('code'),ex=tr.querySelector('.expl');
+      function rel(from,to){var a1=from.split('/');a1.pop();var b1=to.replace(/\.(jsx|js)$/,'').split('/');var i=0;while(i<a1.length&&i<b1.length-1&&a1[i]===b1[i])i++;var up=a1.length-i;var pre=up===0?'./':new Array(up+1).join('../');return pre+b1.slice(i).join('/')}
+      function r(){var from=f1.value,to=f2.value,path=rel(from,to),base=to.split('/').pop().replace(/\.(jsx|js)$/,'');
+        var line;if(/components|app/.test(to))line="import "+base+" from '"+path+"';";else line="import { /* nombres exportados */ } from '"+path+"';";
+        code.textContent=line+(from===to?"   // ¡es el mismo fichero!":'');window.HL&&window.HL(code);
+        var up=(path.match(/\.\.\//g)||[]).length;
+        ex.innerHTML=from===to?'Estás importando el fichero en sí mismo.':('Desde <code>'+from.split('/').slice(0,-1).join('/')+'/</code> '+(up?'subes <b>'+up+'</b> carpeta(s) (<code>../</code>) y bajas hasta el destino. ':'estás en la misma carpeta o debajo: empieza por <code>./</code>. ')+(/components|app/.test(to)?'Es un componente/pantalla con <b>export default</b>: sin llaves.':'Son funciones/datos con <b>export con nombre</b>: entre llaves.')+' La extensión no se escribe.')}
+      f1.onchange=f2.onchange=r;r()}})};
+
+  S.marco=function(el){mount(el,{title:'Marco (_layout) y contenido (index)',hint:'Cambia cosas y mira a qué fichero pertenece cada cambio.',
+    legend:['La barra superior la pone <code>&lt;Stack /&gt;</code> de <code>_layout.jsx</code>','El contenido lo pone la pantalla (<code>index.jsx</code> o <code>nuevo.jsx</code>)'],
+    build:function(a){var bar=true,txt='Tour',pantalla='index';
+      a.ctl.innerHTML='<button data-c="bar" class="on">Barra: visible</button><button data-c="txt">Texto: «Tour»</button><button data-c="go">Ir a «nuevo»</button>';
+      function r(){var t=pantalla==='index'?'index':'nuevo';
+        a.screen.innerHTML=(bar?'<div class="p-bar" data-n="1">'+a.b(1)+(pantalla==='nuevo'?'‹ ':'')+t+'</div>':'')+'<div data-n="2" style="padding:8px">'+a.b(2)+(pantalla==='index'?'<div style="font-size:1.2rem;font-weight:700">MyPlaces</div><div>'+txt+'</div>':'<div style="font-size:1.2rem;font-weight:700">Nuevo lugar</div><input class="p-input" placeholder="Nombre">')+'</div>'}
+      r();a.ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;var c=b.dataset.c;
+        if(c==='bar'){bar=!bar;b.classList.toggle('on',bar);b.textContent='Barra: '+(bar?'visible':'oculta');a.log('<b>_layout.jsx</b>: &lt;Stack screenOptions={{ headerShown: '+bar+' }} /&gt;','→ el <b>marco</b> cambia (barra '+(bar?'visible':'oculta')+'); el contenido de las pantallas no se toca.')}
+        else if(c==='txt'){txt=txt==='Tour'?'Hola':'Tour';b.textContent='Texto: «'+txt+'»';a.log('<b>index.jsx</b>: &lt;Text&gt;'+txt+'&lt;/Text&gt;','→ cambia el <b>contenido</b> de esa pantalla; la barra sigue igual.')}
+        else{pantalla=pantalla==='index'?'nuevo':'index';b.textContent='Ir a «'+(pantalla==='index'?'nuevo':'index')+'»';a.log(pantalla==='nuevo'?'router.push(\'/nuevo\')':'router.back()','→ <b>otro fichero</b> (<code>'+(pantalla==='nuevo'?'nuevo.jsx':'index.jsx')+'</code>) se dibuja dentro del <b>mismo marco</b>.')}r()}}})};
+
+  S.login=function(el){mount(el,{title:'Flujo login → dashboard',hint:'Elige cómo entra el usuario (replace o push) y mira qué pasa con «Atrás». Después prueba el perfil y cerrar sesión.',
+    legend:['Barra con ‹ solo si hay algo debajo en la pila','Botones de navegación de la pantalla actual'],
+    build:function(a){var stk=['login'],mode='replace';
+      a.ctl.innerHTML='<button data-m="replace" class="on">Entrar con replace</button><button data-m="push">Entrar con push</button>';
+      function r(){var top=stk[stk.length-1],h='<div class="p-bar" data-n="1">'+a.b(1)+(stk.length>1?'‹ ':'')+top+'</div><div data-n="2" style="display:flex;flex-direction:column;gap:6px">'+a.b(2);
+        if(top==='login')h+='<input class="p-input" placeholder="Usuario"><input class="p-input" type="password" placeholder="Contraseña"><button class="p-btn" data-act="entrar">Entrar</button>';
+        if(top==='dashboard')h+='<div style="padding:6px 0">Bienvenido al dashboard 🎉</div><button class="p-btn" data-act="perfil">Ver perfil</button><button class="p-btn red" data-act="salir">Cerrar sesión</button>';
+        if(top==='perfil')h+='<div style="padding:6px 0">Tu perfil</div><button class="p-btn red" data-act="salir">Cerrar sesión</button>';
+        h+='<button class="p-btn sec" data-act="back">Atrás (back)</button></div><div style="font-size:.75rem;color:#555"><b>Pila</b> (arriba = visible):</div>'+stk.slice().reverse().map(function(x,i){return '<div class="p-row" style="'+(i===0?'outline:2px solid #e07a2f':'')+'">'+x+'</div>'}).join('');
+        a.screen.innerHTML=h}
+      r();a.ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;mode=b.dataset.m;[].forEach.call(a.ctl.children,function(x){x.classList.toggle('on',x===b)});a.log('modo de entrada = '+mode,mode==='push'?'→ ojo: con <code>push</code> el login se queda debajo en la pila.':'→ con <code>replace</code> el login desaparece de la pila.')};
+      a.on('click',function(x){
+        if(x==='entrar'){if(mode==='replace'){stk=['dashboard'];a.log('router.replace(\'/dashboard\')','→ se <b>sustituye</b> login por dashboard. Pila: [dashboard]. No hay vuelta atrás al login.')}else{stk.push('dashboard');a.log('router.push(\'/dashboard\')','→ se apila encima: pila [login, dashboard]. <b>«Atrás» volverá al login</b> (normalmente no lo quieres).')}}
+        else if(x==='perfil'){stk.push('perfil');a.log('router.push(\'/perfil\')','→ aquí sí interesa <code>push</code>: se puede volver al dashboard.')}
+        else if(x==='back'){if(stk.length>1){var q=stk.pop();a.log('router.back()','→ se quita «'+q+'»; ves «'+stk[stk.length-1]+'».')}else a.log('router.back()','→ no hay nada debajo: en Android cerraría la app.')}
+        else if(x==='salir'){a.log(stk.length>1?'router.dismissAll(); router.replace(\'/login\')':'router.replace(\'/login\')','→ se vacía la pila y queda solo «login».');stk=['login']}
+        r()})}})};
+
+  S.rutas=function(el){var EJ=['src/app/index.jsx','src/app/nuevo.jsx','src/app/_layout.jsx','src/app/local/index.jsx','src/app/local/[id].jsx','src/app/(auth)/login.jsx','src/app/[...resto].jsx','src/app/+not-found.jsx','src/app/components/Tarjeta.jsx','src/components/Tarjeta.jsx'];
+    mount(el,{title:'De fichero a ruta',hint:'Elige un fichero (o escribe una ruta) y mira qué ruta genera y qué significa.',legend:[],
+    build:function(a){
+      a.ctl.innerHTML='<select id="e">'+EJ.map(function(x){return '<option>'+x+'</option>'}).join('')+'</select> <input id="t" class="p-input" style="width:230px;background:var(--bg);color:var(--ink)" placeholder="o escribe src/app/..." >';
+      var sel=a.ctl.querySelector('#e'),inp=a.ctl.querySelector('#t');
+      var tr=a.el.querySelector('.trace');tr.innerHTML='<div class="expl" style="padding:10px 12px;background:color-mix(in srgb,var(--accent2) 10%,transparent);border-left:4px solid var(--accent2);border-radius:0 8px 8px 0;font-size:.93rem"></div>';var ex=tr.firstChild;
+      function info(f){f=f.trim();var m=f.match(/^src\/app\/(.*)\.(jsx|js|tsx|ts)$/);
+        if(!m)return {r:'—',t:'<b>No es una pantalla.</b> Está fuera de <code>src/app/</code>: Expo Router no lo mira. Es un fichero normal que se usa con <code>import</code>.'};
+        var r=m[1],base=r.split('/').pop();
+        if(base==='_layout')return {r:'(no es ruta)',t:'<b>Layout</b>: marco de las pantallas de esa carpeta (<code>Stack</code>, <code>Tabs</code>…).'};
+        if(base==='+not-found')return {r:'cualquier ruta que no exista',t:'<b>Pantalla “no encontrado”</b> (404).'};
+        if(base==='+html')return {r:'(solo web)',t:'Personaliza el HTML base en la web. Avanzado.'};
+        var seg=r.split('/').filter(function(x){return !/^\(.*\)$/.test(x)});
+        if(seg[seg.length-1]==='index')seg.pop();
+        var route='/'+seg.join('/').replace(/\[\.\.\.(\w+)\]/g,'*$1').replace(/\[(\w+)\]/g,':$1');
+        var notes=[];
+        if(/\[\.\.\./.test(r))notes.push('Comodín: recoge <b>varios</b> trozos de la ruta.');
+        else if(/\[\w+\]/.test(r))notes.push('Ruta <b>dinámica</b>: el valor entre corchetes se lee con <code>useLocalSearchParams()</code>.');
+        if(/\(.*\)\//.test(r))notes.push('La carpeta con paréntesis <b>agrupa</b> y no aparece en la ruta.');
+        if(base==='index')notes.push('<code>index</code> = la ruta base de su carpeta.');
+        if(/^components\//.test(r))notes.push('<b>Cuidado:</b> un componente dentro de <code>src/app</code> se vuelve una pantalla. Muévelo a <code>src/components</code>.');
+        if(!notes.length)notes.push('Pantalla normal: el nombre del fichero es la ruta.');
+        return {r:route,t:notes.join(' ')}}
+      function r(){var f=inp.value.trim()||sel.value,i=info(f);ex.innerHTML='<div><b>Fichero:</b> <code>'+f.replace(/</g,'&lt;')+'</code></div><div><b>Ruta:</b> <code>'+i.r+'</code></div><div style="margin-top:6px">'+i.t+'</div>';
+        a.screen.innerHTML='<div class="p-bar">'+(i.r.charAt(0)==='/'?i.r:'—')+'</div><div style="padding:8px;color:#555">'+(i.r.charAt(0)==='/'?'Esta es la pantalla que se abre en <b>'+i.r+'</b>':'No se abre como pantalla')+'</div>'}
+      sel.onchange=function(){inp.value='';r()};inp.oninput=r;r()}})};
+
+  S.estilos=function(el){mount(el,{title:'Editor de estilos en vivo',hint:'Cambia las propiedades y mira la tarjeta y el código. Las del texto (tamaño, negrita, color) solo valen en <code>Text</code>.',
+    legend:['<code>caja</code>: estilo del <code>View</code> (fondo, espacio, borde)','<code>titulo</code>: estilo del <code>Text</code> (solo texto)'],
+    build:function(a){
+      var v={backgroundColor:'#ffffff',padding:16,borderRadius:12,borderWidth:1,margin:0,fontSize:20,fontWeight:'bold',color:'#234c3b',textAlign:'left'};
+      var SW={backgroundColor:['#ffffff','#eef3ef','#fff3cd','#234c3b'],color:['#234c3b','#b3541a','#000000','#ffffff']};
+      var RG={padding:[0,40],borderRadius:[0,40],borderWidth:[0,8],margin:[0,30],fontSize:[12,34]};
+      var h='';
+      ['backgroundColor','color'].forEach(function(k){h+='<div style="width:100%"><b>'+k+':</b> '+SW[k].map(function(c){return '<button data-k="'+k+'" data-v="'+c+'" style="background:'+c+';color:'+(c==='#ffffff'||c==='#eef3ef'||c==='#fff3cd'?'#000':'#fff')+';border:1px solid #888;width:26px;height:26px;padding:0"> </button>'}).join(' ')+'</div>'});
+      Object.keys(RG).forEach(function(k){h+='<div style="width:100%"><b>'+k+':</b> <input type="range" data-k="'+k+'" min="'+RG[k][0]+'" max="'+RG[k][1]+'" value="'+v[k]+'"> <span id="n_'+k+'">'+v[k]+'</span></div>'});
+      h+='<div style="width:100%"><b>fontWeight:</b> <button data-k="fontWeight" data-v="normal">normal</button><button data-k="fontWeight" data-v="bold" class="on">bold</button> <b>textAlign:</b> <button data-k="textAlign" data-v="left" class="on">left</button><button data-k="textAlign" data-v="center">center</button><button data-k="textAlign" data-v="right">right</button></div>';
+      a.ctl.innerHTML=h;a.ctl.style.flexDirection='column';
+      var code=document.createElement('div');code.className='disk';code.style.color='#dcdcaa';var tr=a.el.querySelector('.trace');tr.innerHTML='';tr.appendChild(code);
+      function r(){var dark=v.backgroundColor==='#234c3b';
+        a.screen.innerHTML='<div data-n="1" style="background:'+v.backgroundColor+';padding:'+v.padding+'px;border-radius:'+v.borderRadius+'px;border:'+v.borderWidth+'px solid #888;margin:'+v.margin+'px">'+a.b(1)+'<div data-n="2" style="font-size:'+v.fontSize+'px;font-weight:'+v.fontWeight+';color:'+v.color+';text-align:'+v.textAlign+'">'+a.b(2)+'Sagrada Família</div><div style="font-size:13px;color:'+(dark?'#ddd':'#666')+'">Pulsa para ver más</div></div>';
+        code.textContent="const estilos = StyleSheet.create({\n  caja: {\n    backgroundColor: '"+v.backgroundColor+"',\n    padding: "+v.padding+",\n    borderRadius: "+v.borderRadius+",\n    borderWidth: "+v.borderWidth+",\n    margin: "+v.margin+",\n  },\n  titulo: {\n    fontSize: "+v.fontSize+",\n    fontWeight: '"+v.fontWeight+"',\n    color: '"+v.color+"',\n    textAlign: '"+v.textAlign+"',\n  },\n});"}
+      var NOTA={backgroundColor:'color de fondo del <code>View</code>.',color:'color del <b>texto</b> (solo en <code>Text</code>).',padding:'espacio <b>interior</b>: entre el borde y el contenido.',margin:'espacio <b>exterior</b>: separa la caja de lo que la rodea.',borderRadius:'redondea las esquinas.',borderWidth:'grosor del borde (si hay, define también <code>borderColor</code>).',fontSize:'tamaño del texto (solo <code>Text</code>).',fontWeight:'negrita o normal (solo <code>Text</code>).',textAlign:'alineación del texto dentro de su caja.'};
+      r();
+      function set(k,val,isNum){v[k]=isNum?+val:val;if(isNum){var n=a.ctl.querySelector('#n_'+k);if(n)n.textContent=val}a.log(k+': '+(isNum?val:"'"+val+"'"),'→ '+NOTA[k]);r()}
+      a.ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;var k=b.dataset.k;
+        [].forEach.call(b.parentNode.querySelectorAll('button[data-k="'+k+'"]'),function(x){x.classList.toggle('on',x===b)});set(k,b.dataset.v,false)};
+      a.ctl.oninput=function(e){var k=e.target.dataset.k;if(k)set(k,e.target.value,true)}}})};
+
+  S.combinar=function(el){mount(el,{title:'Combinar estilos con un array',hint:'Activa o desactiva «activo» y «peligro». Fíjate en qué estilo gana cuando hay varios.',
+    legend:['El array de estilos tal como lo evalúa React Native','El resultado final tras aplicar todos'],
+    build:function(a){var on={activo:false,peligro:false};
+      a.ctl.innerHTML='<button data-k="activo">activo = false</button><button data-k="peligro">peligro = false</button>';
+      var tr=a.el.querySelector('.trace');tr.innerHTML='<div class="disk" style="color:#dcdcaa"></div><div class="expl" style="margin-top:8px;padding:8px 10px;background:color-mix(in srgb,var(--accent2) 10%,transparent);border-left:4px solid var(--accent2);border-radius:0 8px 8px 0;font-size:.9rem"></div>';
+      var code=tr.querySelector('.disk'),ex=tr.querySelector('.expl');
+      function r(){var bg='#cccccc',list=['estilos.base'],used=[];
+        if(on.activo){bg='#234c3b';list.push('estilos.activo')}else list.push('false');
+        if(on.peligro){bg='#b3541a';list.push('estilos.peligro')}else list.push('false');
+        a.screen.innerHTML='<div data-n="2" style="background:'+bg+';color:#fff;text-align:center;padding:12px;border-radius:8px">'+a.b(2)+(on.peligro?'Peligro':on.activo?'Activo':'Normal')+'</div>';
+        code.textContent='style={['+list.join(', ')+']}\n\n// resultado final:\n{ padding: 12, borderRadius: 8,\n  backgroundColor: \''+bg+'\' }';
+        ex.innerHTML=on.activo&&on.peligro?'Entran <b>los dos</b>: <code>activo</code> pone verde y luego <code>peligro</code> lo <b>sobrescribe</b> con naranja. <b>Gana el último del array.</b>':on.peligro?'<code>peligro</code> pisa el gris del <code>base</code>.':on.activo?'<code>activo</code> pisa el gris del <code>base</code>.':'Solo <code>base</code>. Los <code>false</code> se ignoran.'}
+      r();a.ctl.onclick=function(e){var b=e.target.closest('button');if(!b)return;var k=b.dataset.k;on[k]=!on[k];b.classList.toggle('on',on[k]);b.textContent=k+' = '+on[k];
+        a.log(k+' = '+on[k],on[k]?'→ <code>'+k+' &amp;&amp; estilos.'+k+'</code> devuelve el estilo y se añade al array.':'→ <code>false &amp;&amp; …</code> da <code>false</code> y ese hueco del array se ignora.');r()}}})};
+
+  S.ciudades=function(el){var D=[{id:'gotham',n:'Gotham',c:'#111111',d:'Ciudad oscura y lluviosa, siempre en vilo.'},{id:'metropolis',n:'Metropolis',c:'#1e63d6',d:'La ciudad del mañana, llena de rascacielos.'},{id:'coast',n:'Coast City',c:'#d62828',d:'Ciudad costera de cielos despejados.'}];
+    mount(el,{title:'Lista de lugares → pantalla de cada lugar',hint:'Pulsa un lugar y mira qué ejecuta cada paso de la receta. Prueba también una ruta que no existe.',
+    legend:['<code>BotonPlaces</code> con su <code>color</code> (viene de los datos)','Título de la barra: <code>Stack.Screen options</code>','Nombre y descripción: salen de <code>find</code>'],
+    build:function(a){var cur=null;
+      a.ctl.innerHTML='<button data-id="xyz">Probar /lugar/xyz (no existe)</button>';
+      function list(){cur=null;a.screen.innerHTML='<div class="p-bar">index</div><div style="display:flex;flex-direction:column;gap:12px;padding:6px 0">'+D.map(function(l){return '<div data-n="1" data-act="go" data-id="'+l.id+'" style="background:'+l.c+';color:#fff;border-radius:14px;padding:14px 16px;cursor:pointer;box-shadow:0 2px 4px #0004">'+a.b(1)+'<b style="font-size:1.1rem">'+l.n+'</b><div style="font-size:.78rem;opacity:.8">Desconocido</div></div>'}).join('')+'</div>'}
+      function det(id){var l=D.filter(function(x){return x.id===id})[0];cur=id;
+        a.screen.innerHTML='<div class="p-bar" data-n="2">'+a.b(2)+'‹ '+(l?l.n:id)+'</div>'+(l?'<div data-n="3" style="padding:10px;border-left:6px solid '+l.c+'">'+a.b(3)+'<div style="font-size:1.3rem;font-weight:700">'+l.n+'</div><div>'+l.d+'</div></div>':'<div class="p-err" style="padding:10px">Lugar no encontrado</div>')+'<button class="p-btn sec" data-act="back">Volver</button>'}
+      list();
+      function ir(id){var l=D.filter(function(x){return x.id===id})[0];
+        a.log('onPress → router.push({ pathname: "/lugar/[id]", params: { id: "'+id+'" } })','→ se abre <b>/lugar/'+id+'</b>.');
+        a.log('const { id } = useLocalSearchParams()','→ id = <b>"'+id+'"</b> (texto).');
+        a.log('lugares.find(l => l.id === id)',l?'→ encuentra «'+l.n+'».':'→ <b>undefined</b>: se muestra «Lugar no encontrado».');
+        if(l)a.log('&lt;Stack.Screen options={{ title: lugar.nombre }} /&gt;','→ la barra superior pasa a decir «'+l.n+'».');det(id)}
+      a.ctl.onclick=function(e){var b=e.target.closest('button');if(b)ir(b.dataset.id)};
+      a.on('click',function(x,d){if(x==='go')ir(d.id);else{a.log('router.back()','→ vuelves a la lista.');list()}})}})};
+  document.querySelectorAll('.sim[data-sim]').forEach(function(el){S[el.dataset.sim](el)});
+})();
+</script>
+<script>
+(function(){
+
+  var B=function(t){return '<div class="p-bar">'+t+'</div>'};
+  var R=function(t,b){return '<div class="p-row"><span>'+t+'</span>'+(b?'<button class="p-btn sm">'+b+'</button>':'')+'</div>'};
+  var BTN=function(t,c){return '<button class="p-btn '+(c||'')+'">'+t+'</button>'};
+  var P=function(h){return {p:h}};
+  var T=function(){return {o:[].slice.call(arguments)}};
+  var NONE='<div class="none">Todavía no se dibuja nada</div>';
+  var CIU=function(){return [['Gotham','#111111'],['Metropolis','#1e63d6'],['Coast City','#d62828']].map(function(c){return '<div style="background:'+c[1]+';color:#fff;border-radius:14px;padding:12px 14px;margin-bottom:8px"><b>'+c[0]+'</b><div style="font-size:.75rem;opacity:.8">Desconocido</div></div>'}).join('')};
+  var STK=function(a){return B((a.length>1?'‹ ':'')+a[a.length-1])+'<div style="font-size:.75rem;color:#555"><b>Pila</b> (arriba = visible):</div>'+a.slice().reverse().map(function(x,i){return '<div class="p-row" style="'+(i===0?'outline:2px solid #e07a2f':'')+'"><span>'+x+'</span></div>'}).join('')};
+  var STEPS={
+rec1:[[1,1,"Los datos de los lugares van en <b>un solo fichero</b>. Así la lista y el detalle leen <b>lo mismo</b> y no repites información.",null],
+[2,2,"<code>export const</code> (con nombre): se importa con llaves, <code>import { lugares } from …</code>. Es un array de objetos, uno por lugar.",null],
+[3,3,"Cada lugar tiene un <b><code>id</code> único, en texto</b>. Es lo que viajará en la ruta (<code>/lugar/gotham</code>) y servirá para encontrarlo. Aquí también van <code>nombre</code>, <code>color</code>, <code>coordenadas</code> y la <code>descripcion</code> que verás en el detalle.",P(CIU())]],
+rec2:[[2,2,"<code>router</code> permite navegar desde código, por ejemplo al pulsar un botón.",null],
+[3,3,"Importas los datos: desde <code>src/app/</code> subes una carpeta (<code>../</code>) para llegar a <code>src/data/</code>.",null],
+[6,6,"<b><code>map</code></b> convierte cada lugar en un botón. Ya no escribes los tres botones a mano: si añades un lugar a los datos, aparece solo.",P(B('Menu')+CIU())],
+[8,8,"<code>key</code> obligatoria en cada elemento de una lista: React la usa para saber cuál es cuál. Usa el <code>id</code>.",null],
+[11,11,"Cada botón recibe su <code>nombre</code>, <code>coordenadas</code> y <b>su color</b> desde los datos: así tu prop <code>color</code> se alimenta sola.",null],
+[12,12,"Al pulsar: <code>router.push</code> abre la ruta dinámica <code>/lugar/[id]</code> pasando <b>solo el <code>id</code></b>. El detalle buscará el resto en los datos. Tu <code>BotonPlaces</code> ya acepta <code>onPress</code>.",P(B('Menu')+CIU()+'<div style="text-align:center;color:#555;font-size:.8rem">(pulsas Gotham)</div>')]],
+rec3:[[1,1,"Esta es la pantalla dinámica. El fichero vive en la carpeta <code>lugar</code> y se llama <code>[id].jsx</code>: <b>los corchetes</b> significan “aquí va un valor variable”. Sirve para <code>/lugar/gotham</code>, <code>/lugar/metropolis</code>…",null],
+[2,2,"<code>useLocalSearchParams</code> lee los parámetros de la ruta. <code>Stack</code> lo necesitas para cambiar el título de la barra desde esta pantalla.",null],
+[4,4,"Los mismos datos. Desde <code>src/app/lugar/</code> hay que subir <b>dos</b> carpetas: <code>../../data/lugares</code>.",null],
+[6,6,"Como toda pantalla, lleva <code>export default</code>. El nombre de la función es libre.",null],
+[7,7,"Lees el <code>id</code> de la ruta. Si abriste <code>/lugar/gotham</code>, <code>id = \"gotham\"</code> (siempre texto).",P(B('gotham'))],
+[8,8,"<code>find</code> recorre los datos y devuelve el <b>primer lugar cuyo id coincide</b>, o <code>undefined</code> si no hay ninguno.",null],
+[10,10,"Si no se encontró (alguien abrió <code>/lugar/xyz</code>), muestras un aviso y <b>terminas</b>. Sin esto, la línea siguiente fallaría al leer <code>lugar.nombre</code> de <code>undefined</code>.",P(B('xyz')+'<div class="p-err">Lugar no encontrado</div>')],
+[14,14,"<b>Título dinámico</b>: este <code>Stack.Screen</code> dentro de la pantalla no pinta nada, solo cambia la barra superior para que muestre el nombre del lugar.",P(B('‹ Gotham'))],
+[15,15,"El nombre y, debajo, la descripción. Aquí harías luego los estilos (color del lugar, tamaños…).",P(B('‹ Gotham')+'<div style="padding:10px"><div style="font-size:1.4rem;font-weight:700">Gotham</div><div>Ciudad oscura y lluviosa, siempre en vilo.</div></div>')]],
+sty1:[[1,1,"Importas <code>StyleSheet</code> junto a los componentes que vas a usar.",null],
+[5,5,"La prop <code>style</code> recibe un <b>objeto</b> de estilos. <code>estilos.caja</code> es el objeto <code>caja</code> que se define abajo.",P('<div style="background:#fff;border:1px dashed #bbb;min-height:90px"></div>')],
+[6,6,"Cada elemento lleva su propio estilo. <b>No hay herencia</b> de <code>View</code> a <code>Text</code>: el título necesita el suyo.",P('<div style="background:#fff;border:1px solid #ddd;padding:16px">'+'<div style="font-size:20px;font-weight:bold;color:#234c3b">Sagrada Família</div>'+'</div>')],
+[7,7,"Estilo de la línea secundaria, más pequeña y gris.",P('<div style="background:#fff;border:1px solid #ddd;padding:16px;border-radius:12px">'+'<div style="font-size:20px;font-weight:bold;color:#234c3b">Sagrada Família</div>'+'<div style="font-size:14px;color:#666">Pulsa para ver más</div>'+'</div>')],
+[12,12,"<code>StyleSheet.create({ … })</code> agrupa <b>todos los estilos con nombre</b> en un solo sitio. Cada clave (<code>caja</code>, <code>titulo</code>…) es un estilo. Se suele poner al final del fichero.",null],
+[14,14,"<code>backgroundColor</code>: color de fondo. Los colores van como texto: <code>'#fff'</code>, <code>'red'</code>, <code>'rgb(0,0,0)'</code>…",P('<div style="background:#ffffff;border:1px solid #ccc;padding:30px">fondo blanco</div>')],
+[15,15,"<code>padding</code>: espacio <b>interior</b>, entre el borde y el contenido. El número son píxeles lógicos, <b>sin “px”</b>.",P('<div style="background:#fff;padding:16px;border:1px dashed #bbb"><div style="background:#eef3ef">contenido</div></div>')],
+[16,16,"Esquinas redondeadas.",P('<div style="background:#fff;padding:16px;border:1px solid #ddd;border-radius:12px">'+'<div style="font-size:20px;font-weight:bold;color:#234c3b">Sagrada Família</div>'+'</div>')],
+[17,18,"Borde: grosor y color. Si pones <code>borderWidth</code> sin <code>borderColor</code>, sale negro.",P('<div style="background:#fff;padding:16px;border:1px solid #ddd;border-radius:12px">'+'<div style="font-size:20px;font-weight:bold;color:#234c3b">Sagrada Família</div>'+'<div style="font-size:14px;color:#666">Pulsa para ver más</div>'+'</div>')],
+[19,19,"<code>margin</code>: espacio <b>exterior</b>, separa esta caja de las de al lado. <code>marginBottom</code> solo por abajo.",P('<div style="background:#fff;padding:16px;border:1px solid #ddd;border-radius:12px;margin-bottom:12px">'+'<div style="font-size:20px;font-weight:bold;color:#234c3b">Sagrada Família</div>'+'</div><div style="background:#fff;padding:16px;border:1px solid #ddd;border-radius:12px">Otra tarjeta</div>')],
+[21,21,"<code>fontSize</code> (tamaño), <code>fontWeight</code> (<code>'bold'</code>, <code>'normal'</code>, <code>'600'</code>…) y <code>color</code> <b>solo funcionan en <code>Text</code></b>.",P('<div style="font-size:20px;font-weight:bold;color:#234c3b">Sagrada Família</div>')],
+[22,22,"Un tamaño menor y gris para el texto secundario.",P('<div style="background:#fff;padding:16px;border:1px solid #ddd;border-radius:12px">'+'<div style="font-size:20px;font-weight:bold;color:#234c3b">Sagrada Família</div>'+'<div style="font-size:14px;color:#666">Pulsa para ver más</div>'+'</div>')]],
+sty2:[[1,1,"Un botón con varias “versiones” según sus props: normal, activo, de peligro.",null],
+[3,3,"<b>Array de estilos</b>: se aplican <b>de izquierda a derecha</b> y el último que defina una propiedad gana. <code>activo &amp;&amp; estilos.activo</code> añade ese estilo <b>solo si <code>activo</code> es verdadero</b>; si es falso, el array lleva <code>false</code> y React Native lo ignora.",P('<div style="background:#cccccc;color:#fff;text-align:center;padding:12px;border-radius:8px">Normal</div>')],
+[10,10,"Estilo base: lo que tienen <b>todos</b> los botones (fondo gris).",P('<div style="background:#cccccc;color:#fff;text-align:center;padding:12px;border-radius:8px">Normal</div>')],
+[11,11,"Con <code>activo</code>: <code>backgroundColor</code> verde <b>sobrescribe</b> al gris del base (va después en el array).",P('<div style="background:#cccccc;color:#fff;text-align:center;padding:12px;border-radius:8px;margin-bottom:8px">Normal</div><div style="background:#234c3b;color:#fff;text-align:center;padding:12px;border-radius:8px">Activo</div>')],
+[12,12,"Con <code>peligro</code>: naranja. Si llegaran <code>activo</code> y <code>peligro</code> a la vez, ganaría <code>peligro</code> por ir el último en el array.",P('<div style="background:#cccccc;color:#fff;text-align:center;padding:12px;border-radius:8px;margin-bottom:8px">Normal</div><div style="background:#234c3b;color:#fff;text-align:center;padding:12px;border-radius:8px;margin-bottom:8px">Activo</div><div style="background:#b3541a;color:#fff;text-align:center;padding:12px;border-radius:8px">Peligro</div>')],
+[13,13,"El texto del botón: blanco y centrado. Va en su propio estilo porque es otro componente (<code>Text</code>).",null]],
+login1:[[2,2,"Importas <code>router</code> para navegar desde código.",null],
+[6,2,"<code>entrar</code> se ejecutará al pulsar el botón. Aquí, antes de navegar, comprobarías el usuario y la contraseña (con una API o datos guardados).",null],
+[8,8,"<b><code>replace</code></b>, no <code>push</code>: sustituye <code>login</code> por <code>dashboard</code>. La pila pasa de <code>[login]</code> a <code>[dashboard]</code>, así que <b>no hay nada debajo</b> y el botón atrás no vuelve al login.",P(STK(['dashboard']))],
+[12,12,"Campo de usuario (aquí sin estado para simplificar; en el real usarías <code>useState</code> como en el formulario).",P(B('login')+'<input class="p-input" placeholder="Usuario"><input class="p-input" type="password" placeholder="Contraseña">'+BTN('Entrar'))],
+[13,13,"<code>secureTextEntry</code> oculta lo que se escribe (puntos en vez de letras).",P(B('login')+'<input class="p-input" placeholder="Usuario"><input class="p-input" type="password" placeholder="Contraseña">'+BTN('Entrar'))],
+[14,14,"El botón ejecuta <code>entrar</code> y te lleva al dashboard.",P(B('login')+'<input class="p-input" placeholder="Usuario"><input class="p-input" type="password" placeholder="Contraseña">'+BTN('Entrar'))]],
+prot1:[[3,3,"Para este esquema necesitas estado: si el usuario está dentro o no.",null],
+[6,6,"<code>logueado</code> vale <code>false</code> al principio. En una app real este dato no vive aquí: se guarda en una <b>sesión compartida</b> (contexto) para que <code>login.jsx</code> pueda cambiarlo. Es un tema aparte; esto es el esquema.",null],
+[9,9,"El mismo <code>Stack</code> de siempre, pero agrupando pantallas en bloques protegidos.",null],
+[10,12,"<b>Bloque 1</b>: <code>guard</code> es una condición. Con <code>!logueado</code> (<code>true</code> si no hay sesión), <code>login</code> <b>está disponible</b>.",P(STK(['login']))],
+[13,12,"<b>Bloque 2</b>: solo está disponible si <code>logueado</code> es <code>true</code>. Mientras sea <code>false</code>, <code>dashboard</code> y <code>perfil</code> <b>no se pueden abrir</b>, ni escribiendo la ruta a mano; Expo Router te lleva a una pantalla permitida.",P(STK(['login']))]],
+stack1:[[1,1,"Al abrir la app, la pila tiene <b>una sola</b> pantalla: <code>index</code>. Es la que ves. No hay botón de atrás porque no hay nada debajo.",P(STK(['index']))],
+[2,2,"<code>push</code> <b>pone una pantalla encima</b>. Ahora la pila tiene dos y ves la de arriba (<code>nuevo</code>). <code>index</code> sigue ahí debajo, esperando; aparece la flecha ‹ de volver.",P(STK(['index','nuevo']))],
+[3,3,"Otro <code>push</code>: tercera pantalla encima. Cada <code>push</code> añade una; la pila crece.",P(STK(['index','nuevo','detall/3']))],
+[4,4,"<code>back</code> <b>quita la de arriba</b> (la destruye) y vuelves a ver la anterior. Es lo mismo que pulsar la flecha ‹ de la barra o el botón atrás de Android.",P(STK(['index','nuevo']))],
+[5,5,"Otro <code>back</code>: vuelves a <code>index</code>, la base de la pila.",P(STK(['index']))],
+[6,6,"<code>replace</code> <b>sustituye</b> la pantalla de arriba por otra, sin apilar. Como no queda la anterior debajo, <b>no se puede volver</b> a ella. Útil tras un login, por ejemplo.",P(STK(['nuevo']))]],
+fich1:[[1,2,"<b>1 · Imports</b>: siempre arriba. Traes todo lo que vas a usar en este fichero.",null],
+[4,6,"<b>2 · Piezas auxiliares</b>: funciones o componentes pequeños que solo usa este fichero. <b>No llevan</b> <code>export default</code>: Expo Router los ignora.",P('<div style="font-size:24px">MyPlaces</div>')],
+[9,10,"<b>3 · El componente principal</b>: <b>solo uno por fichero</b> con <code>export default</code>. Si pones dos, error. Este es el que Expo Router muestra como pantalla.",null],
+[11,11,"Aquí, al principio de la función y antes del <code>return</code>, va la lógica: estado, efectos y funciones.",null],
+[12,17,"El <code>return</code> describe lo que se ve. Usa <code>&lt;Titulo /&gt;</code> (la pieza auxiliar) y un <code>Text</code>.",P(B('index')+'<div style="padding:6px"><div style="font-size:24px">MyPlaces</div><div>Tour</div></div>')],
+[20,21,"<b>4 · Estilos</b>: al final del fichero (opcional). Se declaran con <code>const</code> después, pero se pueden usar arriba porque se ejecutan cuando se pinta.",null]],
+exp1:[[1,1,"Un fichero puede <b>exportar</b> cosas para que otros las usen. Sin <code>export</code>, lo que defines es privado de ese fichero.",null],
+[2,2,"<b>Export por defecto</b>: cada fichero puede tener solo <b>uno</b>. Es lo normal para componentes y pantallas (<code>Expo Router</code> lo exige en las pantallas).",null],
+[5,5,"<b>Export con nombre</b>: puedes tener varios por fichero. Se usa en ficheros de utilidades (<code>storage</code>, <code>data</code>).",null],
+[9,9,"Importar uno <b>por defecto</b>: sin llaves y puedes ponerle el nombre que quieras (pero usa el mismo que el fichero). La ruta empieza por <code>../</code> para subir una carpeta.",null],
+[10,10,"Importar <b>con nombre</b>: entre llaves y con <b>exactamente</b> el nombre exportado. Puedes traer varios a la vez.",null]],
+lay1:[[1,1,"El layout es un fichero más de <code>src/app</code>, pero con nombre especial: Expo Router lo carga <b>primero</b> y lo usa como marco de las pantallas de esa carpeta.",null],
+[2,2,"<code>Stack</code> viene de <code>expo-router</code>: es la navegación en pila.",null],
+[3,3,"Para colocar varias cosas en el layout necesitamos una caja <code>View</code> (sale de <code>react-native</code>).",null],
+[4,4,"<b>Aquí se importa tu componente</b>: ruta relativa desde <code>src/app/</code> hasta <code>src/components/BannerRed</code> (<code>../</code> = subir a <code>src/</code>). Sin extensión <code>.jsx</code>.",null],
+[6,6,"El layout también es un componente con <b>export default</b>.",null],
+[8,8,"Caja que ocupa toda la pantalla (<code>flex: 1</code>) y apila sus hijos de arriba abajo.",P('<div class="p-net on">Red: wifi</div>'+'<div class="none">(aquí irá la pantalla)</div>')],
+[9,9,"Usas tu componente como una etiqueta. Al estar en el layout, <b>sale encima de todas las pantallas</b> sin repetirlo en cada una.",P('<div class="p-net on">Red: wifi</div>'+'<div class="none">(aquí irá la pantalla)</div>')],
+[10,10,"<code>&lt;Stack /&gt;</code> es el hueco donde Expo Router dibuja la pantalla actual (<code>index</code>, <code>nuevo</code>…) con su barra superior.",P('<div class="p-net on">Red: wifi</div>'+B('Lugares')+R('Sagrada Família','Ver lugar')+R('Barceloneta','Ver lugar'))]],
+lay2:[[1,1,"<code>screenOptions</code> aplica opciones a <b>todas</b> las pantallas: aquí, barra verde y texto blanco.",P("<div class=\"p-bar\">Mis lugares</div>")],
+[2,2,"<code>Stack.Screen name=\"index\"</code> configura la pantalla del fichero <code>index.jsx</code>. El <code>name</code> es el nombre del fichero, sin extensión.",P(B("Mis lugares")+R("Sagrada Família","Ver lugar"))],
+[3,3,"Título para <code>nuevo.jsx</code>.",P(B("Nuevo lugar")+"<input class=\"p-input\" placeholder=\"Nombre\">")],
+[4,4,"Las rutas dinámicas se nombran con el camino del fichero: <code>detall/[id]</code>.",P(B("Detalle")+"<b>Barceloneta</b>")]],
+js1:[[1,1,"<code>const</code> declara un valor que <b>no se puede reasignar</b>. Úsalo por defecto.",T('<b>&gt;</b> nombre','"Ana"')],
+[2,2,"<code>let</code> declara una variable que sí cambiará más tarde.",T('<b>&gt;</b> edad','20')],
+[3,3,"Reasignas: solo es posible con <code>let</code>. Con <code>const</code> daría error.",T('<b>&gt;</b> edad = 21','21')],
+[5,5,"Función flecha: <code>(parámetros) =&gt; resultado</code>. Si va en una línea, el resultado se devuelve solo. Es la forma más usada en React.",null],
+[6,6,"Se llama con paréntesis.",T('<b>&gt;</b> sumar(2, 3)','5')],
+[8,8,"Un <b>objeto</b> agrupa datos con nombre: <code>{ clave: valor }</code>. Se accede con <code>lugar.nombre</code>.",T('<b>&gt;</b> lugar.nombre','"Parc Güell"')],
+[9,9,"<b>Desestructurar</b>: sacar una propiedad del objeto a una variable. <code>nombre: titulo</code> la renombra. Así se reciben las props: <code>({ lugar })</code>.",T('<b>&gt;</b> titulo','"Parc Güell"')],
+[10,10,"<b>Spread</b> <code>...</code>: copia todas las propiedades y luego cambias las que quieras. React exige copiar, no modificar.",T('<b>&gt;</b> copia','{ id: "2", nombre: "Parc Güell" }')],
+[12,12,"Un <b>array</b> es una lista ordenada. Se accede por posición: <code>lista[0]</code>.",null],
+[13,13,"<code>map</code> transforma cada elemento y devuelve una lista nueva. En React se usa para convertir datos en componentes.",T('<b>&gt;</b> doble','[2, 4, 6]')],
+[14,14,"<code>filter</code> se queda solo con los que cumplen la condición.",T('<b>&gt;</b> mayores','[2, 3]')],
+[15,15,"Spread en arrays: copia + elemento nuevo. Así se <b>añade</b> sin modificar el original.",T('<b>&gt;</b> nueva','[1, 2, 3, 4]')],
+[17,17,"Plantilla de texto con acentos graves: <code>${...}</code> mete variables dentro del texto.",T('<b>&gt;</b> saludo','"Hola Ana"')],
+[18,18,"Ternario <code>condición ? siSí : siNo</code>: un if en una línea. Muy usado dentro del JSX.",T('<b>&gt;</b> msg','"mayor"')],
+[19,19,"<code>a &amp;&amp; b</code>: si <code>a</code> es verdadero devuelve <code>b</code>; si no, devuelve <code>a</code>. En JSX: <i>“pinta esto solo si…”</i>.",T('<b>&gt;</b> visible','"tiene edad"')],
+[21,21,"<code>export</code> hace público algo de este fichero.",null],
+[22,22,"<code>import</code> trae lo exportado por otro fichero. Las llaves son para exports con nombre; sin llaves, para el <code>export default</code>.",null],
+[24,24,"<code>async</code> marca una función que usa <code>await</code> (operaciones lentas: red, disco, GPS).",null],
+[25,25,"<code>await</code> detiene <i>esa función</i> hasta tener la respuesta, pero la app no se congela.",T('<b>&gt;</b> await fetch(url)','Response { ok: true, status: 200 }')]],
+comp1:[[1,1,"Un componente es una función con nombre en <b>mayúscula</b>. Recibe un único parámetro: el objeto de <b>props</b>. <code>({ nombre, edad })</code> lo desestructura al vuelo.",null],
+[2,2,"Devuelve el JSX: la descripción de lo que debe verse.",null],
+[4,4,"Las llaves insertan el valor de la prop dentro del texto.",P(B('Saludo')+'<div class="p-row"><span>Hola Ana<br>Tienes 20 años</span></div>')],
+[11,11,"<b>Usar</b> el componente: se escribe como una etiqueta. Los atributos son las props. Texto va entre comillas; números y variables, entre llaves.",P('<div class="p-row"><span>Hola Ana<br>Tienes 20 años</span></div>')],
+[12,12,"Mismo componente, otros datos: se <b>reutiliza</b>. Esa es la gran idea de React.",P('<div class="p-row"><span>Hola Ana<br>Tienes 20 años</span></div><div class="p-row"><span>Hola Luis<br>Tienes 31 años</span></div>')]],
+comp2:[[1,1,"<code>children</code> es una prop especial: lo que escribes <b>entre</b> la etiqueta de apertura y cierre.",null],
+[4,4,"El título viene de la prop <code>titulo</code>.",null],
+[5,5,"Aquí se colocan los hijos. Así creas “contenedores” reutilizables (tarjetas, secciones, marcos).",null],
+[10,10,"Al usarla, pones contenido dentro de la etiqueta.",P('<div style="border:1px solid #333;padding:8px"><b>Mi lugar</b><div>Descripción</div><div>Dirección</div></div>')]],
+jsx1:[[1,1,"Datos que usará la pantalla.",null],
+[4,4,"El JSX va dentro del <code>return</code>, entre paréntesis para poder escribirlo en varias líneas.",null],
+[6,6,"<b>Ternario</b> dentro de llaves: se pinta uno u otro texto.",P('<div>Bienvenido</div>')],
+[7,7,"<b>&amp;&amp;</b>: como <code>items</code> tiene 2 elementos, la condición es falsa y <b>no se pinta nada</b>.",null],
+[8,8,"<b>map</b>: por cada elemento se crea un <code>&lt;Text&gt;</code>. Cada uno necesita <code>key</code> única para que React los distinga.",P('<div>Bienvenido</div><div>a</div><div>b</div>')],
+[9,9,"Los eventos reciben una <b>función</b>. Usamos flecha <code>() =&gt; …</code> para ejecutarla solo al pulsar (si pones <code>alert('hola')</code> sin flecha, salta al pintar).",P('<div>Bienvenido</div><div>a</div><div>b</div><div style="text-decoration:underline">Pulsa</div>')]],
+state1:[[1,1,"Un componente puede tener memoria con <code>useState</code>.",null],
+[2,2,"<code>n</code> valor actual (0), <code>setN</code> función para cambiarlo.",P('<div>Pulsado 0 veces</div>')],
+[3,3,"Segundo estado para lo que escribe el usuario.",null],
+[7,7,"Muestra el valor actual del estado.",null],
+[8,8,"Al pulsar: <code>setN</code> guarda un valor nuevo y <b>React vuelve a ejecutar <code>Contador()</code></b>, ahora con <code>n = 1</code>.",P('<div>Pulsado 1 veces</div>')],
+[9,9,"<b>Campo controlado</b>: <code>value</code> viene del estado y <code>onChangeText</code> actualiza el estado en cada tecla.",P('<div>Pulsado 1 veces</div><input class="p-input" value="hola">')],
+[10,10,"Como cada tecla repinta la pantalla, este texto siempre está al día.",P('<div>Pulsado 1 veces</div><input class="p-input" value="hola"><div>Escribiste: hola</div>')]],
+effect1:[[1,1,"Un componente que cuenta segundos.",null],
+[2,2,"El estado guarda los segundos.",P('<div>0 segundos</div>')],
+[4,4,"<code>useEffect</code>: código que se ejecuta <b>después</b> de pintar (aquí, al aparecer).",null],
+[5,5,"Crea un temporizador que cada segundo suma 1. <code>s =&gt; s + 1</code> usa el valor más reciente.",P('<div>3 segundos</div>')],
+[6,6,"Función de <b>limpieza</b>: React la ejecuta cuando el componente desaparece. Sin ella el temporizador seguiría gastando memoria.",null],
+[7,7,"<code>[]</code>: dependencias vacías = ejecutar una sola vez al montar. Con <code>[x]</code> se repetiría cada vez que <code>x</code> cambie.",null],
+[9,9,"El render muestra el valor del estado.",P('<div>5 segundos</div>')]],
+list1:[[1,1,"Estado: la lista original.",null],
+[2,2,"Estado: el texto de la búsqueda.",null],
+[4,4,"Valor <b>derivado</b>: no necesita estado propio. Cada vez que cambian <code>items</code> o <code>busqueda</code> se recalcula.",P('<input class="p-input" value="pa">'+R('Pan'))],
+[7,7,"La lista pinta los <b>visibles</b>, no los originales.",null],
+[8,8,"Identificador único de cada fila: ayuda a React a saber cuál es cuál al añadir o quitar.",null],
+[9,9,"Cómo se dibuja cada fila.",P('<input class="p-input" value="">'+R('Pan')+R('Leche'))],
+[10,10,"Qué mostrar si no hay ninguna fila.",P('<input class="p-input" value="zzz"><div class="p-empty">No hay resultados</div>')]],
+flex1:[[1,1,"Este <code>View</code> es el <b>contenedor</b>: sus estilos de flexbox colocan a sus hijos.",null],
+[2,2,"Ocupa todo el espacio disponible del padre (la pantalla).",null],
+[3,3,"Eje principal: <code>'row'</code> pone los hijos en fila. Por defecto es <code>'column'</code> (arriba abajo).",null],
+[4,4,"Alinea los hijos a lo largo del eje <b>principal</b> (en fila, horizontal).",null],
+[5,5,"Alinea los hijos en el eje <b>contrario</b> (en fila, vertical).",null],
+[6,6,"Separación entre hijos.",null],
+[8,8,"Los hijos se colocan según lo anterior. Prueba a cambiarlo en la simulación de arriba.",null]],
+anat:[[1,3,"<b>1 · Imports</b>: arriba, todo lo que usarás. Si lo usas y no lo importas: error.",null],
+[6,8,"<b>2 · Estado</b>: los datos que cambian. Aquí, la lista y si está cargando.",P('<div class="p-spin"></div>')],
+[10,13,"<b>3 · Efectos</b>: lo que ocurre al aparecer (pedir datos). Al terminar actualiza el estado → React repinta.",null],
+[15,16,"<b>4 · Cálculos</b>: valores derivados del estado (no necesitan <code>useState</code>).",null],
+[18,19,"<b>5 · Render</b>: mientras carga, devuelve un spinner y termina.",P('<div class="p-spin"></div>')],
+[20,25,"Cuando hay datos, devuelve la pantalla real.",P(B('Pantalla')+'<div style="padding:8px">2 elementos</div>'+R('sunt aut…')+R('qui est…'))],
+[28,29,"<b>6 · Estilos</b>: al final del fichero. <code>estilos.contenedor</code> se usa arriba.",null]],
+plat:[[1,1,"<code>Platform</code> dice en qué plataforma corre la app.",null],
+[3,3,"<code>Platform.OS</code> vale <code>'ios'</code>, <code>'android'</code> o <code>'web'</code>.",null],
+[5,5,"<code>Platform.select</code> elige un valor según la plataforma. En la práctica casi todo es igual; solo sombras, barra de estado o permisos suelen cambiar.",null]]
+  };
+function wrap(code){var h=code.innerHTML.split('\n');code.innerHTML=h.map(function(l){return '<span class="ln">'+(l===''?'&#8203;':l)+'</span>'}).join('')}
+
+  var pres=document.querySelectorAll('main pre[data-id]');
+  pres.forEach(function(pre){
+    var st=STEPS[pre.getAttribute('data-id')];if(!st)return;
+    var code=pre.querySelector('code');wrap(code);var lines=code.querySelectorAll('.ln');
+    var box=document.createElement('div');box.className='sim stp';
+    box.innerHTML='<div class="sim-head">▶ Paso a paso · ejecuta este código línea a línea</div><div class="sim-body"><div class="pv"></div><div><div class="nav"><button class="prev">◀ Anterior</button><button class="next">Siguiente ▶</button><button class="auto">⏵ Auto</button><span class="cnt"></span></div><div class="expl"></div></div></div>';
+    pre.parentNode.insertBefore(box,pre.nextSibling);
+    var pv=box.querySelector('.pv'),ex=box.querySelector('.expl'),cnt=box.querySelector('.cnt'),pb=box.querySelector('.prev'),nb=box.querySelector('.next'),ab=box.querySelector('.auto');
+    var cur=-1,timer=null;
+    var isTerm=st.some(function(x){return x[3]&&x[3].o});
+    function draw(){
+      lines.forEach(function(l){l.classList.remove('cur')});
+      if(cur<0){ex.innerHTML='Pulsa <b>Siguiente ▶</b> para ir ejecutando el código paso a paso. Se resaltará la línea explicada y verás a la izquierda qué ocurre.';cnt.textContent='';
+        pv.innerHTML=isTerm?'<div class="term"><i>Terminal vacía…</i></div>':'<div class="phone"><div class="screen">'+NONE+'</div></div>';pb.disabled=true;nb.disabled=false;return}
+      var s=st[cur];for(var k=s[0]-1;k<=s[1]-1&&k<lines.length;k++)lines[k].classList.add('cur');
+      ex.innerHTML=s[2];cnt.textContent='Paso '+(cur+1)+' de '+st.length;
+      if(isTerm){var o=[];for(var j=0;j<=cur;j++)if(st[j][3]&&st[j][3].o)o=o.concat(st[j][3].o);pv.innerHTML='<div class="term">'+o.join('\n')+'<b>█</b></div>'}
+      else{var h=NONE;for(var j=cur;j>=0;j--)if(st[j][3]&&st[j][3].p){h=st[j][3].p;break}pv.innerHTML='<div class="phone"><div class="screen">'+h+'</div></div>'}
+      pb.disabled=cur===0;nb.disabled=cur===st.length-1;if(cur===st.length-1)stop()}
+    function stop(){if(timer){clearInterval(timer);timer=null;ab.textContent='⏵ Auto'}}
+    pb.onclick=function(){stop();if(cur>0){cur--;draw()}};
+    nb.onclick=function(){stop();if(cur<st.length-1){cur++;draw()}};
+    ab.onclick=function(){if(timer){stop();return}ab.textContent='⏸ Pausa';if(cur>=st.length-1)cur=-1;timer=setInterval(function(){if(cur<st.length-1){cur++;draw()}else stop()},2800)};
+    draw();
+  });
+})();
+</script></body>
+</html>
