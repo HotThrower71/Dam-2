@@ -40,6 +40,18 @@ export default function Inicio() {
                     color="#234c3b"
                     onPress={() => router.push("/nuevo")}
                 />
+                <BotonPlaces
+                    titulo="Descubre"
+                    subtitulo="Busca lugares en internet"
+                    color="#16a0b5"
+                    onPress={() => router.push("/descubre")}
+                />
+                <BotonPlaces
+                    titulo="Mi ubicación"
+                    subtitulo="Ver dónde estoy"
+                    color="#d9822b"
+                    onPress={() => router.push("/ubicacion")}
+                />
             </View>
         </ScrollView>
     );

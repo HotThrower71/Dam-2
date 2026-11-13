@@ -1,0 +1,179 @@
+# MyPlaces
+
+Aplicación móvil hecha con React Native y Expo para consultar, añadir, guardar y eliminar lugares de interés.
+Los lugares se guardan en el propio dispositivo y se recuperan al reiniciar la app.
+
+Práctica 2 · UT2 / RA2 · Programación multimedia y dispositivos móviles.
+
+> [!NOTE]
+> **Estado: práctica en desarrollo.** Hechos: navegación, formulario con validación, persistencia local con
+> posibilidad de eliminar, consulta a una API pública y ubicación con permisos (apartados A, B, C, D y E,
+> salvo el mensaje de lista vacía). Pendientes: conectividad (F) y pruebas con capturas (G).
+
+## Inicio rápido
+
+```bash
+npm install
+npx expo start
+```
+
+Después, desde la terminal de Expo:
+
+- pulsa **`w`** para abrirla en el navegador,
+- pulsa **`a`** (Android) o **`i`** (iOS) para abrirla en un emulador,
+- o escanea el código QR con la app **Expo Go** desde el móvil.
+
+### Requisitos
+
+- **Node.js 22.13 o superior** (también valen 24.3+ y 26+). Con versiones anteriores, Expo SDK 58 no arranca.
+- `npm`.
+- La app **Expo Go** en el móvil (en la misma red wifi que el ordenador) o un emulador de Android o iOS.
+
+> [!TIP]
+> Si algo no se actualiza, reinicia limpiando la caché con `npx expo start -c`.
+> Si el móvil no conecta, comprueba que está en la misma red y que el firewall del ordenador permite el puerto
+> que usa Expo (por defecto `8081`).
+
+## Qué hace
+
+| Apartado | Funcionalidad | Estado |
+|---|---|---|
+| A | Menú con la lista de lugares, pantalla de detalle y `id` de cada lugar | Hecho |
+| A | Componentes reutilizables: `BotonPlaces`, `TituloPlace`, `SelectorColor` | Hecho |
+| B | Formulario «Nuevo lugar» (título, subtítulo, descripción y color). No deja guardar un título vacío | Hecho |
+| C | Persistencia con AsyncStorage: los lugares se recuperan al reiniciar | Hecho |
+| C | Eliminar un lugar, con confirmación | Hecho |
+| C | Mensaje cuando la lista está vacía | Pendiente |
+| D | Pantalla «Descubre»: busca lugares por nombre con `fetch` y muestra los estados de carga, error y sin resultados | Hecho |
+| E | Pantalla «Mi ubicación»: botón que pide permiso y muestra la ubicación y las coordenadas. Si se deniega, avisa y el resto de la app sigue funcionando | Hecho |
+| F | Estado de la conexión con NetInfo | Pendiente |
+| G | Pruebas y capturas | Pendiente |
+
+No tiene servidor ni cuenta de usuario: los datos viven solo en el dispositivo donde se crean.
+
+## Estructura del proyecto
+
+```text
+src/
+├─ app/                       pantallas (cada fichero es una ruta, con Expo Router)
+│  ├─ _layout.jsx             marco de la app: navegación en pila y estilo de la cabecera
+│  ├─ index.jsx               menú con la lista de lugares (ruta "/")
+│  ├─ nuevo.jsx               formulario para añadir un lugar (ruta "/nuevo")
+│  ├─ descubre.jsx            buscador de lugares con una API pública (ruta "/descubre")
+│  ├─ ubicacion.jsx           ubicación actual con petición de permiso (ruta "/ubicacion")
+│  └─ place/[id].jsx          detalle de un lugar, con botón de eliminar (ruta "/place/<id>")
+├─ components/                piezas reutilizables
+│  ├─ BotonPlaces.jsx         botón de un lugar (título, subtítulo y color)
+│  ├─ TituloPlace.jsx         título del menú
+│  └─ SelectorColor.jsx       fila de círculos para elegir un color
+├─ data/
+│  └─ places.js               lugares de ejemplo, usados la primera vez que se abre la app
+└─ storage/
+   └─ placesStorage.js        leer, guardar y eliminar lugares con AsyncStorage
+```
+
+## Persistencia
+
+Los lugares se guardan con [AsyncStorage](https://react-native-async-storage.github.io/async-storage/) bajo una sola clave,
+como una lista convertida a texto (`JSON`).
+
+- La **primera vez** que se abre la app no hay nada guardado y se muestran los lugares de `data/places.js`.
+- Al **crear o eliminar** un lugar se guarda la lista completa.
+- Al **volver al menú** se vuelve a leer la lista (`useFocusEffect`), así que los cambios se ven sin recargar.
+- Si se eliminan todos los lugares, la lista queda vacía y los de ejemplo **no** reaparecen.
+
+| Función (`src/storage/placesStorage.js`) | Qué hace |
+|---|---|
+| `readPlaces()` | Devuelve la lista guardada, o los lugares de ejemplo la primera vez |
+| `savePlaces(lista)` | Guarda la lista completa |
+| `deletePlace(id)` | Elimina el lugar con ese `id` |
+
+## API pública utilizada
+
+**[Open-Meteo Geocoding API](https://open-meteo.com/en/docs/geocoding-api)**, que busca lugares por nombre.
+No necesita clave ni registro y se usa en la pantalla «Descubre» (`src/app/descubre.jsx`).
+
+```text
+GET https://geocoding-api.open-meteo.com/v1/search?name=Barcelona&count=10&language=es&format=json
+```
+
+| Parámetro | Valor | Para qué |
+|---|---|---|
+| `name` | texto buscado | Nombre del lugar. Mínimo 2 letras, por eso el botón «Buscar» se desactiva con menos |
+| `count` | `10` | Número máximo de resultados |
+| `language` | `es` | Idioma de los nombres |
+| `format` | `json` | Formato de la respuesta |
+
+Cada resultado incluye `name`, `admin1` (comunidad o región), `country`, `latitude` y `longitude`.
+
+Estados de la pantalla:
+
+| Estado | Cuándo | Qué se muestra |
+|---|---|---|
+| Inicial | Aún no se ha buscado | Instrucción para escribir y buscar |
+| Cargando | Mientras responde la API | Rueda de carga |
+| Con resultados | Respuesta con lugares | Lista de tarjetas con nombre, zona y coordenadas |
+| Sin resultados | La API responde sin lugares | «No hay resultados para …» (la API omite entonces el campo `results`) |
+| Error | Sin internet, o la API responde con un código de error | Mensaje y botón «Reintentar» |
+
+## Permisos y limitaciones
+
+### Permiso de ubicación
+
+La pantalla «Mi ubicación» (`src/app/ubicacion.jsx`) usa [`expo-location`](https://docs.expo.dev/versions/latest/sdk/location/)
+y pide el permiso **solo cuando se pulsa el botón** y **solo mientras la app está abierta** (permiso en primer plano).
+En `app.json` el plugin `expo-location` declara el texto del permiso y los permisos de Android (`ACCESS_COARSE_LOCATION` y `ACCESS_FINE_LOCATION`).
+
+| Situación | Qué ocurre |
+|---|---|
+| El usuario acepta | Muestra la ubicación (dirección, si se puede obtener), latitud, longitud y precisión |
+| El usuario deniega | Muestra un mensaje y, en el móvil, un botón «Abrir ajustes». El resto de la app sigue funcionando |
+| Hay permiso pero falla el GPS (apagado, sin señal) | Muestra un mensaje de error |
+| No se puede obtener el nombre del lugar (sin internet, versión web) | Muestra las coordenadas y «Nombre del lugar no disponible» |
+
+> [!NOTE]
+> En la versión web el navegador pide su propio permiso, y el nombre del lugar no suele estar disponible.
+> En un emulador hay que fijar una posición falsa: en Android, *Extended controls → Location*; en iOS, *Features → Location*.
+
+Limitaciones conocidas:
+
+- Los datos son **locales a cada dispositivo**: no se comparten entre móviles ni entre el navegador y la app.
+- En la versión web, los datos se guardan por dirección: `localhost:8081` y `localhost:8082` son sitios distintos.
+- Los lugares de ejemplo no se pueden restaurar desde la app una vez eliminados.
+- La pantalla «Descubre» necesita conexión a internet. La API es gratuita para uso no comercial; consulta sus condiciones y límites en su web.
+- Los resultados de «Descubre» solo se muestran: todavía no se pueden añadir a «Mis lugares».
+- En «Mi ubicación», el **nombre del lugar** puede no estar disponible aunque las coordenadas sean correctas. Las coordenadas
+  las da el GPS, pero el nombre lo resuelve `reverseGeocodeAsync` con un servicio del propio dispositivo, que no existe en
+  la versión web y puede faltar en algunos emuladores o sin conexión a internet. En esos casos la app muestra las coordenadas
+  y el aviso «Nombre del lugar no disponible».
+
+## Pruebas
+
+Cinco casos del apartado G. La columna de resultados se completará al probarlos en el móvil o en el emulador.
+
+| # | Caso | Cómo se provoca | Resultado esperado | Resultado obtenido | Observaciones |
+|---|---|---|---|---|---|
+| 1 | Creación | Añadir un lugar válido desde «Añadir lugar» | Aparece en el menú | Pendiente | |
+| 2 | Reinicio | Cerrar la app del todo y volver a abrirla | El lugar creado sigue ahí | Pendiente | |
+| 3 | Sin datos | Eliminar todos los lugares | Se muestra un mensaje de lista vacía | Pendiente | Depende del mensaje de lista vacía |
+| 4 | Error de red | Modo avión y buscar un lugar en «Descubre» | Mensaje de error y botón «Reintentar» | Pendiente | Falta probarlo en el móvil |
+| 5 | Permiso denegado | Pulsar «Utilizar mi ubicación» en «Mi ubicación» y denegar | Mensaje, y el resto de la app sigue usable | Pendiente | Falta probarlo en el móvil |
+
+## Capturas
+
+Pendiente: pantallas principales y una prueba de persistencia.
+
+## Tecnologías
+
+- [Expo](https://docs.expo.dev/) SDK 58 y [Expo Router](https://docs.expo.dev/router/introduction/) (navegación basada en ficheros)
+- React Native 0.88 y React 19
+- `@react-native-async-storage/async-storage` para la persistencia local
+- `expo-location` para la ubicación
+- JavaScript (`.js` y `.jsx`)
+
+## Documentación de apoyo
+
+En `Practica2-MyPlaces/` hay dos apuntes en HTML, con explicaciones y simulaciones:
+
+- `apuntes-expo.html`: guía del proyecto paso a paso (apartados A a G).
+- `react-native-basico.html`: principios de React Native y de sus componentes.

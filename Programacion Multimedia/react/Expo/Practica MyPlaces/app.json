@@ -4,6 +4,10 @@
     "slug": "myplaces",
     "scheme": "myplaces",
     "web": { "bundler": "metro", "output": "single" },
-    "plugins": ["expo-router", "expo-status-bar"]
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      ["expo-location", { "locationWhenInUsePermission": "MyPlaces usa tu ubicación para mostrar dónde estás." }]
+    ]
   }
 }

@@ -1,11 +1,9 @@
 import { router } from "expo-router";
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput } from "react-native";
 
+import SelectorColor, { COLORES } from "../components/SelectorColor";
 import { readPlaces, savePlaces } from "../storage/placesStorage";
-
-// colores entre los que se puede elegir
-const COLORES = ["#111111", "#1e63d6", "#3aa564", "#d62828", "#8e44ad", "#16a0b5", "#e84393", "#7f8c8d"];
 
 export default function Nuevo() {
     const [titulo, setTitulo] = useState("");
@@ -67,16 +65,7 @@ export default function Nuevo() {
                 />
 
                 <Text style={estilos.etiqueta}>Color</Text>
-                <View style={estilos.colores}>
-                    {COLORES.map(c => (
-                        <Pressable
-                            key={c}
-                            onPress={() => setColor(c)}
-                            accessibilityLabel={`Color ${c}`}
-                            style={[estilos.muestra, { backgroundColor: c }, c === color && estilos.seleccionada]}
-                        />
-                    ))}
-                </View>
+                <SelectorColor valor={color} onCambiar={setColor} />
 
                 <Pressable
                     onPress={guardar}
@@ -126,23 +115,6 @@ const estilos = StyleSheet.create({
     error: {
         color: "#c0392b",
         fontSize: 14,
-    },
-    colores: {
-        // las muestras van en fila y saltan a la siguiente línea si no caben
-        flexDirection: "row",
-        flexWrap: "wrap",
-        gap: 12,
-    },
-    muestra: {
-        width: 48,
-        height: 48, // zona táctil cómoda
-        borderRadius: 24, // la mitad del tamaño = círculo
-        borderWidth: 3,
-        borderColor: "transparent",
-    },
-    seleccionada: {
-        borderColor: "#e07a2f", // aro naranja alrededor del elegido
-        transform: [{ scale: 1.15 }],
     },
     boton: {
         marginTop: 16,

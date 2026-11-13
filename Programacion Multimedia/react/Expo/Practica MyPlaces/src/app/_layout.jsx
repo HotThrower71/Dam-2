@@ -15,6 +15,8 @@ export default function Layout() {
             {/* el name es el nombre del fichero, sin .jsx */}
             <Stack.Screen name="index" options={{ title: "MyPlaces" }} />
             <Stack.Screen name="nuevo" options={{ title: "Nuevo lugar" }} />
+            <Stack.Screen name="descubre" options={{ title: "Descubre" }} />
+            <Stack.Screen name="ubicacion" options={{ title: "Mi ubicación" }} />
         </Stack>
     );
 }
