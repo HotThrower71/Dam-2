@@ -8,7 +8,7 @@ Práctica 2 · UT2 / RA2 · Programación multimedia y dispositivos móviles.
 > [!NOTE]
 > **Estado: práctica en desarrollo.** Hechos: navegación, formulario con validación, persistencia local con
 > posibilidad de eliminar, consulta a una API pública, ubicación con permisos y estado de la conexión
-> (apartados A a F, salvo el mensaje de lista vacía). Pendiente: pruebas con capturas (G).
+> y gestión de la lista vacía (apartados A a F). Pendiente: completar los resultados de las pruebas (G).
 
 ## Inicio rápido
 
@@ -43,7 +43,7 @@ Después, desde la terminal de Expo:
 | B | Formulario «Nuevo lugar» (título, subtítulo, descripción y color). No deja guardar un título vacío | Hecho |
 | C | Persistencia con AsyncStorage: los lugares se recuperan al reiniciar | Hecho |
 | C | Eliminar un lugar, con confirmación | Hecho |
-| C | Mensaje cuando la lista está vacía | Pendiente |
+| C | Mensaje cuando la lista está vacía: «Aún no hay lugares. ¡Añade el primero!» | Hecho |
 | D | Pantalla «Descubre»: busca lugares por nombre con `fetch` y muestra los estados de carga, error y sin resultados | Hecho |
 | E | Pantalla «Mi ubicación»: botón que pide permiso y muestra la ubicación y las coordenadas. Si se deniega, avisa y el resto de la app sigue funcionando | Hecho |
 | F | Barra con el estado de la conexión y el tipo de red (NetInfo). Sin conexión, «Descubre» no lanza consultas y avisa | Hecho |
@@ -173,13 +173,24 @@ Cinco casos del apartado G. La columna de resultados se completará al probarlos
 |---|---|---|---|---|---|
 | 1 | Creación | Añadir un lugar válido desde «Añadir lugar» | Aparece en el menú | Pendiente | |
 | 2 | Reinicio | Cerrar la app del todo y volver a abrirla | El lugar creado sigue ahí | Pendiente | |
-| 3 | Sin datos | Eliminar todos los lugares | Se muestra un mensaje de lista vacía | Pendiente | Depende del mensaje de lista vacía |
+| 3 | Sin datos | Eliminar todos los lugares (uno a uno, desde su pantalla de detalle) | El menú muestra «Aún no hay lugares. ¡Añade el primero!», sigue siendo usable y el botón «Añadir lugar» funciona | Pendiente | Falta probarlo en el móvil |
 | 4 | Error de red | Activar el modo avión y abrir «Descubre» | La barra dice «Sin conexión a internet», «Buscar» queda desactivado y se avisa; no se lanza ninguna petición | Pendiente | Falta probarlo en el móvil |
 | 5 | Permiso denegado | Pulsar «Utilizar mi ubicación» en «Mi ubicación» y denegar | Mensaje, y el resto de la app sigue usable | Pendiente | Falta probarlo en el móvil |
 
 ## Capturas
 
-Pendiente: pantallas principales y una prueba de persistencia.
+Las evidencias de las pruebas están en la carpeta [`Pruebas/`](Pruebas/):
+
+| Fichero | Contenido |
+|---|---|
+| [`Pruebas-MyPlaces.pdf`](Pruebas/Pruebas-MyPlaces.pdf) | Informe con las cinco pruebas y sus capturas dentro de un móvil |
+| [`Screenrecorder-2026-11-13-20-03-21-987.mp4`](Pruebas/Screenrecorder-2026-11-13-20-03-21-987.mp4) | Vídeo de la prueba de persistencia: la app se vuelve a abrir y el lugar creado sigue en el menú |
+| [`reinicio-app.gif`](Pruebas/reinicio-app.gif) | El mismo vídeo en GIF |
+| [`capturas/`](Pruebas/capturas/) | Las capturas originales de pantalla |
+
+Prueba de persistencia: se crea un lugar, se cierra la app del todo y se vuelve a abrir. El lugar sigue en el menú. En la captura de «Mi ubicación» se ha ocultado la dirección y las coordenadas.
+
+![Prueba de persistencia: se cierra y se vuelve a abrir la app, y el lugar creado sigue en el menú](Pruebas/reinicio-app.gif)
 
 ## Tecnologías
 

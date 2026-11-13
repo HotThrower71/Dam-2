@@ -1,6 +1,6 @@
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 
 import BotonPlaces from "../components/BotonPlaces";
 import TituloPlace from "../components/TituloPlace";
@@ -9,11 +9,15 @@ import { readPlaces } from "../storage/placesStorage";
 
 export default function Inicio() {
     const [todos, setTodos] = useState([]); // empieza vacío y se rellena al leer
+    const [cargado, setCargado] = useState(false); // false hasta que termina la primera lectura
 
     // cada vez que esta pantalla vuelve a verse (por ejemplo tras crear o borrar un lugar), se vuelve a leer
     useFocusEffect(
         useCallback(() => {
-            readPlaces().then(setTodos);
+            readPlaces().then(lista => {
+                setTodos(lista);
+                setCargado(true);
+            });
         }, []),
     );
 
@@ -23,6 +27,10 @@ export default function Inicio() {
                 <TituloPlace titulo="Menu" />
             </View>
             <View style={estilos.lista}>
+                {/* lista vacía: se avisa solo cuando ya se ha leído y de verdad no hay ninguno (si no, parpadearía al abrir) */}
+                {cargado && todos.length === 0 && (
+                    <Text style={estilos.vacio}>Aún no hay lugares. ¡Añade el primero!</Text>
+                )}
                 {todos.map(l => (
                     <BotonPlaces
                         key={l.id}
@@ -61,5 +69,11 @@ const estilos = StyleSheet.create({
     lista: {
         padding: 16,
         gap: 12,
+    },
+    vacio: {
+        paddingVertical: 24,
+        fontSize: 16,
+        color: "#555555",
+        textAlign: "center",
     },
 });
