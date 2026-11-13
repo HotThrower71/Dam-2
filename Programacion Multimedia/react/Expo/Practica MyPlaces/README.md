@@ -7,8 +7,8 @@ Práctica 2 · UT2 / RA2 · Programación multimedia y dispositivos móviles.
 
 > [!NOTE]
 > **Estado: práctica en desarrollo.** Hechos: navegación, formulario con validación, persistencia local con
-> posibilidad de eliminar, consulta a una API pública y ubicación con permisos (apartados A, B, C, D y E,
-> salvo el mensaje de lista vacía). Pendientes: conectividad (F) y pruebas con capturas (G).
+> posibilidad de eliminar, consulta a una API pública, ubicación con permisos y estado de la conexión
+> (apartados A a F, salvo el mensaje de lista vacía). Pendiente: pruebas con capturas (G).
 
 ## Inicio rápido
 
@@ -46,7 +46,7 @@ Después, desde la terminal de Expo:
 | C | Mensaje cuando la lista está vacía | Pendiente |
 | D | Pantalla «Descubre»: busca lugares por nombre con `fetch` y muestra los estados de carga, error y sin resultados | Hecho |
 | E | Pantalla «Mi ubicación»: botón que pide permiso y muestra la ubicación y las coordenadas. Si se deniega, avisa y el resto de la app sigue funcionando | Hecho |
-| F | Estado de la conexión con NetInfo | Pendiente |
+| F | Barra con el estado de la conexión y el tipo de red (NetInfo). Sin conexión, «Descubre» no lanza consultas y avisa | Hecho |
 | G | Pruebas y capturas | Pendiente |
 
 No tiene servidor ni cuenta de usuario: los datos viven solo en el dispositivo donde se crean.
@@ -65,7 +65,10 @@ src/
 ├─ components/                piezas reutilizables
 │  ├─ BotonPlaces.jsx         botón de un lugar (título, subtítulo y color)
 │  ├─ TituloPlace.jsx         título del menú
-│  └─ SelectorColor.jsx       fila de círculos para elegir un color
+│  ├─ SelectorColor.jsx       fila de círculos para elegir un color
+│  └─ BannerRed.jsx           barra con el estado de la conexión y el tipo de red
+├─ hooks/
+│  └─ useRed.js               hook que informa de si hay conexión y de qué tipo (NetInfo)
 ├─ data/
 │  └─ places.js               lugares de ejemplo, usados la primera vez que se abre la app
 └─ storage/
@@ -118,6 +121,20 @@ Estados de la pantalla:
 
 ## Permisos y limitaciones
 
+### Conectividad
+
+La barra inferior (`BannerRed`, colocada en `_layout.jsx` para verse en todas las pantallas) usa
+[`@react-native-community/netinfo`](https://github.com/react-native-netinfo/react-native-netinfo) a través del hook `useRed`,
+y se actualiza sola cuando la red cambia.
+
+| Situación | Barra | Qué hace «Descubre» |
+|---|---|---|
+| Wi-Fi, datos móviles, Ethernet… con internet | «Conectado · Wi-Fi» (o el tipo que sea), en verde | Funciona con normalidad |
+| Sin conexión (modo avión, sin red) | «Sin conexión a internet», en rojo | El botón «Buscar» se desactiva, **no se lanza la petición** y se muestra un aviso |
+| Conectado a una red sin salida a internet | «Sin conexión a internet» | Igual que sin conexión |
+
+Si la conexión se pierde justo durante una búsqueda, la petición falla y se muestra el estado de error con «Reintentar».
+
 ### Permiso de ubicación
 
 La pantalla «Mi ubicación» (`src/app/ubicacion.jsx`) usa [`expo-location`](https://docs.expo.dev/versions/latest/sdk/location/)
@@ -142,6 +159,7 @@ Limitaciones conocidas:
 - Los lugares de ejemplo no se pueden restaurar desde la app una vez eliminados.
 - La pantalla «Descubre» necesita conexión a internet. La API es gratuita para uso no comercial; consulta sus condiciones y límites en su web.
 - Los resultados de «Descubre» solo se muestran: todavía no se pueden añadir a «Mis lugares».
+- NetInfo comprueba si hay salida real a internet con una petición de prueba en segundo plano, así que en algunas redes (portales cautivos, cortafuegos) puede tardar unos segundos en reflejar el cambio.
 - En «Mi ubicación», el **nombre del lugar** puede no estar disponible aunque las coordenadas sean correctas. Las coordenadas
   las da el GPS, pero el nombre lo resuelve `reverseGeocodeAsync` con un servicio del propio dispositivo, que no existe en
   la versión web y puede faltar en algunos emuladores o sin conexión a internet. En esos casos la app muestra las coordenadas
@@ -156,7 +174,7 @@ Cinco casos del apartado G. La columna de resultados se completará al probarlos
 | 1 | Creación | Añadir un lugar válido desde «Añadir lugar» | Aparece en el menú | Pendiente | |
 | 2 | Reinicio | Cerrar la app del todo y volver a abrirla | El lugar creado sigue ahí | Pendiente | |
 | 3 | Sin datos | Eliminar todos los lugares | Se muestra un mensaje de lista vacía | Pendiente | Depende del mensaje de lista vacía |
-| 4 | Error de red | Modo avión y buscar un lugar en «Descubre» | Mensaje de error y botón «Reintentar» | Pendiente | Falta probarlo en el móvil |
+| 4 | Error de red | Activar el modo avión y abrir «Descubre» | La barra dice «Sin conexión a internet», «Buscar» queda desactivado y se avisa; no se lanza ninguna petición | Pendiente | Falta probarlo en el móvil |
 | 5 | Permiso denegado | Pulsar «Utilizar mi ubicación» en «Mi ubicación» y denegar | Mensaje, y el resto de la app sigue usable | Pendiente | Falta probarlo en el móvil |
 
 ## Capturas
@@ -169,6 +187,7 @@ Pendiente: pantallas principales y una prueba de persistencia.
 - React Native 0.88 y React 19
 - `@react-native-async-storage/async-storage` para la persistencia local
 - `expo-location` para la ubicación
+- `@react-native-community/netinfo` para el estado de la conexión
 - JavaScript (`.js` y `.jsx`)
 
 ## Documentación de apoyo

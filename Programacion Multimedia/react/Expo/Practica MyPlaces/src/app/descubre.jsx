@@ -12,6 +12,8 @@ import {
     View,
 } from "react-native";
 
+import useRed from "../hooks/useRed";
+
 // API pública: Open-Meteo Geocoding (busca lugares por nombre, sin clave)
 const URL_API = "https://geocoding-api.open-meteo.com/v1/search";
 
@@ -20,11 +22,13 @@ export default function Descubre() {
     // en qué situación está la pantalla: "inicial" | "cargando" | "error" | "ok"
     const [estado, setEstado] = useState("inicial");
     const [resultados, setResultados] = useState([]);
+    const { conectado } = useRed(); // si no hay conexión, ni se intenta la consulta
 
-    // la API pide al menos 2 letras para buscar
-    const puedeBuscar = texto.trim().length >= 2 && estado !== "cargando";
+    // la API pide al menos 2 letras para buscar, y hace falta conexión
+    const puedeBuscar = texto.trim().length >= 2 && estado !== "cargando" && conectado;
 
     async function buscar() {
+        if (!conectado) return; // sin red no se lanza la petición
         Keyboard.dismiss();
         setEstado("cargando");
         try {
@@ -41,6 +45,14 @@ export default function Descubre() {
 
     // elige qué se pinta debajo del buscador según el estado
     function contenido() {
+        // sin conexión (y sin resultados que enseñar): se avisa en vez de intentar la consulta
+        if (!conectado && estado !== "ok") {
+            return (
+                <Text style={[estilos.aviso, estilos.avisoSinRed]}>
+                    Sin conexión a internet. Conéctate para buscar lugares.
+                </Text>
+            );
+        }
         if (estado === "inicial") {
             return <Text style={estilos.aviso}>Escribe una ciudad o un lugar y pulsa Buscar.</Text>;
         }
@@ -158,6 +170,10 @@ const estilos = StyleSheet.create({
         fontSize: 16,
         color: "#555555",
         textAlign: "center",
+    },
+    avisoSinRed: {
+        color: "#8a2323",
+        fontWeight: "bold",
     },
     cargando: {
         marginTop: 40,
