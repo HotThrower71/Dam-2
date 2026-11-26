@@ -15,6 +15,7 @@ import AvisoError from "../components/AvisoError";
 import Boton from "../components/Boton";
 import Tarjeta from "../components/Tarjeta";
 import { colores } from "../utils/colores";
+import { avisoPermiso } from "../utils/permisos";
 import { formatearBytes, formatearFecha, formatearTiempo } from "../utils/formato";
 
 // Las notas se guardan en la carpeta de documentos de la app (persisten al cerrarla)
@@ -76,18 +77,16 @@ export default function Audio() {
         };
     }, []);
 
-    async function empezarGrabacion() {
+    // esReintento: true si se llama desde el botón «Reintentar» del aviso
+    async function empezarGrabacion(esReintento = false) {
         setError(null);
         try {
             const permiso = await requestRecordingPermissionsAsync();
             if (!permiso.granted) {
                 setError({
                     titulo: "Permiso de micrófono denegado",
-                    mensaje: permiso.canAskAgain
-                        ? "Sin el micrófono no se pueden grabar notas. Pulsa «Reintentar» y acepta el permiso."
-                        : "Has denegado el micrófono de forma permanente. Actívalo en los ajustes del sistema.",
-                    accion: permiso.canAskAgain ? empezarGrabacion : undefined,
-                    ajustes: !permiso.canAskAgain,
+                    ...avisoPermiso("el micrófono", permiso, esReintento),
+                    accion: () => empezarGrabacion(true),
                 });
                 return;
             }
@@ -99,7 +98,7 @@ export default function Audio() {
             grabandoRef.current = true;
             setPausada(false);
         } catch (e) {
-            setError({ titulo: "No se ha podido empezar a grabar", mensaje: e.message || String(e), accion: empezarGrabacion });
+            setError({ titulo: "No se ha podido empezar a grabar", mensaje: e.message || String(e), accion: () => empezarGrabacion() });
         }
     }
 
@@ -220,7 +219,7 @@ export default function Audio() {
                             <Text style={estilos.cronometro}>{formatearTiempo(estadoGrabadora.durationMillis / 1000)}</Text>
                         </View>
                         {!grabando ? (
-                            <Boton texto="Grabar nota" onPress={empezarGrabacion} variante="acento" />
+                            <Boton texto="Grabar nota" onPress={() => empezarGrabacion()} variante="acento" />
                         ) : (
                             <View style={estilos.fila}>
                                 <Boton texto={pausada ? "Reanudar" : "Pausar"} onPress={pausarOReanudar} variante="secundario" estilo={estilos.flex} />

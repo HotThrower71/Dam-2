@@ -10,6 +10,7 @@ import Boton from "../components/Boton";
 import Dato from "../components/Dato";
 import Tarjeta from "../components/Tarjeta";
 import { colores } from "../utils/colores";
+import { avisoPermiso } from "../utils/permisos";
 import { formatearBytes } from "../utils/formato";
 
 // Los tres formatos de salida. PNG no tiene "calidad": siempre es sin pérdida.
@@ -85,16 +86,16 @@ export default function Procesado() {
     }, []);
 
     // Si no venimos de "Imágenes", se puede elegir aquí directamente de la galería.
-    async function elegirDeGaleria() {
+    // esReintento: true si se llama desde el botón «Reintentar» del aviso de permiso
+    async function elegirDeGaleria(esReintento = false) {
         setError(null);
         try {
             const permiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
             if (!permiso.granted) {
                 setError({
                     titulo: "Permiso denegado",
-                    mensaje: "Sin acceso a tus fotos no se puede elegir la imagen.",
-                    accion: elegirDeGaleria,
-                    ajustes: !permiso.canAskAgain,
+                    ...avisoPermiso("tus fotos", permiso, esReintento),
+                    accion: () => elegirDeGaleria(true),
                 });
                 return;
             }
@@ -104,7 +105,7 @@ export default function Procesado() {
             setOriginal({ uri: a.uri, ancho: a.width, alto: a.height, bytes: a.fileSize || bytesDelFichero(a.uri) });
             setResultados([]);
         } catch (e) {
-            setError({ titulo: "No se ha podido abrir la galería", mensaje: e.message || String(e), accion: elegirDeGaleria });
+            setError({ titulo: "No se ha podido abrir la galería", mensaje: e.message || String(e), accion: () => elegirDeGaleria() });
         }
     }
 
@@ -134,7 +135,7 @@ export default function Procesado() {
             setError({
                 titulo: "La imagen ya no existe",
                 mensaje: "El sistema ha borrado el fichero temporal. Vuelve a elegir la imagen.",
-                accion: elegirDeGaleria,
+                accion: () => elegirDeGaleria(),
             });
             return;
         }
@@ -211,7 +212,7 @@ export default function Procesado() {
         return (
             <ScrollView contentContainerStyle={estilos.contenido}>
                 <Text style={estilos.ayuda}>Primero necesitas una imagen.</Text>
-                <Boton texto="Elegir de la galería" onPress={elegirDeGaleria} />
+                <Boton texto="Elegir de la galería" onPress={() => elegirDeGaleria()} />
                 <Boton texto="Ir a Imágenes (galería o cámara)" onPress={() => router.replace("/imagenes")} variante="secundario" />
                 {error && <AvisoError titulo={error.titulo} mensaje={error.mensaje} onReintentar={error.accion} irAjustes={error.ajustes} />}
             </ScrollView>
@@ -228,7 +229,7 @@ export default function Procesado() {
                 <Image source={{ uri: original.uri }} style={estilos.miniatura} resizeMode="contain" />
                 <Dato etiqueta="Dimensiones" valor={`${original.ancho} × ${original.alto} px`} />
                 <Dato etiqueta="Tamaño" valor={formatearBytes(original.bytes)} />
-                <Boton texto="Cambiar imagen" onPress={elegirDeGaleria} variante="secundario" />
+                <Boton texto="Cambiar imagen" onPress={() => elegirDeGaleria()} variante="secundario" />
             </Tarjeta>
 
             <Tarjeta titulo="Transformaciones">

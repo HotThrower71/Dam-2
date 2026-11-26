@@ -88,7 +88,7 @@ Para comprobar que el proyecto compila sin abrir nada: `npx expo export --platfo
 | Cámara | F1, al pulsar «Hacer una foto» | Para hacer la foto que luego se procesa | Igual que la galería |
 | Micrófono | F3, al pulsar «Grabar nota» | Para grabar las notas de voz | Igual, con el texto adaptado al micrófono |
 
-Cada permiso se pide justo cuando hace falta, nunca al abrir la app, y solo el que corresponde a lo que se ha pulsado. La respuesta `canAskAgain` decide si se ofrece «Reintentar» (se puede volver a preguntar) o «Abrir ajustes» (el usuario marcó que no se le pregunte más).
+Cada permiso se pide justo cuando hace falta, nunca al abrir la app, y solo el que corresponde a lo que se ha pulsado. El aviso siempre ofrece «Reintentar». Si `canAskAgain` es `false`, o si al reintentar el permiso sigue denegado, también ofrece «Abrir ajustes». Android deja de enseñar la ventana del permiso después de denegarlo dos veces, así que a partir de ahí la única forma de darlo es desde los ajustes (ver [src/utils/permisos.js](src/utils/permisos.js)).
 
 No se piden permisos de almacenamiento: las copias de imágenes, los resultados del procesado y las notas de voz se guardan en las carpetas propias de la app (`Paths.document` y `Paths.cache`), y para eso no hace falta ningún permiso.
 
