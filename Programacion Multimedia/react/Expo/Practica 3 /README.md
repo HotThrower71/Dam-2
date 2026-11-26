@@ -13,6 +13,14 @@ Es una app con React Native y Expo SDK 58 (JavaScript) que junta en un mismo men
 | F5 · Animaciones | Dos animaciones con `Animated`: un viaje con final y un ecualizador en bucle, ambas con interpolación y limpieza | [src/app/animaciones.jsx](src/app/animaciones.jsx) |
 | F6 · Calidad | Este README | — |
 
+## Vídeo de demostración
+
+▶ **[Ver el vídeo de pruebas](video/video-pruebas.mp4)** (1:27, grabado en un Xiaomi POCO F7 Pro con Expo Go el 26/11/2026).
+
+Sale la app funcionando en el móvil: permiso de cámara denegado y «Reintentar», foto con la cámara, foto de la galería, procesado a JPEG, PNG y WebP, una nota de voz grabada, reproducida y borrada, vídeo local, remoto y HLS, y las dos animaciones.
+
+En GitHub, si el vídeo no se reproduce en la página, pulsa «View raw» o el botón de descarga.
+
 ---
 
 ## 1. Entorno y versiones
