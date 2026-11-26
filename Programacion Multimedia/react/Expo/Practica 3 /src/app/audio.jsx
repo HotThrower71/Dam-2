@@ -77,17 +77,16 @@ export default function Audio() {
         };
     }, []);
 
-    // esReintento: true si se llama desde el botón «Reintentar» del aviso
-    async function empezarGrabacion(esReintento = false) {
+    async function empezarGrabacion() {
         setError(null);
         try {
             const permiso = await requestRecordingPermissionsAsync();
             if (!permiso.granted) {
-                const aviso = avisoPermiso("el micrófono", permiso, esReintento);
+                const aviso = avisoPermiso("el micrófono", permiso);
                 setError({
                     titulo: "Permiso de micrófono denegado",
                     mensaje: aviso.mensaje,
-                    accion: accionReintentar(aviso.bloqueado, () => empezarGrabacion(true)),
+                    accion: accionReintentar(aviso.bloqueado, () => empezarGrabacion()),
                 });
                 return;
             }

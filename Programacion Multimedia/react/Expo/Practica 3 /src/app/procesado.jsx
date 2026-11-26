@@ -86,17 +86,16 @@ export default function Procesado() {
     }, []);
 
     // Si no venimos de "Imágenes", se puede elegir aquí directamente de la galería.
-    // esReintento: true si se llama desde el botón «Reintentar» del aviso de permiso
-    async function elegirDeGaleria(esReintento = false) {
+    async function elegirDeGaleria() {
         setError(null);
         try {
             const permiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
             if (!permiso.granted) {
-                const aviso = avisoPermiso("tus fotos", permiso, esReintento);
+                const aviso = avisoPermiso("tus fotos", permiso);
                 setError({
                     titulo: "Permiso denegado",
                     mensaje: aviso.mensaje,
-                    accion: accionReintentar(aviso.bloqueado, () => elegirDeGaleria(true)),
+                    accion: accionReintentar(aviso.bloqueado, () => elegirDeGaleria()),
                 });
                 return;
             }

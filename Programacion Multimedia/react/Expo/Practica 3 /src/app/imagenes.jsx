@@ -55,7 +55,7 @@ export default function Imagenes() {
     }, []);
 
     // Pide el permiso que toque. Devuelve true si se puede seguir.
-    async function pedirPermiso(origen, esReintento) {
+    async function pedirPermiso(origen) {
         const respuesta =
             origen === "camara"
                 ? await ImagePicker.requestCameraPermissionsAsync()
@@ -64,18 +64,17 @@ export default function Imagenes() {
         if (respuesta.granted) return true;
 
         const que = origen === "camara" ? "la cámara" : "tus fotos";
-        // canAskAgain = false o un reintento que sigue denegado -> solo se puede cambiar en Ajustes
-        setError({ titulo: "Permiso denegado", ...avisoPermiso(que, respuesta, esReintento), reintentar: origen });
+        // canAskAgain = false -> Android ya no pregunta: «Reintentar» lleva a los ajustes
+        setError({ titulo: "Permiso denegado", ...avisoPermiso(que, respuesta), reintentar: origen });
         return false;
     }
 
     // origen: "galeria" | "camara"
-    // esReintento: true si se llama desde el botón «Reintentar» del aviso
-    async function elegirImagen(origen, esReintento = false) {
+    async function elegirImagen(origen) {
         setError(null);
         setAviso("");
         try {
-            if (!(await pedirPermiso(origen, esReintento))) return;
+            if (!(await pedirPermiso(origen))) return;
 
             const opciones = { mediaTypes: ["images"], quality: 1, exif: true };
             const resultado =
@@ -155,7 +154,7 @@ export default function Imagenes() {
                     mensaje={error.mensaje}
                     onReintentar={
                         error.reintentar
-                            ? accionReintentar(error.bloqueado, () => elegirImagen(error.reintentar, true))
+                            ? accionReintentar(error.bloqueado, () => elegirImagen(error.reintentar))
                             : undefined
                     }
                     irAjustes={error.ajustes}
