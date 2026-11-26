@@ -124,12 +124,12 @@ export default function Imagenes() {
     }
 
     // Copia la imagen de la caché del picker a la carpeta propia de la app (persiste al cerrar la app).
-    function guardarCopia() {
+    async function guardarCopia() {
         try {
             carpetaGuardadas.create({ idempotent: true }); // idempotent: si ya existe, no falla
             const origen = new File(imagen.uri);
             const destino = new File(carpetaGuardadas, `${Date.now()}-${imagen.nombre}`);
-            origen.copy(destino);
+            await origen.copy(destino);
             setGuardadas(leerGuardadas());
             setAviso("Copia guardada en la carpeta de la app.");
         } catch (e) {
