@@ -10,7 +10,7 @@ import Boton from "../components/Boton";
 import Dato from "../components/Dato";
 import Tarjeta from "../components/Tarjeta";
 import { colores } from "../utils/colores";
-import { avisoPermiso } from "../utils/permisos";
+import { accionReintentar, avisoPermiso } from "../utils/permisos";
 import { formatearBytes } from "../utils/formato";
 
 // Los tres formatos de salida. PNG no tiene "calidad": siempre es sin pérdida.
@@ -92,10 +92,11 @@ export default function Procesado() {
         try {
             const permiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
             if (!permiso.granted) {
+                const aviso = avisoPermiso("tus fotos", permiso, esReintento);
                 setError({
                     titulo: "Permiso denegado",
-                    ...avisoPermiso("tus fotos", permiso, esReintento),
-                    accion: () => elegirDeGaleria(true),
+                    mensaje: aviso.mensaje,
+                    accion: accionReintentar(aviso.bloqueado, () => elegirDeGaleria(true)),
                 });
                 return;
             }

@@ -9,7 +9,7 @@ import Boton from "../components/Boton";
 import Dato from "../components/Dato";
 import Tarjeta from "../components/Tarjeta";
 import { colores } from "../utils/colores";
-import { avisoPermiso } from "../utils/permisos";
+import { accionReintentar, avisoPermiso } from "../utils/permisos";
 import { formatearBytes } from "../utils/formato";
 
 // Formatos que la app sabe mostrar y procesar. Si llega otro (GIF animado, SVG…) se avisa.
@@ -153,7 +153,11 @@ export default function Imagenes() {
                 <AvisoError
                     titulo={error.titulo}
                     mensaje={error.mensaje}
-                    onReintentar={error.reintentar ? () => elegirImagen(error.reintentar, true) : undefined}
+                    onReintentar={
+                        error.reintentar
+                            ? accionReintentar(error.bloqueado, () => elegirImagen(error.reintentar, true))
+                            : undefined
+                    }
                     irAjustes={error.ajustes}
                 />
             )}
