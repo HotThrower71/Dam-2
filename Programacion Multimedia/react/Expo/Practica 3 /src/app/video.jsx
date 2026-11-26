@@ -109,7 +109,7 @@ export default function Video() {
             reproductor.pause();
         } else {
             // si estaba al final, vuelve al principio
-            if (reproductor.duration && currentTime >= reproductor.duration - 0.3) reproductor.currentTime = 0;
+            if (terminado || (reproductor.duration && currentTime >= reproductor.duration - 0.3)) reproductor.currentTime = 0;
             reproductor.play();
         }
     }
@@ -125,10 +125,13 @@ export default function Video() {
     const duracion = reproductor.duration || 0;
     const progreso = duracion ? Math.min(currentTime / duracion, 1) : 0;
     const cargado = duracion ? Math.min(bufferedPosition / duracion, 1) : 0;
-    const listo = status === "readyToPlay";
+    // en Android, al llegar al final el reproductor pasa a "idle" aunque el vídeo sigue cargado:
+    // si ya conocemos la duración, se dejan usar los controles para volver a reproducirlo
+    const terminado = status === "idle" && duracion > 0;
+    const listo = status === "readyToPlay" || terminado;
 
     const textoEstado = {
-        idle: "Sin cargar",
+        idle: terminado ? "■ Terminado" : "Sin cargar",
         loading: "Cargando…",
         readyToPlay: isPlaying ? "▶ Reproduciendo" : "❚❚ En pausa",
         error: "Error",

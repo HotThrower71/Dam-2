@@ -124,11 +124,11 @@ En la pantalla de vídeo hay dos fuentes rotas a propósito, **No existe** y **I
 
 Leyenda: ✅ correcto · ❌ falla · ➖ no aplica.
 
-Dispositivo de pruebas: _(modelo y versión de Android/iOS)_. Emulador: _(nombre del AVD y versión de Android)_.
+Dispositivo de pruebas: Xiaomi POCO F7 Pro con Expo Go (_versión de Android_). Los resultados del dispositivo salen del vídeo de demostración del 26/11/2026. Emulador: _(nombre del AVD y versión de Android)_.
 
 | # | Caso | Resultado esperado | Emulador | Dispositivo | Resultado |
 |---|---|---|---|---|---|
-| 1 | Elegir una foto JPEG de la galería | Sale la ficha con medidas, peso, formato y EXIF | | | |
+| 1 | Elegir una foto JPEG de la galería | Sale la ficha con medidas, peso, formato y EXIF | | POCO F7 Pro | ✅ 3072 × 4096 px, 2,91 MB, `image/jpeg`, fecha y cámara del EXIF |
 | 2 | Hacer una foto con la cámara | Sale la ficha con origen «Cámara» | | | |
 | 3 | Denegar el permiso de galería | Aviso con «Reintentar»; al reintentar vuelve a preguntar | | | |
 | 4 | Denegar la cámara para siempre | Aviso con «Abrir ajustes», que abre los ajustes de la app | | | |
@@ -136,25 +136,25 @@ Dispositivo de pruebas: _(modelo y versión de Android/iOS)_. Emulador: _(nombre
 | 6 | Cámara en un emulador sin cámara | «No se ha podido abrir la cámara» con «Reintentar» | | ➖ | |
 | 7 | Guardar copia y luego borrar copias | El contador y el espacio ocupado suben y vuelven a 0 | | | |
 | 8 | Procesar sin recorte a 800 px | Tres filas (JPEG, PNG, WebP) con ✓, peso y % frente al original | | | |
-| 9 | Recorte cuadrado + 500 px | Las tres salen a 500 × 500 con ✓ | | | |
+| 9 | Recorte cuadrado + 500 px | Las tres salen a 500 × 500 con ✓ | | POCO F7 Pro | ✅ Probado con 200 px: las tres a 200 × 200 ✓. JPEG 11,5 KB, PNG 58,2 KB, WebP 5,7 KB (★) |
 | 10 | Recorte 16:9 + calidad 50 % | Medidas 16:9; JPEG y WebP pesan menos que con el 80 % | | | |
 | 11 | Ancho vacío, «abc» o 10 | «Revisa los datos» con el motivo | | | |
 | 12 | Ancho mayor que la imagen | Aviso de que no se amplían imágenes | | | |
-| 13 | Vaciar la caché de resultados | Los ficheros pasan a 0 y desaparece la comparativa | | | |
-| 14 | Grabar una nota, pausar, reanudar y guardar | El cronómetro se para en la pausa; la nota sale en la lista con su duración y peso | | | |
+| 13 | Vaciar la caché de resultados | Los ficheros pasan a 0 y desaparece la comparativa | | POCO F7 Pro | ✅ De 3 ficheros (75,4 KB) a 0 |
+| 14 | Grabar una nota, pausar, reanudar y guardar | El cronómetro se para en la pausa; la nota sale en la lista con su duración y peso | | POCO F7 Pro | ✅ Nota de 0:06 y 96,1 KB en la lista (la pausa no se probó en el vídeo) |
 | 15 | Grabar menos de medio segundo | «Nota demasiado corta» | | | |
-| 16 | Reproducir, pausar y parar una nota | El estado y la barra de progreso cambian; al acabar vuelve al principio | | | |
+| 16 | Reproducir, pausar y parar una nota | El estado y la barra de progreso cambian; al acabar vuelve al principio | | POCO F7 Pro | ✅ «Reproduciendo» y «En pausa» con la barra avanzando |
 | 17 | Cerrar la app y volver a abrirla | Las notas siguen en la lista | | | |
 | 18 | Denegar el micrófono | Aviso con «Reintentar» o «Abrir ajustes» | | | |
 | 19 | Borrar una nota | Desaparece de la lista y del disco | | | |
-| 20 | Vídeo local | Se reproduce sin internet; funcionan play, ±10 s, saltar con la barra, silencio y velocidades | | | |
-| 21 | Vídeo remoto MP4 | Se ve el búfer en la barra y los eventos `statusChange` y `sourceLoad` | | | |
+| 20 | Vídeo local | Se reproduce sin internet; funcionan play, ±10 s, saltar con la barra, silencio y velocidades | | POCO F7 Pro | ❌ → corregido: al llegar al final el estado pasaba a `idle` y los controles se quedaban bloqueados. Ahora sale «Terminado» y Play/Reiniciar lo vuelven a reproducir. Falta repetir la prueba |
+| 21 | Vídeo remoto MP4 | Se ve el búfer en la barra y los eventos `statusChange` y `sourceLoad` | | POCO F7 Pro | ✅ Carga, `sourceLoad` (0:05), y funcionan pausa y las velocidades 1,5× y 2× |
 | 22 | HLS (Mux y Apple) | Se reproduce el stream `.m3u8` | | | |
 | 23 | Fuente «No existe» | «No se puede reproducir» (404) con «Reintentar» | | | |
 | 24 | Fuente «Incompatible» | Aviso de formato no compatible | | | |
 | 25 | Vídeo remoto sin conexión (modo avión) | Aviso de comprobar la conexión; al volver la red, «Reintentar» funciona | | | |
 | 26 | Salir de Vídeo mientras se reproduce | El sonido se para | | | |
-| 27 | Animación Viaje: iniciar hasta el final | Llega al 100 % y el estado pasa a «Terminada» | | | |
+| 27 | Animación Viaje: iniciar hasta el final | Llega al 100 % y el estado pasa a «Terminada» | | POCO F7 Pro | ✅ |
 | 28 | Animación Viaje: parar a mitad | Estado «Interrumpida» con el porcentaje en el que se ha parado | | | |
 | 29 | Ecualizador: iniciar y parar | Las barras se mueven en bucle, cuenta vueltas y al parar vuelven a reposo | | | |
 | 30 | Salir de Animaciones con el ecualizador en marcha | No queda nada en marcha (limpieza) | | | |
