@@ -10,7 +10,7 @@ import Boton from "../components/Boton";
 import Dato from "../components/Dato";
 import Tarjeta from "../components/Tarjeta";
 import { colores } from "../utils/colores";
-import { avisoPermiso } from "../utils/permisos";
+import { accionReintentar, avisoPermiso } from "../utils/permisos";
 import { formatearBytes } from "../utils/formato";
 
 // Los tres formatos de salida. PNG no tiene "calidad": siempre es sin pérdida.
@@ -86,12 +86,18 @@ export default function Procesado() {
     }, []);
 
     // Si no venimos de "Imágenes", se puede elegir aquí directamente de la galería.
-    async function elegirDeGaleria() {
+    // esReintento: true si se llama desde el botón «Reintentar» del aviso de permiso
+    async function elegirDeGaleria(esReintento = false) {
         setError(null);
         try {
             const permiso = await ImagePicker.requestMediaLibraryPermissionsAsync();
             if (!permiso.granted) {
-                setError({ titulo: "Permiso denegado", ...avisoPermiso("tus fotos") });
+                const aviso = avisoPermiso("tus fotos", permiso, esReintento);
+                setError({
+                    titulo: "Permiso denegado",
+                    mensaje: aviso.mensaje,
+                    accion: accionReintentar(aviso.bloqueado, () => elegirDeGaleria(true)),
+                });
                 return;
             }
             const r = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ["images"], quality: 1 });

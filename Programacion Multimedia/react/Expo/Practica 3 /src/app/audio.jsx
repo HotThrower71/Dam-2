@@ -15,7 +15,7 @@ import AvisoError from "../components/AvisoError";
 import Boton from "../components/Boton";
 import Tarjeta from "../components/Tarjeta";
 import { colores } from "../utils/colores";
-import { avisoPermiso } from "../utils/permisos";
+import { accionReintentar, avisoPermiso } from "../utils/permisos";
 import { formatearBytes, formatearFecha, formatearTiempo } from "../utils/formato";
 
 // Las notas se guardan en la carpeta de documentos de la app (persisten al cerrarla)
@@ -77,12 +77,18 @@ export default function Audio() {
         };
     }, []);
 
-    async function empezarGrabacion() {
+    // esReintento: true si se llama desde el botón «Reintentar» del aviso
+    async function empezarGrabacion(esReintento = false) {
         setError(null);
         try {
             const permiso = await requestRecordingPermissionsAsync();
             if (!permiso.granted) {
-                setError({ titulo: "Permiso de micrófono denegado", ...avisoPermiso("el micrófono") });
+                const aviso = avisoPermiso("el micrófono", permiso, esReintento);
+                setError({
+                    titulo: "Permiso de micrófono denegado",
+                    mensaje: aviso.mensaje,
+                    accion: accionReintentar(aviso.bloqueado, () => empezarGrabacion(true)),
+                });
                 return;
             }
             reproductor.pause(); // no se graba y reproduce a la vez

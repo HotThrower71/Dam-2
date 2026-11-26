@@ -9,7 +9,7 @@ import Boton from "../components/Boton";
 import Dato from "../components/Dato";
 import Tarjeta from "../components/Tarjeta";
 import { colores } from "../utils/colores";
-import { avisoPermiso } from "../utils/permisos";
+import { accionReintentar, avisoPermiso } from "../utils/permisos";
 import { formatearBytes } from "../utils/formato";
 
 // Formatos que la app sabe mostrar y procesar. Si llega otro (GIF animado, SVG…) se avisa.
@@ -55,7 +55,7 @@ export default function Imagenes() {
     }, []);
 
     // Pide el permiso que toque. Devuelve true si se puede seguir.
-    async function pedirPermiso(origen) {
+    async function pedirPermiso(origen, esReintento) {
         const respuesta =
             origen === "camara"
                 ? await ImagePicker.requestCameraPermissionsAsync()
@@ -64,17 +64,18 @@ export default function Imagenes() {
         if (respuesta.granted) return true;
 
         const que = origen === "camara" ? "la cámara" : "tus fotos";
-        // sin "reintentar": el permiso se da desde los ajustes
-        setError({ titulo: "Permiso denegado", ...avisoPermiso(que) });
+        // canAskAgain = false o un reintento que sigue denegado -> solo se puede cambiar en Ajustes
+        setError({ titulo: "Permiso denegado", ...avisoPermiso(que, respuesta, esReintento), reintentar: origen });
         return false;
     }
 
     // origen: "galeria" | "camara"
-    async function elegirImagen(origen) {
+    // esReintento: true si se llama desde el botón «Reintentar» del aviso
+    async function elegirImagen(origen, esReintento = false) {
         setError(null);
         setAviso("");
         try {
-            if (!(await pedirPermiso(origen))) return;
+            if (!(await pedirPermiso(origen, esReintento))) return;
 
             const opciones = { mediaTypes: ["images"], quality: 1, exif: true };
             const resultado =
@@ -152,7 +153,11 @@ export default function Imagenes() {
                 <AvisoError
                     titulo={error.titulo}
                     mensaje={error.mensaje}
-                    onReintentar={error.reintentar ? () => elegirImagen(error.reintentar) : undefined}
+                    onReintentar={
+                        error.reintentar
+                            ? accionReintentar(error.bloqueado, () => elegirImagen(error.reintentar, true))
+                            : undefined
+                    }
                     irAjustes={error.ajustes}
                 />
             )}
