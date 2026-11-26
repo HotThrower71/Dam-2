@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Estudi Multimèdia",
+    "slug": "estudi-multimedia",
+    "scheme": "estudimultimedia",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "web": { "bundler": "metro", "output": "single" },
+    "ios": {
+      "bundleIdentifier": "com.isma.estudimultimedia"
+    },
+    "android": {
+      "package": "com.isma.estudimultimedia"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-asset",
+      "expo-video",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Estudi Multimèdia necesita acceder a tus fotos para elegir la imagen que quieres ver y procesar.",
+          "cameraPermission": "Estudi Multimèdia necesita la cámara para hacer la foto que quieres ver y procesar."
+        }
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "Estudi Multimèdia necesita el micrófono para grabar tus notas de voz."
+        }
+      ]
+    ]
+  }
+}
