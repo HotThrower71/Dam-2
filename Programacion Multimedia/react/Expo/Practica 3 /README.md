@@ -84,11 +84,11 @@ Para comprobar que el proyecto compila sin abrir nada: `npx expo export --platfo
 
 | Permiso | Dónde se pide | Por qué hace falta | Si se deniega |
 |---|---|---|---|
-| Fotos / galería | F1 y F2, al pulsar «Elegir de la galería» | Para leer la imagen que el usuario elige | Mensaje y botón «Reintentar». Si se ha denegado para siempre, botón «Abrir ajustes» |
+| Fotos / galería | F1 y F2, al pulsar «Elegir de la galería» | Para leer la imagen que el usuario elige | Mensaje y botón «Abrir ajustes» |
 | Cámara | F1, al pulsar «Hacer una foto» | Para hacer la foto que luego se procesa | Igual que la galería |
 | Micrófono | F3, al pulsar «Grabar nota» | Para grabar las notas de voz | Igual, con el texto adaptado al micrófono |
 
-Cada permiso se pide justo cuando hace falta, nunca al abrir la app, y solo el que corresponde a lo que se ha pulsado. «Reintentar» funciona siempre. Si Android todavía puede preguntar, vuelve a enseñar la ventana del permiso. Si no puede (porque `canAskAgain` es `false` o porque el permiso se ha denegado dos veces y Android ya no enseña la ventana), abre los ajustes de la app y, cuando el usuario vuelve, la app lo intenta otra vez sola con `AppState`. Si el permiso ya está activado, sigue con lo que se iba a hacer (ver [src/utils/permisos.js](src/utils/permisos.js)).
+Cada permiso se pide justo cuando hace falta, nunca al abrir la app, y solo el que corresponde a lo que se ha pulsado. Si se deniega un permiso, el aviso ofrece «Abrir ajustes», que abre los permisos de la app. No se ofrece «Reintentar» porque Android, después de denegar un permiso dos veces, ya no vuelve a enseñar la ventana, así que la forma segura de darlo es desde los ajustes (ver [src/utils/permisos.js](src/utils/permisos.js)).
 
 No se piden permisos de almacenamiento: las copias de imágenes, los resultados del procesado y las notas de voz se guardan en las carpetas propias de la app (`Paths.document` y `Paths.cache`), y para eso no hace falta ningún permiso.
 
@@ -100,7 +100,7 @@ Todos los errores salen en el componente común [AvisoError](src/components/Avis
 
 | Tipo de error | Ejemplo en la app | Qué hace |
 |---|---|---|
-| Permiso denegado | Galería, cámara o micrófono | Explica qué no se puede hacer y ofrece «Reintentar» o «Abrir ajustes» |
+| Permiso denegado | Galería, cámara o micrófono | Explica qué no se puede hacer y ofrece «Abrir ajustes» |
 | Recurso inexistente | Una nota de voz cuyo fichero se ha borrado; la imagen temporal que el sistema ha limpiado; un vídeo que da 404 | La nota sale como «Fichero no encontrado» con el botón «Quitar de la lista»; la imagen pide elegirla otra vez; el vídeo ofrece «Reintentar» |
 | Formato incompatible | GIF o SVG en F1; una página HTML en el reproductor de vídeo; un formato que el móvil no sabe codificar en F2 | Avisa del tipo recibido; en F2 la fila de ese formato dice «No compatible en este dispositivo» y los otros formatos se generan igual |
 | Operación fallida | No se abre la cámara (emulador sin cámara), falla la grabación, falla el procesado | Mensaje con el detalle y «Reintentar» |
@@ -136,7 +136,7 @@ Dispositivo de pruebas: Xiaomi POCO F7 Pro con Expo Go (_versión de Android_). 
 | 6 | Vídeo local: play, +10 s, silencio, velocidades y llegar al final | Funcionan los controles y se puede volver a reproducir | ➖ | POCO F7 Pro | ❌ → corregido: al llegar al final el estado pasaba a `idle` y los controles se bloqueaban. Ahora sale «Terminado» y Play/Reiniciar lo vuelven a reproducir. Falta repetir la prueba |
 | 7 | Vídeo remoto MP4 | Carga y llegan los eventos `statusChange` y `sourceLoad` | ➖ | POCO F7 Pro | ✅ `sourceLoad` (0:05), pausa y velocidades 1,5× y 2× |
 | 8 | Animación Viaje hasta el final | Llega al 100 % y el estado pasa a «Terminada» | ➖ | POCO F7 Pro | ✅ |
-| 9 | Permiso denegado: denegar el micrófono en Notas de voz | Aviso con «Reintentar» o «Abrir ajustes» | ➖ | | |
+| 9 | Permiso denegado: denegar el micrófono en Notas de voz | Aviso con el botón «Abrir ajustes», que abre los permisos | ➖ | | |
 | 10 | Recurso inexistente: vídeo «No existe» | «No se puede reproducir» (404) con «Reintentar» | ➖ | | |
 | 11 | Formato incompatible: vídeo «Incompatible» | Aviso de formato no compatible | ➖ | | |
 | 12 | Datos no válidos: ancho «abc» en Procesado | «Revisa los datos» antes de procesar | ➖ | | |
