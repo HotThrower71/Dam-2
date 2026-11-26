@@ -124,23 +124,29 @@ En la pantalla de vídeo hay dos fuentes rotas a propósito, **No existe** y **I
 
 Leyenda: ✅ correcto · ❌ falla · ➖ no probado en ese entorno. No hay emulador instalado: todas las pruebas se han hecho en un dispositivo real.
 
-Dispositivo de pruebas: Xiaomi POCO F7 Pro con Expo Go (_versión de Android_). Los resultados del dispositivo salen del vídeo de demostración del 26/11/2026.
+Dispositivo de pruebas: Xiaomi POCO F7 Pro con Expo Go (_versión de Android_). Los resultados del dispositivo salen de los dos vídeos de prueba grabados el 26/11/2026.
 
 | # | Caso | Resultado esperado | Emulador | Dispositivo | Resultado |
 |---|---|---|---|---|---|
 | 1 | Elegir una foto JPEG de la galería | Sale la ficha con medidas, peso, formato y EXIF | ➖ | POCO F7 Pro | ✅ 3072 × 4096 px, 2,91 MB, `image/jpeg`, fecha y cámara del EXIF |
-| 2 | Recorte cuadrado + 200 px | Las tres salen a 200 × 200 con ✓ | ➖ | POCO F7 Pro | ✅ JPEG 11,5 KB, PNG 58,2 KB, WebP 5,7 KB (★ el más ligero) |
-| 3 | Vaciar la caché de resultados | Los ficheros pasan a 0 | ➖ | POCO F7 Pro | ✅ De 3 ficheros (75,4 KB) a 0 |
-| 4 | Grabar una nota y guardarla | La nota sale en la lista con su duración y peso | ➖ | POCO F7 Pro | ✅ Nota de 0:06 y 96,1 KB |
-| 5 | Reproducir y pausar una nota | El estado y la barra de progreso cambian | ➖ | POCO F7 Pro | ✅ «Reproduciendo» y «En pausa» con la barra avanzando |
-| 6 | Vídeo local: play, +10 s, silencio, velocidades y llegar al final | Funcionan los controles y se puede volver a reproducir | ➖ | POCO F7 Pro | ❌ → corregido: al llegar al final el estado pasaba a `idle` y los controles se bloqueaban. Ahora sale «Terminado» y Play/Reiniciar lo vuelven a reproducir. Falta repetir la prueba |
-| 7 | Vídeo remoto MP4 | Carga y llegan los eventos `statusChange` y `sourceLoad` | ➖ | POCO F7 Pro | ✅ `sourceLoad` (0:05), pausa y velocidades 1,5× y 2× |
-| 8 | Animación Viaje hasta el final | Llega al 100 % y el estado pasa a «Terminada» | ➖ | POCO F7 Pro | ✅ |
-| 9 | Permiso denegado: denegar el micrófono en Notas de voz | Aviso con «Reintentar» o «Abrir ajustes» | ➖ | | |
-| 10 | Recurso inexistente: vídeo «No existe» | «No se puede reproducir» (404) con «Reintentar» | ➖ | | |
-| 11 | Formato incompatible: vídeo «Incompatible» | Aviso de formato no compatible | ➖ | | |
-| 12 | Datos no válidos: ancho «abc» en Procesado | «Revisa los datos» antes de procesar | ➖ | | |
-| 13 | Compilar el proyecto (`npx expo export`, Android y web) | Se generan los dos paquetes sin errores | ➖ | ➖ | ✅ (26/11/2026, en el PC) |
+| 2 | Hacer una foto con la cámara | Sale la ficha con origen «Cámara» | ➖ | POCO F7 Pro | ✅ 3072 × 4096 px, 2,92 MB, EXIF con fecha y modelo |
+| 3 | Permiso denegado: denegar la cámara y pulsar «Reintentar» | Aviso «Permiso denegado»; «Reintentar» vuelve a enseñar la ventana del permiso | ➖ | POCO F7 Pro | ✅ Sale el aviso; al reintentar vuelve la ventana y, al aceptar, se abre la cámara |
+| 4 | Procesar sin recorte a 800 px | Tres formatos con ✓, peso y % frente al original | ➖ | POCO F7 Pro | ✅ 800 × 1066 ✓. JPEG 63,1 KB (2 %), PNG 994,2 KB (30 %), WebP 22,7 KB (1 %, ★) |
+| 5 | Recorte cuadrado + 200 px | Las tres salen a 200 × 200 con ✓ | ➖ | POCO F7 Pro | ✅ JPEG 11,5 KB, PNG 58,2 KB, WebP 5,7 KB (★) |
+| 6 | Vaciar la caché de resultados | Los ficheros pasan a 0 | ➖ | POCO F7 Pro | ✅ De 3 ficheros (75,4 KB) a 0 |
+| 7 | Grabar una nota y guardarla | La nota sale en la lista con su duración y peso | ➖ | POCO F7 Pro | ✅ Nota de 0:03 y 63,5 KB |
+| 8 | Reproducir y pausar una nota | El estado y la barra de progreso cambian | ➖ | POCO F7 Pro | ✅ «Reproduciendo» y «En pausa» con la barra avanzando |
+| 9 | Borrar una nota | Desaparece de la lista | ➖ | POCO F7 Pro | ✅ «Mis notas (0)» |
+| 10 | Vídeo local: play, +10 s, silencio, velocidades y llegar al final | Funcionan los controles y se puede volver a reproducir | ➖ | POCO F7 Pro | ❌ → corregido: al llegar al final el estado pasaba a `idle` y los controles se bloqueaban. Ahora sale «Terminado» y Play/Reiniciar lo vuelven a reproducir. Falta repetir la prueba |
+| 11 | Vídeo remoto MP4 | Carga y llegan los eventos `statusChange` y `sourceLoad` | ➖ | POCO F7 Pro | ✅ `sourceLoad` (0:05), pausa y velocidades 1,5× y 2× |
+| 12 | HLS (Mux, `.m3u8`) | Se reproduce el stream | ➖ | POCO F7 Pro | ✅ *Big Buck Bunny*, 10:34, reproduciendo |
+| 13 | HLS 2 (Apple bipbop) | Se reproduce el stream | ➖ | POCO F7 Pro | Sin terminar: llega `sourceLoad` (10:00) pero se salió de la pantalla mientras cargaba |
+| 14 | Animación Viaje | Se mueve de 0 a 100 % y se puede parar y reiniciar | ➖ | POCO F7 Pro | ✅ |
+| 15 | Animación Ecualizador: iniciar y parar | Las barras se mueven en bucle y al parar vuelven a reposo | ➖ | POCO F7 Pro | ✅ 1 vuelta contada y vuelta a «Parada» |
+| 16 | Recurso inexistente: vídeo «No existe» | «No se puede reproducir» (404) con «Reintentar» | ➖ |  |  |
+| 17 | Formato incompatible: vídeo «Incompatible» | Aviso de formato no compatible | ➖ |  |  |
+| 18 | Datos no válidos: ancho «abc» en Procesado | «Revisa los datos» antes de procesar | ➖ |  |  |
+| 19 | Compilar el proyecto (`npx expo export`, Android y web) | Se generan los dos paquetes sin errores | ➖ | ➖ | ✅ (26/11/2026, en el PC) |
 
 ---
 
